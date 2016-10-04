@@ -6,7 +6,9 @@
 #include <time.h>
 #include <qemu-hypertrace.h>
 
-
+// I made this external global variable to run my micro benchmarks
+__thread uint64_t *control_addr;
+// #define do_hypertrace(client, arg1) control_addr[client] = arg1
 
 int timeval_subtract(struct timeval *result, struct timeval *t2, struct timeval *t1)
 {
@@ -20,7 +22,6 @@ int timeval_subtract(struct timeval *result, struct timeval *t2, struct timeval 
 
 int main(int argc, char **argv)
 {
-    
     struct timeval tvBegin, tvEnd, tvDiff;
     char *base = NULL;
     if (argc > 1) {
@@ -40,12 +41,12 @@ int main(int argc, char **argv)
     uint64_t client  = 0;
     uint64_t *data = qemu_hypertrace_data(client);
     // begin
+    ulong i = 0;
+    ulong repeat = 1E6;
     gettimeofday(&tvBegin, NULL);
-    uint i = 0;
-    uint repeat = 1E6;
-    for ( ; i < repeat; i++) {
-        data[0] = i;
-        qemu_hypertrace(client, 0xfefa);
+    for ( i=0; i < repeat; i++) {
+        // do_hypertrace(client, i);
+        control_addr[client] = i;
     }
     //end
     gettimeofday(&tvEnd, NULL);
