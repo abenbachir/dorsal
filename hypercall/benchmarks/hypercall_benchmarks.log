@@ -1,0 +1,47 @@
+-------- hypercall benchmark ---------
+elapsed : 3501056000 ns 
+event cost : 350.105600 ns 
+
+-------- hypercall benchmark ---------
+elapsed : 3491469000 ns 
+event cost : 349.146900 ns 
+
+-------- hypercall benchmark ---------
+elapsed : 3488126000 ns 
+event cost : 348.812600 ns 
+
+-------- hypercall benchmark ---------
+elapsed : 3495977000 ns 
+event cost : 349.597700 ns 
+
+-------- hypercall benchmark ---------
+elapsed : 3497822000 ns 
+event cost : 349.782200 ns 
+
+-------- hypercall benchmark ---------
+elapsed : 3486037000 ns 
+event cost : 348.603700 ns 
+
+-------- hypercall benchmark ---------
+elapsed : 3520860000 ns 
+event cost : 352.086000 ns 
+
+-------- hypercall benchmark ---------
+elapsed : 3499346000 ns 
+event cost : 349.934600 ns 
+
+-------- hypercall benchmark ---------
+elapsed : 3487621000 ns 
+event cost : 348.762100 ns 
+
+-------- hypercall benchmark ---------
+elapsed : 3497442000 ns 
+event cost : 349.744200 ns 
+
+-------- hypercall benchmark ---------
+elapsed : 3492595000 ns 
+event cost : 349.259500 ns 
+
+-------- hypercall benchmark ---------
+elapsed : 3507947000 ns 
+event cost : 350.794700 ns 

@@ -7,15 +7,10 @@
 #include <qemu-hypertrace.h>
 
 static struct timespec ts_start, ts_end;
+#define tic() clock_gettime(CLOCK_MONOTONIC, &ts_start)
+#define toc() clock_gettime(CLOCK_MONOTONIC, &ts_end)
+#define elapsed_nsec() (ts_end.tv_nsec + 1E9 * ts_end.tv_sec) - (ts_start.tv_nsec + 1E9 * ts_start.tv_sec)
 
-static inline void tic(){
-    clock_gettime(CLOCK_MONOTONIC_RAW, &ts_start);
-}
-
-static inline uint64_t toc(){
-    clock_gettime(CLOCK_MONOTONIC_RAW, &ts_end);
-    return (ts_end.tv_nsec + 1E9 * ts_end.tv_sec) - (ts_start.tv_nsec + 1E9 * ts_start.tv_sec);
-}
 
 int main(int argc, char **argv)
 {
@@ -34,16 +29,21 @@ int main(int argc, char **argv)
     uint64_t *control_addr = qemu_hypertrace_control();
     ulong i = 0;
     ulong repeat = 1E6;
-    printf("-------- Start benchmark --------- \n");   
-    tic();
+    printf("-------- Hypertrace benchmark --------- \n");   
+    printf("Cost\n");
     for ( i=0; i < repeat; i++) {
         // qemu_hypertrace(client, i);
-        // do_hypertrace(client, i);
+        tic();
         control_addr[client] = i;
+        uint64_t test = data[client];
+        toc();
+        unsigned long int ns = elapsed_nsec();
+        printf("%lu\n", ns);
     }
-    uint64_t ns = toc();
-    printf("elapsed : %ld ns \n", ns);
-    printf("event cost : %f ns \n", (double)ns/repeat);
+
+    
+    // printf("elapsed \t: %ld ns \n", ns);
+    // printf("event cost\t: %f ns \n", (double)ns/repeat);
     // printf("event freq : %f ns \n", (double)1000 * 1 / (ns / repeat));
     return 0;
 }
