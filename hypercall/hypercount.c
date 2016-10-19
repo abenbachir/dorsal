@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include <string.h>
 #include <sys/time.h>
 #include <time.h>
+#include <stdbool.h>
+
 
 static struct timespec ts_start, ts_end;
 
@@ -46,8 +49,18 @@ unsigned int hypercount(unsigned int nanoseconds)
     return count;
 }
 
+void cpu_burn(unsigned int n)
+{
+    double x;
+    while (n-- > 0) {
+        x = sin(log(x+10)) + 1.1;
+        x = sqrt(x*3.9 + x*x/4.2); 
+        // printf("%f\n",x);
+    }
+}
 int main(int argc, char** argv)
 {
+    
     //printf("----------- Hypercount benchmark ----------\n");
     printf("duration,hypercalls\n");
     unsigned long int ns_max_duration = 1E6; 
@@ -57,6 +70,7 @@ int main(int argc, char** argv)
     {
         unsigned long int count = hypercount(period);
         printf("%lu,%lu\n", period, count);
+        cpu_burn(1E5);
     }
     
     // printf("elapsed : %lu ns\n", nanoseconds);

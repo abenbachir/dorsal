@@ -2,7 +2,7 @@
 all:
 	gcc -O0 -o hypercall_guest hypercall-guest.c
 	gcc -o hypercall_benchmark hypercall_benchmark.c
-	gcc -o hypercount hypercount.c
+	gcc -o hypercount hypercount.c -lm
 	scp hypercall_guest hypercall_benchmark hypercount ubuntu:~
 
 clean:

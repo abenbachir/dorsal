@@ -1,7 +1,7 @@
-mydata=as.vector(read.table("hypertrace.dat", header=TRUE, skip=1)$Cost)
+mydata=as.vector(read.table("./hypertrace/plots/hypertrace.dat", header=TRUE, skip=1)$Cost)
 
 hist(mydata, 
-     main = paste("Histogram of Hypertrace Overhead"),
+     main = paste("Hypertrace Overhead (kvm-enabled)"),
      xlim=c(1700,2600),
      breaks=1000000)
 
