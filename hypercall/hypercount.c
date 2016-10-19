@@ -48,10 +48,10 @@ unsigned int hypercount(unsigned int nanoseconds)
 
 int main(int argc, char** argv)
 {
-    printf("----------- Hypercount benchmark ----------\n");
-    printf("# duration, hypercalss\n");
-    unsigned long int ns_max_duration = 1E7; 
-    unsigned long int ns_increment = 10000; 
+    //printf("----------- Hypercount benchmark ----------\n");
+    printf("duration,hypercalls\n");
+    unsigned long int ns_max_duration = 1E6; 
+    unsigned long int ns_increment = 300; 
     unsigned long int period = ns_increment;
     for(; period < ns_max_duration; period+=ns_increment)
     {

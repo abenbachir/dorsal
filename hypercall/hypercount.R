@@ -7,4 +7,6 @@ y <- as.vector(mydata$hypercalls)
 
 str(mydata)
 
-xyplot(x~y, data=mydata, grid = TRUE, type = c("p", "r"))
+xyplot <- xyplot(y~x, data=mydata, grid = TRUE, type = c("p", "r"))
+
+plot(xyplot)
