@@ -69,8 +69,9 @@ int main(int argc, char** argv)
     for(; period < ns_max_duration; period+=ns_increment)
     {
         unsigned long int count = hypercount(period);
+        // hypercount(period);
         printf("%lu,%lu\n", period, count);
-        cpu_burn(1E5);
+        // cpu_burn(1E5);
     }
     
     // printf("elapsed : %lu ns\n", nanoseconds);
