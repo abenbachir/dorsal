@@ -33,12 +33,17 @@ void kvm_hypercall_handler(unsigned long int nr,
 
 int main(int argc, char** argv)
 {
+    if (argc <= 1){
+        printf("You must inject the filename in argment : example, ./exec file.txt\n");
+        return 0;
+    }
+
     unsigned long int arg1, arg2, arg3, arg4 = 0;
     struct timespec ts_start, ts_end;
     FILE *fp;
     FILE *output;
-    const char filename[10] = "file.txt";
-    const char out_filename[10] = "out.txt";
+    const char* filename = argv[1];
+    const char out_filename[20] = "out.txt";
     unsigned long int buffer[MAX_HYPERCALL_SIZE];
     unsigned long int buffer_output[MAX_HYPERCALL_SIZE];
         
@@ -47,11 +52,11 @@ int main(int argc, char** argv)
         printf("Can not open %s %d\n", filename, fp);
         return -1;
     }
-    output = fopen(out_filename, "w");
-    if (!output){
-        printf("Can not open %s\n",out_filename);
-        return -1;
-    }
+    // output = fopen(out_filename, "w");
+    // if (!output){
+    //     printf("Can not open %s\n",out_filename);
+    //     return -1;
+    // }
     
     unsigned long int hc_filename = 0;
     memcpy(&hc_filename, filename, sizeof(hc_filename));
@@ -90,6 +95,6 @@ int main(int argc, char** argv)
 
     fclose(fp);
 
-    printf("elapsed : %lu ns\n", nanoseconds);
+    printf("%lu ns\n", nanoseconds);
     return 0;
 }
