@@ -2,9 +2,9 @@
 #set -x
 
 files=(
-  "trace-58MB.txt"
-  "trace-116MB.txt"
-  "trace-522MB.txt"
+  "file_1MB.bin"
+  "file_10MB.bin"
+  "file_100MB.bin"
 )
 
 #output="hyperstream.dat"
@@ -12,11 +12,12 @@ files=(
 for filename in ${files[@]}
 do
   size=${filename/trace-/}
+  size=${size/.bin/}
   size=${size/.txt/}
-  output="hyperstream-${size}.dat"
+  output="./data/hyperstream-${size}.dat"
   echo "elapsed_time" > $output
   sleep 2
-  for i in {1..1000}
+  for i in {1..100}
   do
   #  echo "$size," >> $output
     ssh ubuntu "./hyperstream_guest $filename" >> $output
