@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 library(ggplot2)
 # elapsed_time,func_calls
-data_ins_hypercall = read.table("./function-graph/data/function-graph.dat", header=TRUE, sep = ',', skip=1)
+data_ins_hypercall = read.table("./function-graph/data/function-graph-dohypercall.dat", header=TRUE, sep = ',', skip=1)
 data_ins = read.table("./function-graph/data/function-graph.dat", header=TRUE, sep = ',', skip=1)
 data_noins = read.table("./function-graph/data/no-function-graph.dat", header=TRUE, sep = ',', skip=1)
 
@@ -9,9 +9,10 @@ data_noins = read.table("./function-graph/data/no-function-graph.dat", header=TR
 # data$ratio <- data$elapsed_time / data$func_calls
 
 ins_density <- density(data_ins$elapsed_time) 
+ins_dohypercall_density <- density(data_ins_hypercall$elapsed_time) 
 nosins_density <- density(data_noins$elapsed_time)
 
-plot(nosins_density$y - ins_density$y)
+plot(1 - (nosins_density$y / ins_dohypercall_density$y))
 
 # mydata <- data.frame(overhead = nosins_density$y - ins_density$y)
 # plot <- ggplot(mydata, aes(overhead)) +

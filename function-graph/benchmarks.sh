@@ -22,8 +22,8 @@ done
 
 
 echo "Running benchmarks for : function graph enabled + hypercall ..."
-echo "# Merge sort elapsed time with function graph enabled + hypercall" > $output_ins
-echo "elapsed_time" >> $output_ins
+echo "# Merge sort elapsed time with function graph enabled + hypercall" > $output_ins_hypercall
+echo "elapsed_time" >> $output_ins_hypercall
 for i in {1..100}
 do
 	ssh ubuntu "./simple-program-ins-dohypercall" >> $output_ins_hypercall

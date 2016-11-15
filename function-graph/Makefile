@@ -9,12 +9,12 @@ all:
 	gcc simple-program-instrumented.o libftrace.o -D DO_HYPERCALL -o simple-program-ins-dohypercall
 
 	gcc simple-program-instrumented.o libftrace.o -o simple-program-ins
-	
+
 	gcc simple-program-not-instrumented.o -o simple-program-noins
 
 
 	# send it to vm
-	scp simple-program-ins simple-program-noins simple-program-ins-dohypercall ubuntu:~
+	scp input.txt simple-program-ins simple-program-noins simple-program-ins-dohypercall ubuntu:~
 
 clean:
 	rm libftrace.o simple-program-*.o simple-program-ins simple-program-noins simple-program-ins-dohypercall
