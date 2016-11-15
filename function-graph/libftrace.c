@@ -18,14 +18,14 @@ void __attribute__ ((constructor)) trace_begin (void)
  
 void __attribute__ ((destructor)) trace_end (void)
 {
-	// printf("%lu\n", func_count);
+	// printf("func_count = %lu\n", func_count);
 }
 
 void __cyg_profile_func_enter (void *func,  void *caller)
 {
 #ifdef DO_HYPERCALL
 	do_hypercall(HYPERCALL_NR, (unsigned long)func, (unsigned long)caller, FUNC_ENTER);
-	func_count++;
+	// func_count++;
 #endif
 }
  
@@ -33,7 +33,7 @@ void __cyg_profile_func_exit (void *func, void *caller)
 {	
 #ifdef DO_HYPERCALL
 	do_hypercall(HYPERCALL_NR, (unsigned long)func, (unsigned long)caller, FUNC_EXIT);
-	func_count++;
+	// func_count++;
 #endif
 }
 
