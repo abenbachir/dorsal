@@ -42,7 +42,7 @@ void mergeSort(long int *arr, int size) {
 
 int initializeArray(char* filename, long int** array_output)
 {
-	
+    __asm__("nop");	
 	char *fcontent = NULL;
 	FILE *fp = fopen(filename, "r");
 	fseek(fp, 0, SEEK_END); 
