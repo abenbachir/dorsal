@@ -32,7 +32,7 @@ def init_symbols():
             function_name = values[2]
             # binarySearchTree[ip] = function_name
             bst.append(ip)
-            mappings[ip] = function_name
+            mappings[ip] = function_name.rstrip()
 
 
 def get_symbol_name(instruction_pointer):
