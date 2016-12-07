@@ -86,26 +86,22 @@ void main()
     }
 	return;*/
 	struct timespec ts_start, ts_end;
-	printf("#...\nelapsed_time\n");
+	// printf("#...\nelapsed_time\n");
+	// read fomr file
 	// long int* array = NULL;
 	// int size = initializeArray("input-50.txt", &array);
 	// printf("size=%d\n", size );
 	int size = 50;
-	// warm up 
-	for (int i = 0; i<1000; i++)
-    {
-		mergeSort(array, size);
-	}
 
-    for (int i = 0; i<1000; i++)
-    {
-	    tic(ts_start);
-	    mergeSort(array, size);
-	    toc(ts_end);
-	    unsigned long int nanoseconds = elapsed_nsec(ts_start, ts_end);
-	    printf("%lu\n", nanoseconds);
-	}
-
+ //    for (int i = 0; i<1000; i++)
+ //    {
+	//     tic(ts_start);
+	//     mergeSort(array, size);
+	//     toc(ts_end);
+	//     unsigned long int nanoseconds = elapsed_nsec(ts_start, ts_end);
+	//     printf("%lu\n", nanoseconds);
+	// }
+	mergeSort(array, size);
     // free space
     // free(array);
 
