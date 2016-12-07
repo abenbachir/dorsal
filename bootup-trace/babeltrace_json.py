@@ -16,6 +16,8 @@ USERSPACE_HYPERCALL_NR = 2000
 KERNELSPACE_HYPERCALL_NR = 1000
 SCHED_SWITCH_HYPERCALL_NR = 1001
 
+level0_calls = []
+
 def ns_to_us(timestamp):
     return (timestamp/float(1000))
 
@@ -39,9 +41,32 @@ def add_overhead(func_name, overhead):
     overheads[func_name].append(overhead)
 
 
+def has_conflicts(call, calls):
+    for i in range(0, len(calls)):
+        call1 = calls[i]
+        call2 = call
+        if not ((call1["start"] < call2["start"] and call1["end"] < call2["start"]) \
+                        or (call2["start"] < call1["start"] and call2["end"] < call1["start"])):
+            return True
+
+def detect_conflicts(calls):
+    count = 0
+    for i in range(0, len(calls)):
+        for j in range(0, len(calls)):
+            if i == j:
+                continue
+            call1 = calls[i]
+            call2 = calls[j]
+            if not ( (call1["start"] < call2["start"] and call1["end"] < call2["start"]) \
+                or (call2["start"] < call1["start"] and call2["end"] < call1["start"])):
+                count += 1
+    print("Conflicts found", count)
+
+
 def main(argv):
     output = None
-    path = "/home/abder/lttng-traces/kernelspace-tracing-20161206-133458"
+    start_recording = 0
+    path = "/home/abder/lttng-traces/kernelspace-tracing-20161207-135859"
     try:
         path = argv[0]
     except:
@@ -76,7 +101,7 @@ def main(argv):
     count = 0
     for event in traces.events:
         # count += 1
-        # if count > 10000:
+        # if count > 18000:
         #     break
         if event.name != "kvm_x86_hypercall":
             continue
@@ -88,23 +113,35 @@ def main(argv):
         nr = fields['nr']
         is_sched_switch = (nr == SCHED_SWITCH_HYPERCALL_NR)
         if is_sched_switch:
-            print("sched_switch",event.timestamp)
-            trace_events.append({
-                'pid': 0,
-                'tid': 0,
-                'name': 'sched_switch',
-                'ph': 'i',
-                'ts': ns_to_us(event.timestamp),
-                's': 'g',
-                'args': {
-                    'wake_cpu': fields['a0']
-                },
-            })
+            # trace_events.append({
+            #     'pid': 0,
+            #     'tid': 0,
+            #     'name': 'sched_switch',
+            #     'ph': 'i',
+            #     'ts': ns_to_us(event.timestamp),
+            #     's': 'g',
+            #     'args': {
+            #         'cpu': fields['a1'],
+            #         'success': fields['a0']
+            #     },
+            # })
+            nr
         else:
-            # function_name = get_kernel_symbol_name(function_address)
+            is_kernelspace = (nr == KERNELSPACE_HYPERCALL_NR)
+            is_userspace = (nr == USERSPACE_HYPERCALL_NR)
             function_address = fields['a0']
+            function_name = function_address
+            if is_kernelspace:
+                function_name = kernel_symbols.get_symbol_name(function_address)
+            if is_userspace:
+                function_name = program_symbols.get_symbol_name(function_address)
+            if function_name == "main":
+                start_recording = True
+
+            if not start_recording:
+                continue
+
             is_entry = fields['a1'] == 0
-            # Handle entry
             if is_entry:
                 # add entry event until we find the exit event
                 if function_address not in function_entry_map:
@@ -112,54 +149,82 @@ def main(argv):
 
                 function_entry_map[function_address].append({
                     'pid': 0,
-                    'tid': 0,
+                    'tid': nr,
                     'name': function_address,
                     'ph': 'X',
-                    # 'cat': event.name,
                     'dur': 0,
                     'ts': event.timestamp,
-                    'args': {'cpu_id_entry': fields['cpu_id']},
+                    'args': {
+                        'cpu_id_entry': fields['cpu_id'],
+                        'cpu': fields['a3']
+                    },
                 })
             # Handle exit
             elif function_address in function_entry_map:
                 if len(function_entry_map[function_address]) == 0:
-                    print("not found ", function_address, kernel_symbols.get_kernel_symbol_name(function_address))
+                    print("not found", function_address, function_name)
                     continue
                 original_duration = fields['a2']
+                depth = fields['a3']
                 event_json = function_entry_map[function_address].pop()
-                event_json['name'] = kernel_symbols.get_symbol_name(function_address)
+                event_json['name'] = function_name
+                if depth == 0:
+                    level0_calls.append({
+                        'start': event_json['ts'],
+                        'end': event.timestamp,
+                        'name': function_name
+                    })
                 duration = event.timestamp - event_json['ts']
                 event_json['ts'] = ns_to_us(event_json['ts'])
                 event_json['dur'] = ns_to_us(duration)
                 event_json['tdur'] = ns_to_us(original_duration)
-                event_json['tid'] = fields['cpu_id']
-                event_json['args']['duration_ms'] = ns_to_ms(original_duration)
+                event_json['args']['duration_ns'] = original_duration
                 event_json['args']['cpu_id_exit'] = fields['cpu_id']
                 event_json['args']['depth'] = fields['a3']
                 event_json['args']['overhead'] = round((1-(original_duration/duration)) * 100, 2)
                 event_json['args']['wall_duration_ns'] = duration
                 trace_events.append(event_json)
+                if function_name == "main":
+                    start_recording = False
+
                 add_overhead(event_json['name'], event_json['args']['overhead'])
 
     print("--- Done ---")
-    # {"pid":15702,"tid":2,"ts":0,"ph":"M","cat":"__metadata","name":"process_labels","args":{"labels":"LTTng: an open source tracing framework for Linux"}},
+    trace_events.append({
+        'pid': 0,
+        'tid': KERNELSPACE_HYPERCALL_NR,
+        'name': "thread_name",
+        'ph': 'M',
+        'cat': "__metadata",
+        'args': {'name': "Kernel space"},
+    })
+    trace_events.append({
+        'pid': 0,
+        'tid': USERSPACE_HYPERCALL_NR,
+        'name': "thread_name",
+        'ph': 'M',
+        'cat': "__metadata",
+        'args': {'name': "User space"},
+    })
     trace_events.append({
         'pid': 0,
         'tid': 0,
-        'name': "process_labels",
+        'name': "process_name",
         'ph': 'M',
         'cat': "__metadata",
-        'args': {'labels': "Kernel space"},
+        'args': {'name': "VM 0"},
     })
-
-    content = json.dumps({"traceEvents": trace_events})
+    content = json.dumps({
+        "traceEvents": trace_events,
+        "displayTimeUnit": "ns"
+    })
     with open(output, "w") as f:
         f.write(content)
     overhead_content = json.dumps({"func_overheads": overheads})
     overhead_output = os.path.join(os.path.dirname(output), "overhead_"+os.path.basename(output))
     with open(overhead_output, "w") as f:
         f.write(overhead_content)
-
+    detect_conflicts(level0_calls)
 
 if __name__ == "__main__":
     main(sys.argv[1:])

@@ -4,6 +4,7 @@ import argparse
 import os
 import sh
 
+
 t = "/sys/kernel/debug/tracing"
 
 def write_to(base, name, data):
@@ -31,6 +32,9 @@ def status(args):
 
 if __name__=="__main__":
 
+    if os.getuid() != 0:
+        print("Administrator privilege required, please use sudo")
+        return
 
     cmds = { "enable": enable_ftrace,
              "disable": disable_ftrace,

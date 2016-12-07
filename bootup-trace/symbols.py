@@ -3,12 +3,12 @@
 import sys
 import os
 
-
 class Symbols:
-    bst = []
-    mappings = dict()
 
     def __init__(self, filepath):
+        self.filepath = filepath
+        self.bst = []
+        self.mappings = dict()
         with open(filepath) as f:
             lines = f.readlines()
             for line in lines:

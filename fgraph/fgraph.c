@@ -57,7 +57,7 @@ static atomic_t returns = ATOMIC_INIT(0);
 static void notrace find_for_each_tracepoint(struct tracepoint *tp, void *priv)
 {
 	struct Query *q = priv;
-	if (strcmp(tp->name, q->name)) {
+	if (strcmp(tp->name, q->name) == 0) {
 		q->tp = tp;
 	}
 }
@@ -65,8 +65,10 @@ static void notrace find_for_each_tracepoint(struct tracepoint *tp, void *priv)
 static void notrace sched_switch_probe(void *__data, struct task_struct *p, int success)
 {
 	preempt_disable_notrace();
-	// printk("sched_switch : wake_cpu=%d on_cpu=%d pid=%d state=%d \n",p->wake_cpu, p->on_cpu, p->pid, p->state);
-	do_hypercall(SCHED_SWITCH_HYPERCALL_NR, p->wake_cpu, p->pid, p->state, success);
+	// if(p)
+	// 	do_hypercall(SCHED_SWITCH_HYPERCALL_NR, success, p->state, 0, 0);
+	int cpu = smp_processor_id();
+	do_hypercall(SCHED_SWITCH_HYPERCALL_NR, success, cpu, 0, 0);
 	preempt_enable_notrace();
 }
 
@@ -75,6 +77,7 @@ static void notrace sched_switch_probe(void *__data, struct task_struct *p, int 
 static int notrace fgraph_entry(struct ftrace_graph_ent *trace)
 {
 	int ret = 1;
+	int cpu = 0;
 	// For now, only trace normal context
 	if (in_interrupt())
 		return 0;
@@ -82,7 +85,7 @@ static int notrace fgraph_entry(struct ftrace_graph_ent *trace)
 	preempt_disable_notrace();
 
 	// record event :
-	int cpu = smp_processor_id();
+	cpu = smp_processor_id();
 	do_hypercall(HYPERCALL_NR, trace->func, FUNCTION_ENTRY, 0, cpu);
 	// atomic_inc(&entries);
 
@@ -94,8 +97,7 @@ static int notrace fgraph_entry(struct ftrace_graph_ent *trace)
 static void notrace fgraph_return(struct ftrace_graph_ret *trace)
 {
 	preempt_disable_notrace();
-	// record event : 
-	
+	// record event : 	
 	do_hypercall(HYPERCALL_NR, trace->func, FUNCTION_EXIT, (trace->rettime - trace->calltime), trace->depth);
 	// atomic_inc(&returns);
 	preempt_enable_notrace();
@@ -130,7 +132,6 @@ static int __init fgraph_init(void)
 		return -1;
 	}
 
-
 	ret = register_ftrace_graph_sym(fgraph_return, fgraph_entry);
 	if (ret) {
 		printk("register fgraph hooks failed ret=%d\n", ret);
@@ -146,14 +147,13 @@ module_init(fgraph_init);
 
 static void __exit fgraph_exit(void)
 {
-	// unregister sched_switch
-	tracepoint_probe_unregister(query.tp, sched_switch_probe, NULL);
 	// unregister ftrace
 	unregister_ftrace_graph_sym();
+	// unregister sched_switch
+	tracepoint_probe_unregister(query.tp, sched_switch_probe, NULL);
 	synchronize_rcu();
 
 	printk("fgraph removed\n");
-	printk("entries=%d returns=%d\n", atomic_read(&entries), atomic_read(&returns));
 }
 module_exit(fgraph_exit);
 
