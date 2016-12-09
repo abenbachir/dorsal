@@ -34,12 +34,12 @@
 #define FUNCTION_ENTRY 0
 #define FUNCTION_EXIT 1
 
-#define do_hypercall(hypercall_nr, arg1, arg2, arg3, arg4) \
-__asm__ __volatile__(".byte 0x0F,0x01,0xC1\n"::"a"(hypercall_nr), \
-	"b"(arg1), \
-	"c"(arg2), \
-	"d"(arg3), \
-	"S"(arg4))
+#define do_hypercall(nr, p1, p2, p3, p4) \
+__asm__ __volatile__(".byte 0x0F,0x01,0xC1\n"::"a"(nr), \
+	"b"(p1), \
+	"c"(p2), \
+	"d"(p3), \
+	"S"(p4))
 
 struct Query {
 	struct tracepoint *tp;
@@ -86,7 +86,7 @@ static int notrace fgraph_entry(struct ftrace_graph_ent *trace)
 
 	// record event :
 	cpu = smp_processor_id();
-	do_hypercall(HYPERCALL_NR, trace->func, FUNCTION_ENTRY, 0, cpu);
+	do_hypercall(HYPERCALL_NR, trace->func, FUNCTION_ENTRY, cpu, trace->depth);
 	// atomic_inc(&entries);
 
 	preempt_enable_notrace();

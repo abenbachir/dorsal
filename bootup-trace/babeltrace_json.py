@@ -16,7 +16,7 @@ USERSPACE_HYPERCALL_NR = 2000
 KERNELSPACE_HYPERCALL_NR = 1000
 SCHED_SWITCH_HYPERCALL_NR = 1001
 
-level0_calls = []
+level_calls = {}
 
 def ns_to_us(timestamp):
     return (timestamp/float(1000))
@@ -34,18 +34,19 @@ def format_value(field_type, value):
     else:
         return str(value)
 
+def add_level_call(call, depth):
+    if depth not in level_calls:
+        level_calls[depth] = []
+    level_calls[depth].append(call)
 
-def add_overhead(func_name, overhead):
-    if func_name not in overheads:
-        overheads[func_name] = []
-    overheads[func_name].append(overhead)
-
-
-def has_conflicts(call, calls):
+def has_conflicts(call, depth):
+    if depth not in level_calls:
+        return False
+    calls = level_calls[depth]
     for i in range(0, len(calls)):
         call1 = calls[i]
         call2 = call
-        if not ((call1["start"] < call2["start"] and call1["end"] < call2["start"]) \
+        if not ((call1["start"] < call2["start"] and call1["end"] < call2["start"])
                         or (call2["start"] < call1["start"] and call2["end"] < call1["start"])):
             return True
 
@@ -57,16 +58,26 @@ def detect_conflicts(calls):
                 continue
             call1 = calls[i]
             call2 = calls[j]
-            if not ( (call1["start"] < call2["start"] and call1["end"] < call2["start"]) \
+            if not ( (call1["start"] < call2["start"] and call1["end"] < call2["start"])
                 or (call2["start"] < call1["start"] and call2["end"] < call1["start"])):
                 count += 1
     print("Conflicts found", count)
 
 
+def add_metadata(events, name, pid, tid, args):
+    events.append({
+        'pid': pid,
+        'tid': tid,
+        'name': name,
+        'ph': 'M',
+        'cat': "__metadata",
+        'args': args,
+    })
+
 def main(argv):
     output = None
     start_recording = 0
-    path = "/home/abder/lttng-traces/kernelspace-tracing-20161207-135859"
+    path = "~/lttng-traces/kernelspace-tracing-20161207-135859"
     try:
         path = argv[0]
     except:
@@ -95,16 +106,13 @@ def main(argv):
     if trace_handle is None:
         raise IOError("Error adding trace")
 
-    print("--- Converting traces ---")
-    # {"pid":0,"tid":0,"ts":1739397949814,"ph":"X","cat":"shutdown","name":"BrowserMainRunner","dur":186340,"tdur":6682,"tts":346077,"args":{}},
     trace_events = []
-    count = 0
+    statistics = "function_name,guest_duration,host_duration,overhead,depth\n"
+    print("--- Converting traces ---")
     for event in traces.events:
-        # count += 1
-        # if count > 18000:
-        #     break
         if event.name != "kvm_x86_hypercall":
             continue
+
         fields = dict()
         for k, v in event.items():
             field_type = event._field(k).type
@@ -147,6 +155,12 @@ def main(argv):
                 if function_address not in function_entry_map:
                     function_entry_map[function_address] = []
 
+                depth = fields["a3"]
+                if is_kernelspace:
+                    call = {'start': event.timestamp, 'end': event.timestamp + 10, 'name': function_name}
+                    if has_conflicts(call, depth):
+                        continue
+
                 function_entry_map[function_address].append({
                     'pid': 0,
                     'tid': nr,
@@ -155,8 +169,9 @@ def main(argv):
                     'dur': 0,
                     'ts': event.timestamp,
                     'args': {
-                        'cpu_id_entry': fields['cpu_id'],
-                        'cpu': fields['a3']
+                        # 'cpu_id_entry': fields['cpu_id'],
+                        'cpu': fields['a2'],
+                        'depth': depth
                     },
                 })
             # Handle exit
@@ -164,67 +179,50 @@ def main(argv):
                 if len(function_entry_map[function_address]) == 0:
                     print("not found", function_address, function_name)
                     continue
-                original_duration = fields['a2']
-                depth = fields['a3']
                 event_json = function_entry_map[function_address].pop()
+                guest_duration = fields['a2']
+                depth = fields['a3']
+                host_duration = event.timestamp - event_json['ts']
+                overhead = round((1 - (guest_duration / host_duration)) * 100, 2)
+                # if is_kernelspace:
+                #     call = {'start': event_json['ts'], 'end': event.timestamp, 'name': function_name}
+                #     if has_conflicts(call, depth):
+                #         continue
+                #     add_level_call(call, depth)
+
                 event_json['name'] = function_name
-                if depth == 0:
-                    level0_calls.append({
-                        'start': event_json['ts'],
-                        'end': event.timestamp,
-                        'name': function_name
-                    })
-                duration = event.timestamp - event_json['ts']
                 event_json['ts'] = ns_to_us(event_json['ts'])
-                event_json['dur'] = ns_to_us(duration)
-                event_json['tdur'] = ns_to_us(original_duration)
-                event_json['args']['duration_ns'] = original_duration
-                event_json['args']['cpu_id_exit'] = fields['cpu_id']
-                event_json['args']['depth'] = fields['a3']
-                event_json['args']['overhead'] = round((1-(original_duration/duration)) * 100, 2)
-                event_json['args']['wall_duration_ns'] = duration
+                event_json['dur'] = ns_to_us(host_duration)
+                event_json['tdur'] = ns_to_us(guest_duration)
+                event_json['args']['depth'] = depth
+                event_json['args']['overhead'] = overhead
+                event_json['args']['guest_duration_ns'] = guest_duration
+                # event_json['args']['cpu_id_exit'] = fields['cpu_id']
+                event_json['args']['host_duration_ns'] = host_duration
                 trace_events.append(event_json)
+                statistics += '"{}",{},{},{}\n'.format(function_name, guest_duration, host_duration, overhead, depth)
+
                 if function_name == "main":
                     start_recording = False
-
-                add_overhead(event_json['name'], event_json['args']['overhead'])
-
     print("--- Done ---")
-    trace_events.append({
-        'pid': 0,
-        'tid': KERNELSPACE_HYPERCALL_NR,
-        'name': "thread_name",
-        'ph': 'M',
-        'cat': "__metadata",
-        'args': {'name': "Kernel space"},
-    })
-    trace_events.append({
-        'pid': 0,
-        'tid': USERSPACE_HYPERCALL_NR,
-        'name': "thread_name",
-        'ph': 'M',
-        'cat': "__metadata",
-        'args': {'name': "User space"},
-    })
-    trace_events.append({
-        'pid': 0,
-        'tid': 0,
-        'name': "process_name",
-        'ph': 'M',
-        'cat': "__metadata",
-        'args': {'name': "VM 0"},
-    })
+    add_metadata(trace_events, "thread_name", 0, KERNELSPACE_HYPERCALL_NR, {'name': "Kernelspace"})
+    add_metadata(trace_events, "thread_name", 0, USERSPACE_HYPERCALL_NR, {'name': "Userspace"})
+    add_metadata(trace_events, "process_name", 0, USERSPACE_HYPERCALL_NR, {'name': "VM0"})
+    add_metadata(trace_events, "process_labels", 0, USERSPACE_HYPERCALL_NR, {'labels': "Ubuntu 16.04"})
+    add_metadata(trace_events, "thread_sort_index", 0, KERNELSPACE_HYPERCALL_NR, {'sort_index': -5})
+    add_metadata(trace_events, "thread_sort_index", 0, USERSPACE_HYPERCALL_NR, {'sort_index': -10})
+
     content = json.dumps({
         "traceEvents": trace_events,
         "displayTimeUnit": "ns"
     })
     with open(output, "w") as f:
         f.write(content)
-    overhead_content = json.dumps({"func_overheads": overheads})
-    overhead_output = os.path.join(os.path.dirname(output), "overhead_"+os.path.basename(output))
-    with open(overhead_output, "w") as f:
-        f.write(overhead_content)
-    detect_conflicts(level0_calls)
+    # detect_conflicts(level_calls)
+    statistics_output = "./rscript/statistics_"+os.path.splitext(os.path.basename(output))[0]+".csv"
+    with open(statistics_output, "w") as file:
+        file.write(statistics)
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])

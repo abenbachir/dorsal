@@ -28,14 +28,10 @@ def list_options(args):
 def status(args):
     current_tracer = sh.cat(t+"/current_tracer").strip()
     is_enabled = sh.cat(t+"/tracing_on").strip() == "1"
-    print "current_tracer", ("enabled" if is_enabled else "disabled")
+    print "current_tracer", current_tracer, ("enabled" if is_enabled else "disabled")
 
-if __name__=="__main__":
 
-    if os.getuid() != 0:
-        print("Administrator privilege required, please use sudo")
-        return
-
+def main():
     cmds = { "enable": enable_ftrace,
              "disable": disable_ftrace,
              "show": show_trace,
@@ -51,3 +47,12 @@ if __name__=="__main__":
     args = parser.parse_args()
     c = cmds.get(args.cmd, not_a_command)
     c(args)
+
+if __name__=="__main__":
+
+    if os.getuid() != 0:
+        print("Administrator privilege required, please use sudo")
+    else:
+        main()
+
+    
