@@ -62,13 +62,14 @@ static void notrace find_for_each_tracepoint(struct tracepoint *tp, void *priv)
 	}
 }
 
-static void notrace sched_switch_probe(void *__data, struct task_struct *p, int success)
+static void notrace sched_switch_probe(void *ignore, bool preempt,
+		   struct task_struct *prev, struct task_struct *next)
 {
 	preempt_disable_notrace();
-	// if(p)
-	// 	do_hypercall(SCHED_SWITCH_HYPERCALL_NR, success, p->state, 0, 0);
+
 	int cpu = smp_processor_id();
-	do_hypercall(SCHED_SWITCH_HYPERCALL_NR, success, cpu, 0, 0);
+	do_hypercall(SCHED_SWITCH_HYPERCALL_NR, prev->pid, prev->tgid, next->pid, next->tgid);
+	// printk("sched_switch_probe : prev_pid=%d prev_tgid=%d next_pid=%d next_tgid=%d\n", prev->pid, prev->tgid, next->pid, next->tgid);
 	preempt_enable_notrace();
 }
 

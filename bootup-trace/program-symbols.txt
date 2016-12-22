@@ -2,6 +2,7 @@
                  U clock_gettime@@GLIBC_2.17
                  U fopen@@GLIBC_2.2.5
                  U fread@@GLIBC_2.2.5
+                 U free@@GLIBC_2.2.5
                  U fseek@@GLIBC_2.2.5
                  U ftell@@GLIBC_2.2.5
                  w __gmon_start__
@@ -30,39 +31,39 @@
 0000000000400274 r .note.gnu.build-id
 0000000000400298 r .gnu.hash
 00000000004002c0 r .dynsym
-0000000000400440 r .dynstr
-0000000000400516 r .gnu.version
-0000000000400538 r .gnu.version_r
-0000000000400578 r .rela.dyn
-0000000000400590 r .rela.plt
-00000000004006b0 T _init
-00000000004006b0 t .init
-00000000004006d0 t .plt
-00000000004007a0 t .plt.got
-00000000004007b0 T _start
-00000000004007b0 t .text
-00000000004007e0 t deregister_tm_clones
-0000000000400820 t register_tm_clones
-0000000000400860 t __do_global_dtors_aux
-0000000000400880 t frame_dummy
-00000000004008a6 T merge
-0000000000400b07 T mergeSort
-0000000000400bb3 T initializeArray
-0000000000400d87 T main
-0000000000400ebd T trace_begin
-0000000000400ec4 T trace_end
-0000000000400ecb T __cyg_profile_func_enter
-0000000000400efa T __cyg_profile_func_exit
-0000000000400f30 T __libc_csu_init
-0000000000400fa0 T __libc_csu_fini
-0000000000400fa4 T _fini
-0000000000400fa4 t .fini
-0000000000400fb0 R _IO_stdin_used
-0000000000400fb0 r .rodata
-0000000000400fe0 r .eh_frame_hdr
-0000000000400fe0 r __GNU_EH_FRAME_HDR
-0000000000401050 r .eh_frame
-0000000000401240 r __FRAME_END__
+0000000000400458 r .dynstr
+0000000000400532 r .gnu.version
+0000000000400558 r .gnu.version_r
+0000000000400598 r .rela.dyn
+00000000004005b0 r .rela.plt
+00000000004006e8 T _init
+00000000004006e8 t .init
+0000000000400710 t .plt
+00000000004007f0 t .plt.got
+0000000000400800 T _start
+0000000000400800 t .text
+0000000000400830 t deregister_tm_clones
+0000000000400870 t register_tm_clones
+00000000004008b0 t __do_global_dtors_aux
+00000000004008d0 t frame_dummy
+00000000004008f6 T merge
+0000000000400b57 T mergeSort
+0000000000400c03 T initializeArray
+0000000000400dd7 T main
+0000000000400f30 T trace_begin
+0000000000400f37 T trace_end
+0000000000400f3e T __cyg_profile_func_enter
+0000000000400f6d T __cyg_profile_func_exit
+0000000000400fa0 T __libc_csu_init
+0000000000401010 T __libc_csu_fini
+0000000000401014 T _fini
+0000000000401014 t .fini
+0000000000401020 R _IO_stdin_used
+0000000000401020 r .rodata
+0000000000401060 r .eh_frame_hdr
+0000000000401060 r __GNU_EH_FRAME_HDR
+00000000004010d0 r .eh_frame
+00000000004012c0 r __FRAME_END__
 0000000000601e00 t __frame_dummy_init_array_entry
 0000000000601e00 t .init_array
 0000000000601e00 t __init_array_start
