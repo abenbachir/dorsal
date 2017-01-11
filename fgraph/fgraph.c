@@ -29,7 +29,7 @@
 #include <linux/preempt.h>
 #include <linux/tracepoint.h>
 #include <linux/proc_fs.h>
-#include <asm/uaccess.h>
+#include <asm-generic/uaccess.h>
 #include <linux/slab.h>
 
 #define SCHED_SWITCH_HYPERCALL_NR 1001
@@ -55,10 +55,6 @@ struct Query {
 static int (*register_ftrace_graph_sym)(trace_func_graph_ret_t retfunc, trace_func_graph_ent_t entryfunc);
 static void (*unregister_ftrace_graph_sym)(void);
 
-
-
-static atomic_t entries = ATOMIC_INIT(0);
-static atomic_t returns = ATOMIC_INIT(0);
 
 
 static void notrace find_for_each_tracepoint(struct tracepoint *tp, void *priv)
@@ -107,6 +103,8 @@ static int notrace fgraph_entry(struct ftrace_graph_ent *trace)
 // called by ftrace_return_to_handler()
 static void notrace fgraph_return(struct ftrace_graph_ret *trace)
 {
+	if(!tracing_enabled)
+		return 0;
 	preempt_disable_notrace();
 	// record event : 	
 	do_hypercall(HYPERCALL_NR, trace->func, FUNCTION_EXIT, (trace->rettime - trace->calltime), trace->depth);
@@ -115,33 +113,56 @@ static void notrace fgraph_return(struct ftrace_graph_ret *trace)
 	return;
 }
 
-static ssize_t notrace read_proc(struct file *filp, char *buf, size_t count, loff_t *offp)
+static ssize_t notrace proc_read(struct file *filp, char *buf, size_t count, loff_t *offp)
 {	
-	int ret;
-	ret = sprintf(buf, "Tracing enabled\n");
+	printk(KERN_INFO "proc called read\n");
+	int ret = 0;
+	// ret = sprintf(buf, "Tracing enabled\n");
 	return ret;
 }
-static ssize_t notrace write_proc(struct file *filp, const char *buf, size_t count, loff_t *offp)
+static char msg[128];
+static ssize_t notrace proc_write(struct file *filp, const char __user *buf, size_t count, loff_t *offp)
 {
-	long input = 0;
-	// kstrtol(buf, 10, input);
-	// copy_from_user(msg,buf,count);
-	printk("Write proc: buf=%s, input=%d", buf, input);
-	printk("Tracing %s", tracing_enabled ? "disabled" : "enabled");
+	printk(KERN_INFO "proc called write\n");
+
+	tracing_enabled = (count == 2 /*&& buf[0] == '1'*/);
+	// ret = kstrtoul_from_user(buf, count, 10, &val);
+	// if (ret)
+	// 	return ret;	
+
+	copy_from_user(msg,buf,count);
+	// printk("Write proc: buf=%s", msg);
+	printk("Tracing %s, count=%d", (tracing_enabled ? "disabled" : "enabled"), count);
+
 	return count;
 } 
+static int proc_open(struct inode * sp_inode, struct file *sp_file)
+{
+	printk(KERN_INFO "proc called open\n");
+	return 0;
+}
+static int proc_release(struct inode *sp_indoe, struct file *sp_file)
+{
+	printk(KERN_INFO "proc called release\n");
+	return 0;
+}
 
 struct file_operations proc_fops = {
-	read: read_proc,
-	write: write_proc
+	.open = proc_open,
+	.read = proc_read,
+	.write = proc_write,
+	.release = proc_release	
 };
+
+
+
 
 static int __init fgraph_init(void)
 {
 	int ret;
 
-	proc_create("fgraph", 0, NULL, &proc_fops);
-
+	proc_create("fgraph", 0777, NULL, &proc_fops);
+/*
 	query.tp = NULL;
 	query.name = "sched_switch";
 
@@ -171,7 +192,7 @@ static int __init fgraph_init(void)
 		printk("register fgraph hooks failed ret=%d\n", ret);
 		goto out;
 	}
-
+*/
 	printk("fgraph loaded\n");
 
 out:
@@ -182,10 +203,9 @@ module_init(fgraph_init);
 static void __exit fgraph_exit(void)
 {
 	remove_proc_entry("fgraph", NULL);
-	// unregister ftrace
-	unregister_ftrace_graph_sym();
-	// unregister sched_switch
-	tracepoint_probe_unregister(query.tp, sched_switch_probe, NULL);
+
+	// unregister_ftrace_graph_sym();
+	// tracepoint_probe_unregister(query.tp, sched_switch_probe, NULL);
 	synchronize_rcu();
 
 	printk("fgraph removed\n");
