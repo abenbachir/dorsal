@@ -114,8 +114,12 @@ static void notrace hypergraph_return(struct ftrace_graph_ret *trace)
 static ssize_t notrace proc_read(struct file *filp, char *buf, size_t count, loff_t *offp)
 {	
 	printk(KERN_INFO "proc called read\n");
-	printk("Tracing %s \n", tracing_enabled ? "enabled" : "disabled");
-	return 0;
+	int size = 17;
+	char mybuf[] = "Tracing disabled\n";
+	//sprintf(mybuf, "Tracing %s \n", tracing_enabled ? "enabled" : "disabled"); 
+	printk(KERN_INFO "%s\n", mybuf);
+	copy_from_user(buf,mybuf,size);
+	return size;
 }
 
 static ssize_t notrace proc_write(struct file *filp, const char __user *buf, size_t count, loff_t *offp)
