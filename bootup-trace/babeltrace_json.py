@@ -140,9 +140,9 @@ def main(argv):
             function_address = fields['a0']
             function_name = function_address
             if is_kernelspace:
-                function_name = kernel_symbols.get_symbol_name(function_address)
+                function_name = kernel_symbols.get_name(function_address)
             if is_userspace:
-                function_name = program_symbols.get_symbol_name(function_address)
+                function_name = program_symbols.get_name(function_address)
             if function_name == "main":
                 start_recording = True
 

@@ -12,15 +12,19 @@ class Symbols:
         with open(filepath) as f:
             lines = f.readlines()
             for line in lines:
-                values = line.split(' ')
-                if not values[0]:
-                    continue
-                ip = int('0x' + values[0], 16)
-                mode = values[1]
-                function_name = values[2]
-                # binarySearchTree[ip] = function_name
-                self.bst.append(ip)
-                self.mappings[ip] = function_name.rstrip()
+                try:
+                    values = line.strip().split(' ')
+                    if not values[0]:
+                        continue
+                    ip = values[0]
+                    is_hex = len(ip) == 16 or 'f' in ip
+                    ip = int('0x' + ip, 16) if is_hex else int(ip)
+                    function_name = values[1] if len(values) <= 2 else values[2]
+                    # binarySearchTree[ip] = function_name
+                    self.bst.append(ip)
+                    self.mappings[ip] = function_name.rstrip()
+                except Exception as ex:
+                    print(ex)
 
     def bst_lookup(self, value, start, end):
         if end - start <= 1:
@@ -36,10 +40,11 @@ class Symbols:
         elif middle_value == value:
             return value
 
-    def get_symbol_name(self, instruction_pointer):
-        if instruction_pointer in self.mappings:
-            return self.mappings[instruction_pointer]
-        else: # loop for
-            symbol = self.bst_lookup(instruction_pointer, 0, len(self.bst) - 1)
-            mapping = self.mappings[symbol]
-            return mapping
+    def get_name(self, ip):
+        if ip in self.mappings:
+            return self.mappings[ip]
+        # else:  # loop for
+            # symbol = self.bst_lookup(ip, 0, len(self.bst) - 1)
+            # mapping = self.mappings[symbol]
+            # return mapping
+        return ip

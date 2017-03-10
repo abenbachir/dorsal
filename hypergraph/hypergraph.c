@@ -25,6 +25,7 @@
 #include <linux/printk.h>
 #include <linux/kallsyms.h>
 #include <linux/types.h>
+#include <linux/string.h>
 #include <linux/preempt.h>
 #include <linux/tracepoint.h>
 #include <linux/proc_fs.h>
@@ -43,6 +44,7 @@ __asm__ __volatile__(".byte 0x0F,0x01,0xC1\n"::"a"(nr), \
 	"d"(p3), \
 	"S"(p4))
 
+static int len_check = 1;
 static int tracing_enabled = 0;
 
 struct Query {
@@ -113,11 +115,17 @@ static void notrace hypergraph_return(struct ftrace_graph_ret *trace)
  
 static ssize_t notrace proc_read(struct file *filp, char *buf, size_t count, loff_t *offp)
 {	
+	if (len_check)
+		len_check = 0;
+	else {
+		len_check = 1;
+		return 0;
+	}
 	printk(KERN_INFO "proc called read\n");
 	int size = 17;
-	char mybuf[] = "Tracing disabled\n";
-	//sprintf(mybuf, "Tracing %s \n", tracing_enabled ? "enabled" : "disabled"); 
-	printk(KERN_INFO "%s\n", mybuf);
+	// char mybuf[size];
+	// vsnprintf(mybuf, size-1, "Tracing %s\n", (tracing_enabled ? "enabled " : "disabled") ); 
+	printk("Tracing %s \n", tracing_enabled ? "enabled" : "disabled");
 	copy_from_user(buf,mybuf,size);
 	return size;
 }

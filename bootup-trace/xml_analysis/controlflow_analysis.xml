@@ -1,0 +1,89 @@
+<tmfxml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../org.eclipse.tracecompass.tmf.analysis.xml.core/src/org/eclipse/tracecompass/tmf/analysis/xml/core/module/xmlDefinition.xsd">
+    <pattern version="1" id="VM 1">
+        <head>
+            <traceType id="org.eclipse.linuxtools.lttng2.kernel.tracetype"/>
+            <label value="VM hypercall control flow"/>
+        </head>
+        <!--
+         callstack process="Views/*" thread="Threads/*" callstack="callstack" /
+        -->
+        <patternHandler>
+            <!--  CONDITIONS  -->
+            <!--
+             Test if the current running thread is equal to the current scenario thread
+            -->
+            <test id="schedswitch">
+                <if>
+                    <condition>
+                        <stateValue type="eventField" value="nr" forcedType="int"/>
+                        <stateValue type="int" value="1001" forcedType="int"/>
+                    </condition>
+                </if>
+            </test>
+            <!--  ACTIONS  -->
+            <!--  Actions and test for time graph view threads  -->
+
+            <action id="update_current_thread">
+                <stateChange>
+                    <stateAttribute type="constant" value="thread"/>
+                    <stateAttribute type="query">
+                        <stateAttribute type="constant" value="Current thread"/>
+                        <stateAttribute type="eventField" value="cpu"/>
+                    </stateAttribute>
+                    <stateValue type="int" value="0" />
+                </stateChange>
+                <stateChange>
+                    <stateAttribute type="constant" value="thread" />
+                    <stateAttribute type="eventField" value="a2" />
+                    <stateValue type="int" value="1" />
+                </stateChange>
+                <stateChange>
+                    <stateAttribute type="constant" value="Current thread"/>
+                    <stateAttribute type="eventField" value="cpu"/>
+                    <stateValue type="eventField" value="a2" forcedType="int"/>
+                </stateChange>
+                <stateChange>
+                    <stateAttribute type="constant" value="Current process"/>
+                    <stateAttribute type="eventField" value="cpu"/>
+                    <stateValue type="eventField" value="a3" forcedType="int"/>
+                </stateChange>
+            </action>
+            <!--  FSMs  -->
+            <fsm id="sched_switch" initial="in_stat" multiple="false">
+                <state id="in_stat">
+                    <!--
+                     The state will stay here until we have a thread start event
+                    -->
+                    <transition event="kvm_x86_hypercall" cond="schedswitch" target="in_stat"
+                                action="update_current_thread"/>
+                </state>
+            </fsm>
+        </patternHandler>
+    </pattern>
+    <timeGraphView id="my.test.time.graph.view2">
+        <head>
+            <analysis id="VM 1" />
+            <label value="CPU view" />
+        </head>
+
+
+        <entry path="Current thread/*">
+            <display type="self" />
+        </entry>
+    </timeGraphView>
+    <timeGraphView id="my.test.time.graph.view">
+        <head>
+            <analysis id="VM 1" />
+            <label value="Control flow" />
+        </head>
+
+        <definedValue name="Not Running" value="0" color="#881111" />
+        <definedValue name="Running" value="1" color="#118811" />
+
+        <entry path="thread/*">
+            <display type="self" />
+        </entry>
+    </timeGraphView>
+
+</tmfxml>
