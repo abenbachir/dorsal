@@ -20,7 +20,7 @@ scp ~/$linuxsource/init/main.c ubuntu:~/linux/init/main.c
 #scp ~/$linuxsource/arch/x86/kernel/head64.c ubuntu:~/linux/arch/x86/kernel/head64.c
 
 
-ssh ubuntu 'cd linux; make -j4 && sudo make modules_install && sudo make install;'
+ssh ubuntu 'cd linux; make -j$(nproc) && sudo make modules_install && sudo make install;'
 
 #ssh ubuntu 'sudo shutdown now'
 #ssh ubuntu 'sudo reboot'

@@ -76,8 +76,8 @@ def main(argv):
     prev_process_name = ""
     next_process_name = ""
     for event in traces.events:
-        if count > max_count:
-            break
+        # if count > max_count:
+        #     break
         if event.name != "kvm_x86_hypercall":
             continue
 
@@ -115,11 +115,11 @@ def main(argv):
                 if is_entry:
                     count += 1
                 count_display = count if is_entry else ""
-                elapsed_time = timestamp - prev_timestamp if prev_timestamp > 0 else 0
+                elapsed_time = (timestamp - prev_timestamp)/100 if prev_timestamp > 0 else 0
                 prev_timestamp = timestamp
                 name = "{}() {{".format(function_name) if is_entry else "}} /* {} */".format(function_name)
                 # name = "{}() {{".format(function_name) if is_entry else "}"
-                print("{}\t{}) +{} ns\t\t [{}] | d={} | {} {}".format(count_display, cpu_id, elapsed_time, next_process_name, depth, "".join(['  ']*depth), name))
+                print("{}\t\t{}) +{} us\t\t [{}] | d={} | {} {}".format(count_display, cpu_id, elapsed_time, next_process_name, depth, "".join(['  ']*depth), name))
 
 
 if __name__ == "__main__":
