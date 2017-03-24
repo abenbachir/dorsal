@@ -5,10 +5,10 @@
 #include <babeltrace/ctf-writer/event-types.h>
 #include <babeltrace/ctf-writer/event-fields.h>
 #include <babeltrace/ctf-writer/stream-class.h>
-#include <babeltrace/ctf-ir/packet.h>
-#include <babeltrace/ref.h>
+// #include <babeltrace/ctf-ir/packet.h>
+// #include <babeltrace/ref.h>
 #include <babeltrace/ctf/events.h>
-#include <babeltrace/values.h>
+// #include <babeltrace/values.h>
 
 #include <string.h>
 #include <stdio.h>
@@ -16,7 +16,7 @@
 #include <float.h>
 #include <sys/stat.h>
 
-
+/* support babeltrace 1.5 and + */
 void main()
 {
     static char trace_path[] = "/tmp/ctfwriter_XXX";
@@ -36,19 +36,19 @@ void main()
     printf("Traces will be written at %s\n", trace_path);
     /* create writer */
     writer = bt_ctf_writer_create(trace_path);
-    trace = bt_ctf_writer_get_trace(writer);
+    // trace = bt_ctf_writer_get_trace(writer);
     bt_ctf_writer_add_environment_field(writer, "host", "abder");
 
     /* create clock */
     clock = bt_ctf_clock_create(clock_name);
     bt_ctf_clock_set_time(clock, current_time);
     bt_ctf_clock_set_description(clock, clock_description);
-    printf("Clock description is %s\n", bt_ctf_clock_get_description(clock));
-    printf("Clock frequency is %d\n", bt_ctf_clock_get_frequency(clock));
-    printf("Clock precision is %d\n", bt_ctf_clock_get_precision(clock));
-    printf("Clock is absolute: %s\n", bt_ctf_clock_get_is_absolute(clock));
-    bt_ctf_clock_get_time(clock, &get_time);
-    printf("Clock time is %d\n", get_time);
+    // printf("Clock description is %s\n", bt_ctf_clock_get_description(clock));
+    // printf("Clock frequency is %d\n", bt_ctf_clock_get_frequency(clock));
+    // printf("Clock precision is %d\n", bt_ctf_clock_get_precision(clock));
+    // printf("Clock is absolute: %s\n", bt_ctf_clock_get_is_absolute(clock));
+    // bt_ctf_clock_get_time(clock, &get_time);
+    // printf("Clock time is %d\n", get_time);
 
     bt_ctf_writer_add_clock(writer, clock);
 
@@ -93,7 +93,7 @@ void main()
     free(clock);
 	free(writer);
 	free(stream1);
-    free(trace);
+    // free(trace);
 	free(stream_class);
     free(float_type);
     return;
