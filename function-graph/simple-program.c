@@ -14,7 +14,7 @@ static long int array[] = { 7, 6, 57, 83, 79, 80, 47, 78, 82, 65, 80, 59, 0, 44,
 
 void merge(long int *arr, int size1, int size2) 
 {
-	sleep(0.5);
+//	sleep(0.5);
     int temp[size1+size2];
     int ptr1=0, ptr2=0;
 

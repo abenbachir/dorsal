@@ -41,7 +41,7 @@ void main()
 
     /* create clock */
     clock = bt_ctf_clock_create(clock_name);
-    bt_ctf_clock_set_time(clock, current_time);
+    // bt_ctf_clock_set_time(clock, current_time);
     bt_ctf_clock_set_description(clock, clock_description);
     // printf("Clock description is %s\n", bt_ctf_clock_get_description(clock));
     // printf("Clock frequency is %d\n", bt_ctf_clock_get_frequency(clock));
