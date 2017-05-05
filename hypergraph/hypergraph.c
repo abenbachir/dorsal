@@ -45,7 +45,7 @@ __asm__ __volatile__(".byte 0x0F,0x01,0xC1\n"::"a"(nr), \
 	"S"(p4))
 
 static int len_check = 1;
-static int tracing_enabled = 0;
+static int tracing_enabled = 1;
 
 struct Query {
 	struct tracepoint *tp;
@@ -71,7 +71,6 @@ static void notrace sched_switch_probe(void *ignore, bool preempt,
 	if(!tracing_enabled)
 		return;
 	preempt_disable_notrace();
-	int cpu = smp_processor_id();
 	do_hypercall(SCHED_SWITCH_HYPERCALL_NR, prev->pid, prev->tgid, next->pid, next->tgid);
 	// printk("sched_switch_probe : prev_pid=%d prev_tgid=%d next_pid=%d next_tgid=%d\n", prev->pid, prev->tgid, next->pid, next->tgid);
 	preempt_enable_notrace();
@@ -112,7 +111,7 @@ static void notrace hypergraph_return(struct ftrace_graph_ret *trace)
 	preempt_enable_notrace();
 	return;
 }
- 
+/*
 static ssize_t notrace proc_read(struct file *filp, char *buf, size_t count, loff_t *offp)
 {	
 	if (len_check)
@@ -159,13 +158,13 @@ struct file_operations proc_fops = {
 	.write = proc_write,
 	.release = proc_release	
 };
-
+*/
 
 static int __init hypergraph_init(void)
 {
 	int ret;
 
-	proc_create("hypergraph", 0666, NULL, &proc_fops);
+	// proc_create("hypergraph", 0666, NULL, &proc_fops);
 
 	query.tp = NULL;
 	query.name = "sched_switch";

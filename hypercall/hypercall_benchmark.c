@@ -10,8 +10,8 @@ static struct timespec ts_start, ts_end;
 #define toc(end) clock_gettime(CLOCK_MONOTONIC, &end)
 #define elapsed_nsec(start, end) (end.tv_nsec + 1E9 * end.tv_sec) - (start.tv_nsec + 1E9 * start.tv_sec)
 // #define do_hypercall(hypercall_nr,payload,uid, arg1, arg2, arg3) asm volatile(".byte 0x0F,0x01,0xC1\n"::"a"(hypercall_nr), "b"(payload), "c"(uid), "d"(arg1), "e"(arg2), "f"(arg3))
-#define do_hypercall(hypercall_nr,payload,uid, arg1, arg2) asm volatile(".byte 0x0F,0x01,0xC1\n"::"a"(hypercall_nr), "b"(payload), "c"(uid), "d"(arg1), "e"(arg2))
-#define do_hypercall2(hypercall_nr,payload) asm volatile(".byte 0x0F,0x01,0xC1\n"::"a"(hypercall_nr), "b"(payload))
+#define do_hypercall(hypercall_nr,payload,uid, arg1, arg2) \
+    __asm__ __volatile__(".byte 0x0F,0x01,0xC1\n"::"a"(hypercall_nr), "b"(payload), "c"(uid), "d"(arg1), "S"(arg2))
 
 // static inline void do_hypercall(unsigned int hypercall_nr, int payload, unsigned long uid)
 // {
@@ -46,7 +46,7 @@ int main(int argc, char** argv)
     // tic(start);
     for ( i=0; i < repeat; i++) {
         tic(ts_start);
-        do_hypercall(101, 0xca, 0xce, 0xfa, 0x100);
+        do_hypercall(101, 0, 0, 0, 0); // ts_start.tv_nsec + 1E9 * ts_start.tv_sec
         toc(ts_end);
         unsigned long int ns = elapsed_nsec(ts_start, ts_end);
         printf("%lu\n", ns);

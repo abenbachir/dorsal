@@ -3393,23 +3393,23 @@ sched_switch  |  pid:10->1, tgid:10->1
 	5) +496 ns [systemd] | d=1 |    } /* kmem_cache_alloc_trace */
 1691	5) +465 ns [systemd] | d=1 |    kstrdup_const() {
 	5) +500 ns [systemd] | d=1 |    } /* kstrdup_const */
-1692	5) +466 ns [systemd] | d=1 |    mutex_lock() {
-1693	5) +481 ns [systemd] | d=2 |      _cond_resched() {
+	5) +466 ns [systemd] | d=1 |    mutex_lock() {
+	5) +481 ns [systemd] | d=2 |      _cond_resched() {
 	5) +1180 ns [systemd] | d=2 |      } /* _cond_resched */
 	5) +945 ns [systemd] | d=1 |    } /* mutex_lock */
-1694	5) +1562 ns [systemd] | d=1 |    smp_apic_timer_interrupt() {
-1695	5) +549 ns [systemd] | d=2 |      irq_enter() {
-1696	5) +546 ns [systemd] | d=3 |        rcu_irq_enter() {
+	5) +1562 ns [systemd] | d=1 |    smp_apic_timer_interrupt() {
+	5) +549 ns [systemd] | d=2 |      irq_enter() {
+	5) +546 ns [systemd] | d=3 |        rcu_irq_enter() {
 	5) +508 ns [systemd] | d=3 |        } /* rcu_irq_enter */
 	5) +486 ns [systemd] | d=2 |      } /* irq_enter */
-1697	5) +7088 ns [systemd] | d=2 |      idle_cpu() {
+	5) +7088 ns [systemd] | d=2 |      idle_cpu() {
 	5) +540 ns [systemd] | d=2 |      } /* idle_cpu */
-1698	5) +470 ns [systemd] | d=2 |      rcu_irq_exit() {
+	5) +470 ns [systemd] | d=2 |      rcu_irq_exit() {
 	5) +498 ns [systemd] | d=2 |      } /* rcu_irq_exit */
 	5) +511 ns [systemd] | d=1 |    } /* smp_apic_timer_interrupt */
-1699	5) +598 ns [systemd] | d=1 |    mutex_unlock() {
+	5) +598 ns [systemd] | d=1 |    mutex_unlock() {
 	5) +500 ns [systemd] | d=1 |    } /* mutex_unlock */
-1700	5) +2081 ns [systemd] | d=1 |    kmem_cache_alloc_trace() {
+	5) +2081 ns [systemd] | d=1 |    kmem_cache_alloc_trace() {
 1701	5) +484 ns [systemd] | d=2 |      _cond_resched() {
 1702	5) +516 ns [systemd] | d=3 |        rcu_note_context_switch() {
 	5) +497 ns [systemd] | d=3 |        } /* rcu_note_context_switch */
@@ -5651,17 +5651,17 @@ sched_switch  |  pid:10->1, tgid:10->1
 ----------------------------------------------------------------------------------------------------
 sched_switch  |  pid:1->11, tgid:1->11
 ----------------------------------------------------------------------------------------------------
-2817	5) +1026 ns [watchdog/0] | d=0 |  schedule_tail() {
-2818	5) +484 ns [watchdog/0] | d=1 |    finish_task_switch() {
+	5)+1026 ns [watchdog/0] | d=0 |  schedule_tail() {
+	5) +484 ns [watchdog/0] | d=1 |    finish_task_switch() {
 	5) +511 ns [watchdog/0] | d=1 |    } /* finish_task_switch */
 	5) +483 ns [watchdog/0] | d=0 |  } /* schedule_tail */
-2819	5) +471 ns [watchdog/0] | d=0 |  kthread() {
-2820	5) +479 ns [watchdog/0] | d=1 |    __init_waitqueue_head() {
+	5) +471 ns [watchdog/0] | d=0 |  kthread() {
+	5) +479 ns [watchdog/0] | d=1 |    __init_waitqueue_head() {
 	5) +498 ns [watchdog/0] | d=1 |    } /* __init_waitqueue_head */
-2821	5) +462 ns [watchdog/0] | d=1 |    __init_waitqueue_head() {
+	5) +462 ns [watchdog/0] | d=1 |    __init_waitqueue_head() {
 	5) +501 ns [watchdog/0] | d=1 |    } /* __init_waitqueue_head */
-2822	5) +484 ns [watchdog/0] | d=1 |    complete() {
-2823	5) +483 ns [watchdog/0] | d=2 |      _raw_spin_lock_irqsave() {
+	5) +484 ns [watchdog/0] | d=1 |    complete() {
+	5) +483 ns [watchdog/0] | d=2 |      _raw_spin_lock_irqsave() {
 	5) +498 ns [watchdog/0] | d=2 |      } /* _raw_spin_lock_irqsave */
 2824	5) +464 ns [watchdog/0] | d=2 |      __wake_up_locked() {
 2825	5) +481 ns [watchdog/0] | d=3 |        __wake_up_common() {
@@ -5768,18 +5768,18 @@ sched_switch  |  pid:1->11, tgid:1->11
 ----------------------------------------------------------------------------------------------------
 sched_switch  |  pid:11->1, tgid:11->1
 ----------------------------------------------------------------------------------------------------
-2875	5) +957 ns [systemd] | d=8 |                  finish_task_switch() {
+	5) +957 ns [systemd] | d=8 |                  finish_task_switch() {
 	5) +503 ns [systemd] | d=8 |                  } /* finish_task_switch */
 	5) +496 ns [systemd] | d=7 |                } /* schedule */
 	5) +489 ns [systemd] | d=6 |              } /* schedule_timeout */
-2876	5) +465 ns [systemd] | d=6 |              _raw_spin_lock_irq() {
+	5) +465 ns [systemd] | d=6 |              _raw_spin_lock_irq() {
 	5) +500 ns [systemd] | d=6 |              } /* _raw_spin_lock_irq */
 	5) +490 ns [systemd] | d=5 |            } /* wait_for_completion_killable */
-2877	5) +959 ns [systemd] | d=5 |            sched_setscheduler_nocheck() {
-2878	5) +490 ns [systemd] | d=6 |              _sched_setscheduler() {
-2879	5) +498 ns [systemd] | d=7 |                __sched_setscheduler() {
-2880	5) +488 ns [systemd] | d=8 |                  task_rq_lock() {
-2881	5) +493 ns [systemd] | d=9 |                    _raw_spin_lock_irqsave() {
+	5) +959 ns [systemd] | d=5 |            sched_setscheduler_nocheck() {
+	5) +490 ns [systemd] | d=6 |              _sched_setscheduler() {
+	5) +498 ns [systemd] | d=7 |                __sched_setscheduler() {
+	5) +488 ns [systemd] | d=8 |                  task_rq_lock() {
+	5) +493 ns [systemd] | d=9 |                    _raw_spin_lock_irqsave() {
 	5) +499 ns [systemd] | d=9 |                    } /* _raw_spin_lock_irqsave */
 2882	5) +464 ns [systemd] | d=9 |                    _raw_spin_lock() {
 	5) +497 ns [systemd] | d=9 |                    } /* _raw_spin_lock */

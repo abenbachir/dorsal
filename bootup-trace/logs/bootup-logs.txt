@@ -1,6 +1,6 @@
 # tracer: hypergraph
 #
-# entries-in-buffer/entries-written: 0/0   #P:4
+# entries-in-buffer/entries-written: 0/0   #P:1
 #
 #                              _-----=> irqs-off
 #                             / _----=> need-resched

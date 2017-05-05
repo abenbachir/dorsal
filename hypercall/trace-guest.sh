@@ -1,6 +1,6 @@
 set -x
 
-lttng create hypercall_trace
+lttng create hypercall-benchmark
 lttng enable-channel --kernel --num-subbuf 16 --subbuf-size 512k vm_channel
 lttng enable-event -k -a --channel vm_channel
 #lttng enable-event -k  "abder_*" -c vm_channel
