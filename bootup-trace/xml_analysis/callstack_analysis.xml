@@ -46,7 +46,7 @@
                 <if>
                     <condition>
                         <stateValue type="eventField" value="nr" forcedType="int"/>
-                        <stateValue type="int" value="2001" forcedType="int"/>
+                        <stateValue type="int" value="2000" forcedType="int"/>
                     </condition>
                 </if>
             </test>
@@ -54,7 +54,7 @@
                 <if>
                     <condition>
                         <stateValue type="eventField" value="nr" forcedType="int"/>
-                        <stateValue type="int" value="2000" forcedType="int"/>
+                        <stateValue type="int" value="1001" forcedType="int"/>
                     </condition>
                 </if>
             </test>
