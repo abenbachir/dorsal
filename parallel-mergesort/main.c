@@ -1,21 +1,8 @@
-/*
- ============================================================================
- Name        : MergeSort_multiThreaded.c
- Author      : Ashraf Saleh
- Version     :
- Copyright   : refer to my blog www.codingrush.wordpress.com
- Description : The ordinary merge sort (nlog(n)) using multi threads
- 	 	 	   the objective of this assignment to create, use posix threads
- 	 	 	   and not to improve complexity.
- 	 	 	   see Introduction to algorithms (CORMEN) for advanced multi threaded
- 	 	 	   merge sort
- ============================================================================
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
 #include <time.h>
+
 int* a;
 int* b; //sorted array
 int n;
@@ -102,7 +89,8 @@ int main(void) {
     }
 	b = (int*)malloc(sizeof(int)*n);
 	struct index start;
-	start.p = 0;    start.r = n-1;
+	start.p = 0;
+	start.r = n-1;
 	pthread_t start_thread;
 
 	struct timeval tv;

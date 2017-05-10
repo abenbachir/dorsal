@@ -15,7 +15,7 @@ lttng start
 virsh start ubuntu
 #sleep 1 # passe through bootloader
 
-sleep 10;
+sleep 15;
 #sleep 20;
 
 lttng stop

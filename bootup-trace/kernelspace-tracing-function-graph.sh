@@ -2,7 +2,7 @@
 set -x
 
 ssh root@ubuntu 'echo 0 > /sys/kernel/debug/tracing/tracing_on'
-#ssh root@ubuntu 'echo mutex_lock > /sys/kernel/debug/tracing/set_ftrace_filter'
+ssh root@ubuntu 'echo do_sys_open > /sys/kernel/debug/tracing/set_graph_function'
 ssh root@ubuntu 'echo nop > /sys/kernel/debug/tracing/current_tracer'
 #ssh root@ubuntu 'echo funcgraph-proc > /sys/kernel/debug/tracing/trace_options'
 
@@ -31,5 +31,5 @@ lttng destroy
 
 ssh ubuntu "nm -an simple-program-ins-dohypercall > program-symbols.txt"
 scp ubuntu:~/program-symbols.txt .
-ssh root@ubuntu "cat /debug/tracing/trace" > ./logs/trace.txt
+ssh root@ubuntu "cat /debug/tracing/trace" > ./logs/trace-function-graph.txt
 ./dump-symbols.sh

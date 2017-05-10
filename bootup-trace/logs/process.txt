@@ -1,14 +1,14 @@
   PID COMMAND
     1 systemd
     2 kthreadd
-    3 ksoftirqd/0
-    4 kworker/0:0
-    5 kworker/0:0H
-    6 kworker/u8:0
-    7 rcu_sched
-    8 rcu_bh
-    9 migration/0
-   10 lru-add-drain
+    3 kworker/0:0
+    4 kworker/0:0H
+    5 kworker/u8:0
+    6 mm_percpu_wq
+    7 ksoftirqd/0
+    8 rcu_sched
+    9 rcu_bh
+   10 migration/0
    11 watchdog/0
    12 cpuhp/0
    13 kdevtmpfs
@@ -29,12 +29,12 @@
    28 watchdogd
    29 kworker/u8:1
    30 kworker/0:1
-   32 kswapd0
-   33 vmstat
-   34 ecryptfs-kthrea
-   50 kthrotld
-   51 acpi_thermal_pm
-   53 bioset
+   32 kauditd
+   33 kswapd0
+   34 bioset
+   35 ecryptfs-kthrea
+   52 kthrotld
+   53 acpi_thermal_pm
    54 bioset
    55 bioset
    56 bioset
@@ -58,73 +58,66 @@
    74 bioset
    75 bioset
    76 bioset
-   77 scsi_eh_0
-   78 scsi_tmf_0
-   79 scsi_eh_1
-   80 scsi_tmf_1
-   81 kworker/u8:2
-   82 kworker/u8:3
-   83 bioset
+   77 bioset
+   78 scsi_eh_0
+   79 scsi_tmf_0
+   80 scsi_eh_1
+   81 scsi_tmf_1
+   82 kworker/u8:2
+   83 kworker/u8:3
    84 bioset
-   85 kworker/u8:4
-   86 kworker/0:1H
+   85 bioset
+   86 kworker/u8:4
    87 ipv6_addrconf
-  121 deferwq
-  122 charger_manager
-  158 bioset
-  159 bioset
-  160 bioset
-  161 bioset
-  162 bioset
-  163 bioset
-  164 bioset
-  165 bioset
-  169 kpsmoused
-  280 raid5wq
-  309 bioset
-  335 jbd2/sda1-8
-  336 ext4-rsv-conver
-  381 iscsi_eh
-  386 systemd-journal
-  394 kauditd
-  396 kworker/0:2
-  402 lvmetad
-  411 systemd-udevd
-  415 kworker/u9:0
-  416 ib-comp-wq
-  417 ib_addr
-  418 ib_mcast
-  419 ib_nl_sa_wq
-  425 ib_cm
-  431 iw_cm_wq
-  440 rdma_cm
-  473 systemd-timesyn
-  616 acpid
-  619 systemd-logind
-  620 accounts-daemon
-  622 dbus-daemon
-  627 snapd
-  631 atd
-  637 lxcfs
-  639 cron
-  640 rsyslogd
-  649 polkitd
-  676 mdadm
-  688 kworker/0:3
-  729 dhclient
-  826 kvm-irqfd-clean
-  892 kworker/0:4
-  893 sshd
-  912 kworker/0:5
-  914 iscsid
-  915 iscsid
-  941 agetty
-  948 ondemand
-  966 sleep
- 1173 sshd
- 1181 kworker/0:6
- 1182 systemd
- 1183 (sd-pam)
- 1213 sshd
- 1214 bash
- 1215 ps
+  104 charger_manager
+  140 bioset
+  141 bioset
+  142 bioset
+  143 bioset
+  144 bioset
+  145 bioset
+  146 bioset
+  147 bioset
+  149 kworker/0:1H
+  260 raid5wq
+  289 bioset
+  316 jbd2/sda1-8
+  317 ext4-rsv-conver
+  360 kworker/0:2
+  372 systemd-journal
+  375 iscsi_eh
+  386 lvmetad
+  392 systemd-udevd
+  397 ib-comp-wq
+  399 ib_addr
+  400 ib_mcast
+  402 ib_nl_sa_wq
+  407 ib_cm
+  410 iw_cm_wq
+  417 rdma_cm
+  455 systemd-timesyn
+  595 atd
+  600 systemd-logind
+  602 acpid
+  603 accounts-daemon
+  604 rsyslogd
+  607 dbus-daemon
+  623 lxcfs
+  625 cron
+  626 snapd
+  655 polkitd
+  659 mdadm
+  675 kworker/0:3
+  715 dhclient
+  882 kworker/0:4
+  886 sshd
+  889 kworker/0:5
+  892 iscsid
+  893 iscsid
+  928 agetty
+ 1189 sshd
+ 1198 systemd
+ 1199 (sd-pam)
+ 1229 sshd
+ 1230 bash
+ 1231 ps

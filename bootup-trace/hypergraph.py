@@ -110,12 +110,12 @@ class Symbols:
 
 
 def main(argv):
-    path = "/home/abder/lttng-traces/bootup-tracing-20170503-193327"
+    path = ""
     input_word = ""
     input_cpuid = ""
     input_pid = ""
     data_pr_cpu = {0: {
-        'prev_pid': 0, 'pid': 0, 'prev_task': '-', 'task': '-', 'prev_timestamp': 0, 'prev_function_name': ""
+        'prev_pid': 0, 'pid': 0, 'prev_task': '-', 'task': '-', 'func_entry_timestamp': 0, 'func_entry_function_name': "", "stack_head":""
     }}
     try:
         path = argv[0]
@@ -139,8 +139,10 @@ def main(argv):
             input_pid = arg
 
     # Create TraceCollection and add trace:
-    kernel_symbols = Symbols(os.path.join(path, "mapping/symbols.txt"))
-    process_list = Process(os.path.join(path, "mapping/process.txt"))
+    # kernel_symbols = Symbols(os.path.join(path, "mapping/symbols.txt"))
+    # process_list = Process(os.path.join(path, "mapping/process.txt"))
+    kernel_symbols = Symbols("./logs/symbols.txt")
+    process_list = Process("./logs/process.txt")
 
     traces = babeltrace.reader.TraceCollection()
     trace_handle = traces.add_traces_recursive(path, "ctf")
@@ -165,7 +167,7 @@ def main(argv):
         cpu_id = event['cpu_id']
         if cpu_id not in data_pr_cpu:
             data_pr_cpu[cpu_id] = {
-                'prev_pid': 0, 'pid': 1, 'prev_task': '-', 'task': '-', 'prev_timestamp': 0, 'prev_function_name': ""
+                'prev_pid': 0, 'pid': 1, 'prev_task': '-', 'task': '-', 'func_entry_timestamp': 0, 'func_entry_function_name': "", "stack_head":""
             }
         is_sched_switch = (nr == SCHED_SWITCH_HYPERCALL_NR)
         if is_sched_switch:
@@ -197,15 +199,17 @@ def main(argv):
             #     str(cpu_id) == input_cpuid or \
             #                 input_pid != "" and str(data_pr_cpu[cpu_id]['pid']) == input_pid:
             if is_entry:
-                data_pr_cpu[cpu_id]['entry_timestamp'] = timestamp
-                data_pr_cpu[cpu_id]['entry_function_name'] = function_name
+                data_pr_cpu[cpu_id]['func_entry_timestamp'] = timestamp
+                data_pr_cpu[cpu_id]['func_entry_function_name'] = function_name
+                data_pr_cpu[cpu_id]['stack_head'] = function_name
 
-            elapsed_time = "" if is_entry else (str(ns_to_us(timestamp - data_pr_cpu[cpu_id]['entry_timestamp'])) + " us" if data_pr_cpu[cpu_id]['entry_timestamp'] > 0 else "" )
-            # name = "{}() {{".format(function_name) if is_entry else "}} /* {} */".format(function_name)
-            # name = "%s() { [%s-%s]" % (function_name, function_address, hex(function_address)) if is_entry else "}"
+            is_leaf = not is_entry and data_pr_cpu[cpu_id]['stack_head'] == function_name
+            elapsed_time = "" if is_entry else (str(ns_to_us(timestamp - data_pr_cpu[cpu_id]['func_entry_timestamp']))
+                                                + " us" if data_pr_cpu[cpu_id]['func_entry_timestamp'] > 0 else "")
+            # name = ";\n" if is_leaf else "%s()" % (function_name) if is_entry else "}} /* {} */".format(function_name)
             name = "%s() { " % (function_name) if is_entry else "}"
             line = "%s)   <%s>-%s\t| %s\t| d=%s | %s%s" % \
-                   (cpu_id, data_pr_cpu[cpu_id]['task'], data_pr_cpu[cpu_id]['pid'], elapsed_time.ljust(10), str(depth).ljust(2), "".join([' '*(cpu_id-1)*0])+"".join(['-'*depth]),name)
+                   (cpu_id, data_pr_cpu[cpu_id]['task'].ljust(5)[0:5], data_pr_cpu[cpu_id]['pid'], elapsed_time.ljust(10), str(depth).ljust(2), "".join([' '*(cpu_id-1)*0])+"".join(['| '*depth]),name)
             print(line)
 
 if __name__ == "__main__":

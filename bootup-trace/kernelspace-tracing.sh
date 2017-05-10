@@ -2,7 +2,10 @@
 set -x
 
 #ssh root@ubuntu 'echo 0 > /sys/kernel/debug/tracing/tracing_on'
-#ssh root@ubuntu 'echo mutex_lock > /sys/kernel/debug/tracing/set_ftrace_filter'
+ssh root@ubuntu 'echo > /sys/kernel/debug/tracing/set_ftrace_filter'
+ssh root@ubuntu 'echo > /sys/kernel/debug/tracing/set_ftrace_notrace'
+ssh root@ubuntu 'echo > /sys/kernel/debug/tracing/set_graph_function'
+ssh root@ubuntu 'echo > /sys/kernel/debug/tracing/set_graph_notrace'
 ssh root@ubuntu 'echo nop > /sys/kernel/debug/tracing/current_tracer'
 
 lttng create hypergraph
@@ -14,10 +17,11 @@ lttng start
 #ssh ubuntu 'sudo insmod ~/fgraph/fgraph.ko; ./simple-program-ins-dohypercall; sudo rmmod fgraph;'
 
 ssh root@ubuntu 'echo hypergraph > /sys/kernel/debug/tracing/current_tracer'
-ssh root@ubuntu 'echo 7 > /sys/kernel/debug/tracing/max_hypergraph_depth'
-ssh root@ubuntu 'echo 1 > /sys/kernel/debug/tracing/tracing_on'
+ssh root@ubuntu 'echo 0 > /sys/kernel/debug/tracing/max_hypergraph_depth'
+ssh root@ubuntu 'echo 1 > /sys/kernel/debug/tracing/tracing_on; sleep 0.01; echo 0 > /sys/kernel/debug/tracing/tracing_on'
+sleep
 #ssh ubuntu '~/simple-program-ins-dohypercall'
-ssh root@ubuntu 'echo 0 > /sys/kernel/debug/tracing/tracing_on'
+#ssh root@ubuntu 'echo 0 > /sys/kernel/debug/tracing/tracing_on'
 
 
 lttng stop
