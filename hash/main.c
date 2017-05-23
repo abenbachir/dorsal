@@ -26,22 +26,24 @@ static inline long string_hash(char* string, int length)
 
 int main()
 {	
-	struct timespec start, end;
+	struct timespec start, end, test_ts;
 	char* buffer = "intel_uncore_forcewake_domain_to_str.13448aso;isdkjhvasdgsdjlgufsdlkuh";
-	int length = 77;
+	int length = 70;
+	int limit = 1E3;
 
-	long benchmarks = 0;
-	int limit = 1E7;
-	for(int i = 0; i < limit; i++)
+	printf("elapsed_time,function_length\n");
+	for(int len = 1; len <= length; len++)
 	{
-		tic(start);
-		long result = string_hash(buffer, length);
-		toc(end);
+		for(int i = 0; i < limit; i++)
+		{
+			tic(start);
+			long result = string_hash(buffer, len);
+			toc(end);
 
-		unsigned long int ns = elapsed_nsec(start, end);
-		benchmarks += ns;
-	    // printf("%lu ns\n", ns);
+			unsigned long int ns = elapsed_nsec(start, end);
+		    printf("%lu, %d\n", ns, len);
+		}
 	}
-	printf("mean = %f ns\n", (double) benchmarks/limit);
+
 	return 0;
 }

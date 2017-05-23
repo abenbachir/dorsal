@@ -4,10 +4,9 @@ all:
 	gcc -o hypercall_benchmark hypercall_benchmark.c
 	gcc -o hypercount hypercount.c -lm
 #	gcc -o hyperstream hyperstream.c
-	scp hypercall_guest hypercall_benchmark hypercount hyperstream ubuntu:~
-
+	scp hypercall_guest hypercall_benchmark hypercount ubuntu:~
 clean:
-	rm hypercall_guest hypercall_benchmark hypercount hyperstream
+	rm hypercall_guest hypercall_benchmark hypercount
 
 
 # SRCS   = hypercall-host.c

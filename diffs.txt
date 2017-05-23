@@ -1,0 +1,201 @@
+git log v4.1...v4.2 : 22 commits
+e3eea14 ftrace: Fix breakage of set_ftrace_pid
+fb59e39 MIPS: ftrace: Enable support for syscall tracepoints.
+9cf5bcc Documentation/features/debug: Add feature description and arch support status file for 'kprobes-on-ftrace'
+3bc54b5 selftests/ftrace: install test.d
+d0ee8f4 tracing: Rename ftrace_get_offsets_##call() to trace_event_get_offsets_##call()
+33d0f35 tracing: Rename ftrace_define_fields_##call() to trace_event_define_fields_##call()
+3ad017b tracing: Rename ftrace_event_type_funcs_##call to trace_event_type_funcs_##call
+62323a1 tracing: Rename ftrace_data_offset_##call to trace_event_data_offset_##call
+a723776 tracing: Rename ftrace_raw_##call event structures to trace_event_raw_##call
+09a5059 tracing: Rename ftrace_trigger_soft_disabled() to trace_trigger_soft_disabled()
+7967b3e tracing: Rename struct ftrace_subsystem_dir to trace_subsystem_dir
+687fcc4 tracing: Rename ftrace_event_name() to trace_event_name()
+892c505 tracing: Rename ftrace_output functions to trace_output
+3f795dc tracing: Rename ftrace_event_buffer to trace_event_buffer.
+2425bcb tracing: Rename ftrace_event_{call,class} to trace_event_{call,class}
+7f1d2f8 tracing: Rename ftrace_event_file to trace_event_file
+9023c93 tracing: Rename (un)register_ftrace_event() to (un)register_trace_event()
+645df98 tracing: Rename ftrace_print_*() functions ta trace_print_*()
+af658dc tracing: Rename ftrace_event.h to trace_events.h
+2167ae7 tracing: Rename trace/ftrace.h to trace/trace_events.h
+f267caa tracing: Remove unused prototype ftrace_event_define_field()
+aabfa5f ftrace: Provide trace clock monotonic raw
+755a27e tracing: remove unused ftrace_output_event() prototype
+
+git log v4.2...v4.3 : 
+76b1ba7 clocksource/drivers/digicolor: Prevent ftrace recursion
+bd859a4 clocksource/drivers/fsl_ftm_timer: Prevent ftrace recursion
+36361ab clocksource/drivers/vf_pit_timer: Prevent ftrace recursion
+cdc68ec clocksource/drivers/prima2: Prevent ftrace recursion
+b8725da clocksource/drivers/samsung_pwm_timer: Prevent ftrace recursion
+f8af0e9 clocksource/drivers/pistachio: Prevent ftrace recursion
+d6df357 clocksource/drivers/arm_global_timer: Prevent ftrace recursion
+ee556d0 arm64: ftrace: fix function_graph tracer panic
+197165d powerpc/ftrace: add powerpc timebase as a trace clock source
+c93bf92 ftrace: Format MCOUNT_ADDR address as type unsigned long
+82c355e ftrace: Fix function_graph duration spacing with 7-digits
+8e436ca ftrace: add tracing_thresh to function profile
+5e2d5ef ftrace: correct the counter increment for trace_buffer data
+92f6c72 perf probe: Move ftrace probe-event operations to probe-file.c
+
+git log v4.3...v4.4 :
+049fb9b ftrace/module: Call clean up function when module init fails early
+713a3e4 ftrace/scripts: Fix incorrect use of sprintf in recordmcount
+a50bd43 ftrace/scripts: Have recordmcount copy the object file
+112677d x86/ftrace: Add comment on static function tracing
+03e88ae6 tracing: Remove unused ftrace_cpu_disabled per cpu variable
+c6650b2 tracing: ftrace_event_is_function() can return boolean
+883a1e8 ftrace: Calculate the correct dyn_ftrace number to report to the userspace
+b86d937 Documentation: ftrace: Module globbing usage
+0b507e1 ftrace: add module globbing
+3ba0092 ftrace: Introduce ftrace_glob structure
+f0a3b15 ftrace: Clarify code for mod command
+5e3949f ftrace: Remove redundant strsep in mod_callback
+6db0290 ftrace: Remove redundant swap function
+2d34f48 tracing: Make ftrace_trace_stack() depend on general trace_array flag
+938db5f tracing: Remove unused tracing option "ftrace_preempt"
+ca475e8 tracing: Make ftrace_trace_stack() static
+d78a461 tracing: Remove ftrace_trace_stack_regs()
+
+git log v4.4...v4.5 :
+9a154c8 ftracetest: Fix instance test to use proper shell command for pids
+7dcd182 ftrace/module: remove ftrace module notifier
+b752205 ftrace: Remove unused nr_trampolines var
+5156dca ftrace: Fix the race between ftrace and insmod
+b7ffffb ftrace: Add infrastructure for delayed enabling of module functions
+c5d641f x86: ftrace: Fix the comments for ftrace_modify_code_direct()
+e9b349f metag: ftrace: Fix the comments for ftrace_modify_code
+5243238 sh: ftrace: Fix the comments for ftrace_modify_code()
+cbbe12c ia64: ftrace: Fix the comments for ftrace_modify_code()
+97e9b4f ftrace: Clean up ftrace_module_init() code
+b6b71f6 ftrace: Join functions ftrace_module_init() and ftrace_init_module()
+c68c0fa ftrace: Have ftrace_ops_get_func() handle RCU and PER_CPU flags too
+ba27f2b ftrace: Remove use of control list and ops
+030f4e1 ftrace: Fix output of enabled_functions for showing tramp
+b8ec330 ftrace: Fix a typo in comment
+20380bb arm64: ftrace: fix a stack tracer's output under function graph tracer
+79fdee9 arm64: ftrace: modify a stack frame in a safe way
+004ab58 arm64: ftrace: fix the comments for ftrace_modify_code
+81a6a14 arm64: ftrace: stop using kstop_machine to enable/disable tracing
+39daa7b ftrace: Show all tramps registered to a record on ftrace_bug()
+b05086c ftrace: Add variable ftrace_expected for archs to show expected code
+02a392a ftrace: Add new type to distinguish what kind of ftrace_bug()
+3cbd6a4 ftracetest: Add instance create and delete test
+
+git log v4.5...v4.6
+366dd4e parisc: Fix ftrace function tracer
+95272c2 compiler-gcc: disable -ftracer for __noclone functions
+be7635e arch, ftrace: for KASAN put hard/soft IRQ entries into separate sections
+9d2099a x86: ftrace: Fix the misleading comment for arch/x86/kernel/ftrace.c
+6363c6b ftrace: Use kasprintf() in ftrace_profile_tracefs()
+7f50d06 ftrace: Update dynamic ftrace calls only if necessary
+84b6d3e ftrace: Make ftrace_hash_rec_enable return update bool
+4ef5690 tracing: Make ftrace_event_field checking functions available
+8c50b72 powerpc/ftrace: Add Kconfig & Make glue for mprofile-kernel
+1530866 powerpc/ftrace: Add support for -mprofile-kernel ftrace ABI
+9a7841a powerpc/ftrace: Use $(CC_FLAGS_FTRACE) when disabling ftrace
+c96f838 powerpc/ftrace: Use generic ftrace_modify_all_code()
+336a7b5 powerpc/module: Create a special stub for ftrace_caller()
+136cd34 powerpc/module: Only try to generate the ftrace_caller() stub once
+f1b92bb x86/ftrace, x86/asm: Kill ftrace_caller_end label
+
+git log v4.6...v4.7
+0ded517 ftracetest: Fix hist unsupported result in hist selftests
+5fece5a parisc: Use long jump to reach ftrace_return_to_handler()
+97f8827 ftracetest: Use proper logic to find process PID
+4df3c9e parisc: Merge ftrace C-helper and assembler functions into .text.hot section
+8329e81 ftrace/x86: Set ftrace_stub to weak to prevent gcc from using short jumps to it
+6112a30 ftrace: Don't disable irqs when taking the tasklist_lock read_lock
+2c6c394 kselftests/ftrace: Add a test case for event pid filtering
+5a614ec kselftests/ftrace: Detect tracefs mount point
+91e6f1c ftracetest: Add instance created, delete, read and enable event test
+879d08e metag: ftrace: remove the misleading comment for ftrace_dyn_arch_init
+7132e2d ftrace: Match dot symbols when searching functions on ppc64
+93c5f67 kselftests/ftrace: Add a test for log2 modifier of hist trigger
+76929ab kselftests/ftrace: Add hist trigger testcases
+cfa0963 kselftests/ftrace : Add event trigger testcases
+28e7cbd livepatch: Allow architectures to specify an alternate ftrace location
+04cf31a ftrace: Make ftrace_location_range() global
+5dffed1 rcu: Dump ftrace buffer when kicking grace-period kthread
+274529b rcu: Consolidate dumping of ftrace buffer
+0a74c5b ftrace/perf: Check sample types only for sampling events
+
+git log v4.7...v4.8
+469f002 x86, kasan, ftrace: Put APIC interrupt handlers into .irqentry.text
+b2e1c26 ftrace/recordmcount: Work around for addition of metag magic but not relocations
+e64a547 s390/ftrace/jprobes: Fix conflict between jprobes and function graph tracing
+9d63610 powerpc/ftrace: Separate the heuristics for checking call sites
+a4a551b ftrace: Reduce size of function graph entries
+501c237 ftrace: Move toplevel init out of ftrace_init_tracefs()
+479c641 xfs: enable buffer deadlock postmortem diagnosis via ftrace
+345ddcc ftrace: Have set_ftrace_pid use the bitmap like events do
+
+git log v4.8...v4.9
+546fece ftrace: Add more checks for FTRACE_FL_DISABLED in processing ip records
+977c1f9 ftrace: Ignore FTRACE_FL_DISABLED while walking dyn_ftrace records
+3aa6014 clocksource/drivers/ti-32k: Prevent ftrace recursion
+951dbf5 ftrace/scripts: Add helper script to bisect function tracing problem functions
+98ab10e arm64: ftrace: add save_stack_trace_regs()
+8861dd3 ftrace: Access ret_stack->subtime only in the function profiler
+13e25ba x86/dumpstack/ftrace: Don't print unreliable addresses in print_context_stack_bp()
+6f727b8 x86/dumpstack/ftrace: Mark function graph handler function as unreliable
+471bd10 ftrace/x86: Implement HAVE_FUNCTION_GRAPH_RET_ADDR_PTR
+408fe5d x86/dumpstack/ftrace: Convert dump_trace() callbacks to use ftrace_graph_ret_addr()
+223918e ftrace: Add ftrace_graph_ret_addr() stack unwinding helpers
+9a7c348 ftrace: Add return address pointer to ftrace_ret_stack
+daa460a ftrace: Only allocate the ret_stack 'fp' field when needed
+e4a744e ftrace: Remove CONFIG_HAVE_FUNCTION_GRAPH_FP_TEST from config
+bdca79c2 ftrace: kprobe: uprobe: Show u8/u16/u32/u64 types in decimal
+8642562 ftrace: probe: Add README entries for k/uprobe-events
+17ce3dc ftrace: kprobe: uprobe: Add x8/x16/x32/x64 for hexadecimal types
+30b442b3 greybus: greybus_trace: Fix broken greybus ftrace
+
+git log v4.9...v4.10 : 20 patches
+8672aed pstore: don't OOPS when there are no ftrace zones
+270c8cf ARM: 8632/1: ftrace: fix syscall name matching
+3dbb16b selftests: ftrace: Shift down default message verbosity
+847fa1a ftrace/x86_32: Set ftrace_stub to weak to prevent gcc from using short jumps to it
+c02e034 powerpc/ftrace: Fix the comments for ftrace_modify_code
+262e1f6 stm class: ftrace: Add ftrace-export-over-stm driver
+153aae5 selftests: ftrace: Add a testcase for types of kprobe event
+60c1afb selftests: ftrace: Add a testcase for function filter glob match
+6219752 selftests: ftrace: Introduce TMPDIR for temporary files
+57209b9 selftests: ftrace: Hide ftracetest logs from git
+780ade5 selftests: ftrace: Fix trigger-mod to run without syscall trace
+131c60c selftests: ftrace: Check whether snapshot trigger is supported correctly
+7786bcc selftests: ftrace: Add --quiet option not to show error logs on screen
+131f840 selftests: ftrace: Initialize ftrace before each test
+7a0032f pstore: Use global ftrace filters for function trace filtering
+d032ae8 ftrace: Provide API to use global filtering for ftrace ops
+2fbea82 pstore: Merge per-CPU ftrace records into one
+fbccdeb pstore: Add ftrace timestamp counter
+a1cf53a ramoops: Split ftrace buffer space into per-CPU zones
+60f1d5e ftrace: Support full glob matching
+
+git log v4.10...v4.11 : 25 patches
+9ed19c7 selftests: ftrace: Add check for function-fork before running pid filter test
+093be89 selftests: ftrace: Add a testcase for function PID filter
+d879d0b ftrace: Fix function pid filter on instances
+82cc4fc ftrace: Fix removing of second function probe
+34a477e ftrace/x86: Fix triple fault with graph tracing and suspend-to-ram
+65a50c6 ftrace/graph: Add ftrace_graph_max_depth kernel parameter
+92ad18e ftrace/graph: Do not modify the EMPTY_HASH for the function_graph filter
+3a150df tracing: Fix code comment for ftrace_ops_get_func()
+f705d95 arm64: include asm/assembler.h in entry-ftrace.S
+496e9cb powerpc/ftrace: Fix confusing help text for DISABLE_MPROFILE_KERNEL
+e704eff ftrace: Have set_graph_function handle multiple functions in one write
+649b988 ftrace: Do not hold references of ftrace_graph_{notrace_}hash out of graph_lock
+ae98d27 ftrace: Have set_graph_functions handle write with RDWR
+d4ad9a1 ftrace: Reset fgd->hash in ftrace_graph_write()
+555fc78 ftrace: Replace (void *)1 with a meaningful macro name FTRACE_GRAPH_EMPTY
+2b2c279 ftrace: Create a slight optimization on searching the ftrace_hash
+2b0cce0 tracing: Add ftrace_hash_key() helper function
+b05d109 perf ftrace: Add ftrace.tracer config option
+bf062bd perf ftrace: Remove needless code setting default tracer
+ec34787 perf ftrace: Make 'function_graph' be the default tracer
+d01f4e8 perf ftrace: Introduce new 'ftrace' tool
+b9b0c831 ftrace: Convert graph filter to use hash tables
+4046bf0 ftrace: Expose ftrace_hash_empty and ftrace_lookup_ip
+3e278c0 ftrace: Factor out __ftrace_hash_move()
+829d2bd arm64: entry-ftrace.S: avoid open-coded {adr,ldr}_l

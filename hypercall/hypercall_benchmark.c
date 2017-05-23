@@ -36,27 +36,85 @@ void nsleep(long nanoseconds)
     }while(diff >= 0);
 }
 
-int main(int argc, char** argv)
+
+void benchmark_case1()
 {
     struct timespec start, end;
-    printf("----------- Hypercall benchmark ----------\n");
-    printf("Cost\n");
     ulong i = 0;
     ulong repeat = 1E6;
-    // tic(start);
+
     for ( i=0; i < repeat; i++) {
         tic(ts_start);
-        do_hypercall(101, 0, 0, 0, 0); // ts_start.tv_nsec + 1E9 * ts_start.tv_sec
+        do_hypercall(101, 0, 0, 0, 0);
         toc(ts_end);
         unsigned long int ns = elapsed_nsec(ts_start, ts_end);
-        printf("%lu\n", ns);
-        // nsleep(1000000);
+        printf("%lu,with_clock_gettime\n", ns);
     }
-    // toc(end);
-    // unsigned long int ns = elapsed_nsec(start, end);
+}
 
-    // printf("elapsed : %lu ns \n", ns);
-    // printf("event cost : %f ns \n", (double)ns/repeat);
-    // printf("event freq : %f ns \n", (double)1000 * 1 / (ns / repeat));
+void benchmark_case2()
+{
+    struct timespec start, end;
+    ulong samples = 1E6;
+    for (int i=0; i < samples; i++) {
+        // warmup
+        
+        int repeat = 50;
+        tic(ts_start);
+        for (int j=0; j < repeat; j++) {
+            do_hypercall(101, 0, 0, 0, 0);
+        }
+        toc(ts_end);
+        unsigned long int ns = elapsed_nsec(ts_start, ts_end);
+        printf("%f,no_clock_gettime\n", (double)ns/repeat);
+    }
+}
+int main(int argc, char** argv)
+{
+    printf("elapsed_time\n");
+    struct timespec start, end;
+    ulong samples = 1E6;
+
+    for (int i=0; i < samples; i++) {
+        // warmup
+        
+        int repeat = 30;
+        tic(ts_start);
+        // for (int j=0; j < repeat; j++) {
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+            do_hypercall(0, 0, 0, 0, 0);
+        // }
+        toc(ts_end);
+        unsigned long int ns = elapsed_nsec(ts_start, ts_end);
+        printf("%f\n", (double)ns/repeat);
+    }
     return 0;
 }

@@ -2,10 +2,11 @@ import hashlib
 
 
 # filepath = "./logs/available_functions.txt"
-filepath = "./logs/symbols.txt"
+filepath = "./logs/System.map"
 
 shortnames = list()
 functions = dict()
+length_frequencies = dict()
 max_length = 0
 count = 0
 with open(filepath) as f:
@@ -20,13 +21,12 @@ with open(filepath) as f:
             ip = int(ip, 16)
             function_name = values[1] if len(values) <= 2 else values[2]
             function_name = function_name.rstrip()
-            functions[function_name] = ip
             # function_name = line.strip()
             # if function_name in functions:
             #     continue
             max_length = len(function_name) if len(function_name) > max_length else max_length
 
-            shortname = function_name
+            shortname = hash(function_name)
             # size = 40
             # shortname = function_name[:size]
             # if len(function_name) > size:
@@ -44,17 +44,22 @@ with open(filepath) as f:
 
             functions[function_name] = ip
             shortnames.append(shortname)
+            length_frequencies[len(function_name)] = length_frequencies.get(len(function_name), 0) + 1
             # print("%s => %s [size=%d]" % (function_name, function_name[:16], len(function_name)))
         except Exception as ex:
             print(ex)
 
+duplicate = count - len(functions)
 
-print("max function length = %d" % max_length)
-print("all functions = %d" % count)
-print("unique functions = %d" % len(functions))
+print("Max function length : %d" % max_length)
+print("All functions : %d" % count)
+print("Unique functions : %d" % len(functions))
+print("Duplicate : %d" % duplicate)
 unique_names = set(shortnames)
-for name, ip in functions.items():
-    count = shortnames.count(name)
-    if count > 1:
-        print("[%s] %s %d" % (ip, name, count))
-print("%d vs %s = %d" % (len(unique_names), len(shortnames), len(shortnames)-len(unique_names)))
+
+# for name, ip in functions.items():
+#     count = shortnames.count(name)
+#     if count > 1:
+#         print("[%s] %s %d" % (ip, name, count))
+
+print("Clash functions : %d" % (len(shortnames)- len(unique_names) - duplicate))

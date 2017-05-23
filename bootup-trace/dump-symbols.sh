@@ -2,8 +2,9 @@
 
 ssh ubuntu "dmesg > dmsg.txt"
 scp ubuntu:~/dmsg.txt ./logs/
-ssh ubuntu "sudo cat /proc/kallsyms > symbols.txt"
-scp ubuntu:~/symbols.txt ./logs/
+ssh ubuntu "sudo cat /proc/kallsyms > kallsyms.map"
+scp ubuntu:~/kallsyms.map ./logs/
+scp ubuntu:~/linux/System.map ./logs/
 ssh ubuntu "ps -eo pid,comm > process.txt"
 scp ubuntu:~/process.txt ./logs/
 ssh root@ubuntu 'cat /sys/kernel/debug/tracing/trace > /home/abder/bootup-logs.txt'

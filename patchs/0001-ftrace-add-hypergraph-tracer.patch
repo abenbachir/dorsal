@@ -1,0 +1,394 @@
+From 748a9b25a3947889864cbafb25dab3d54f605b02 Mon Sep 17 00:00:00 2001
+From: Abderrahmane Benbachir <abderrahmane.benbachir@polymtl.ca>
+Date: Tue, 23 May 2017 18:25:39 -0400
+Subject: [PATCH] ftrace: add hypergraph tracer
+
+Signed-off-by: Abderrahmane Benbachir <abderrahmane.benbachir@polymtl.ca>
+---
+ kernel/trace/Makefile           |   1 +
+ kernel/trace/trace.c            |  10 ++
+ kernel/trace/trace.h            |   1 +
+ kernel/trace/trace_hypergraph.c | 326 ++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 338 insertions(+)
+ create mode 100644 kernel/trace/trace_hypergraph.c
+
+diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+index 90f2701..a75eebd 100644
+--- a/kernel/trace/Makefile
++++ b/kernel/trace/Makefile
+@@ -42,6 +42,7 @@ obj-$(CONFIG_NOP_TRACER) += trace_nop.o
+ obj-$(CONFIG_STACK_TRACER) += trace_stack.o
+ obj-$(CONFIG_MMIOTRACE) += trace_mmiotrace.o
+ obj-$(CONFIG_FUNCTION_GRAPH_TRACER) += trace_functions_graph.o
++obj-$(CONFIG_FUNCTION_GRAPH_TRACER) += trace_hypergraph.o
+ obj-$(CONFIG_TRACE_BRANCH_PROFILING) += trace_branch.o
+ obj-$(CONFIG_BLK_DEV_IO_TRACE) += blktrace.o
+ ifeq ($(CONFIG_BLOCK),y)
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 0ad75e9..34eea87 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -1704,6 +1704,16 @@ int is_tracing_stopped(void)
+ 	return global_trace.stop_count;
+ }
+ 
++int is_default_bootup_tracer(const char* name)
++{
++    if (!default_bootup_tracer)
++        return 0;
++    
++    if (strncmp(default_bootup_tracer, name, MAX_TRACER_SIZE) != 0)
++        return 0;
++    return 1;
++}
++
+ /**
+  * tracing_start - quick start of the tracer
+  *
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index d19d52d..e62b077 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -634,6 +634,7 @@ void tracing_start_cmdline_record(void);
+ void tracing_stop_cmdline_record(void);
+ int register_tracer(struct tracer *type);
+ int is_tracing_stopped(void);
++int is_default_bootup_tracer(const char* name);
+ 
+ loff_t tracing_lseek(struct file *file, loff_t offset, int whence);
+ 
+diff --git a/kernel/trace/trace_hypergraph.c b/kernel/trace/trace_hypergraph.c
+new file mode 100644
+index 0000000..dd38e5d
+--- /dev/null
++++ b/kernel/trace/trace_hypergraph.c
+@@ -0,0 +1,326 @@
++/*
++ *
++ * Hypergraph : Function graph tracer specific for virtual machine.
++ * Instead of using the buffer we send function entry & exit and
++ * sched_switch events through hypercalls.
++ *
++ * Copyright (c) 2018-2017 Abderrahmane Benbachir <abderrahmane.benbachir@polymtl.ca>
++ * Mostly inspired from function_graph and function tracers which is Copyright (c)
++ * Steven Rostedt <srostedt@redhat.com> and Frederic Weisbecker <fweisbec@gmail.com>
++ *
++ */
++#include <linux/uaccess.h>
++#include <linux/module.h>
++#include <linux/ftrace.h>
++#include <linux/interrupt.h>
++#include <linux/slab.h>
++#include <linux/fs.h>
++#include <trace/events/sched.h>
++#include <asm/setup.h>
++#include <asm/hypervisor.h>
++#include "trace.h"
++
++#define HYPERGRAPH_SCHED_SWITCH_HYPERCALL_NR 1001
++#define HYPERGRAPH_HYPERCALL_NR 1000
++#define FUNCTION_ENTRY 0
++#define FUNCTION_EXIT 1
++#define FUNCTION_EXIT_ONLY 2
++
++// TODO: support x86_32 too
++#define do_hypercall(nr, p1, p2, p3, p4) \
++__asm__ __volatile__(".byte 0x0F,0x01,0xC1\n"::"a"(nr), \
++    "b"(p1), \
++    "c"(p2), \
++    "d"(p3), \
++    "S"(p4))
++
++static int bootup_tracing_enabled;
++
++static int tracing_enabled;
++
++static unsigned int max_depth;
++/*
++ * When exit_only_mode is set, only exit events are sent
++ * the callgraph can still be built using pre-order traversal tree
++*/
++static unsigned int exit_only_mode;
++/* Shen set, include the hash code of each function name 
++ * if CONFIG_KALLSYMS is enabled
++*/
++static unsigned int include_hash_code;
++/* When set, irq functions will be traced */
++static int hypergraph_irqs_enabled;
++
++static struct trace_array *hypergraph_array;
++
++static inline int ftrace_hypergraph_ignore_irqs(void)
++{
++    if (hypergraph_irqs_enabled /*|| trace_recursion_test(TRACE_IRQ_BIT)*/)
++		return 0;
++
++    return irq_count();
++}
++
++static inline long string_hash(char* string, int length)
++{
++    int len = length;
++    unsigned char *p;
++    long x; /* Notice the 64-bit hash, at least on a 64-bit system */
++
++    p = (unsigned char *) string;
++    x = *p << 7;
++    while (--len >= 0){
++        x = (1000003*x) ^ *p++;
++    }
++    x ^= length;
++    if (x == -1)
++        x = -2;
++    return x;
++}
++
++static long get_hash_code(unsigned long address)
++{
++    char name[KSYM_SYMBOL_LEN];
++    unsigned long flag = tracing_enabled;
++    tracing_enabled = 0;
++    sprint_symbol_no_offset(name, address);
++    tracing_enabled = flag;
++
++    return string_hash(name, strlen(name));
++}
++
++static void probe_sched_switch(void *ignore, bool preempt,
++           struct task_struct *prev, struct task_struct *next)
++{
++    /*
++     * Do hypercall to send sched_switch event to host
++     */
++    if(tracing_enabled)
++        do_hypercall(HYPERGRAPH_SCHED_SWITCH_HYPERCALL_NR,
++                     prev->pid,
++                     prev->tgid,
++                     next->pid,
++                     next->tgid);
++}
++
++static int trace_hypergraph_entry(struct ftrace_graph_ent *trace)
++{
++    unsigned long hash_code = 0;
++    struct trace_array *tr = hypergraph_array;
++    if (!tracing_enabled || !ftrace_trace_task(tr))
++		return 0;
++
++    /* trace it when it is-nested-in or is a function enabled. */
++    if(!(trace->depth || ftrace_graph_addr(trace->func)) ||
++        (trace->depth < 0) ||
++        (max_depth && trace->depth >= max_depth))
++        return 0;
++
++    if (ftrace_graph_ignore_func(trace))
++        return 0;
++
++    if(ftrace_hypergraph_ignore_irqs())
++        return 0;
++
++    /*
++     * Do not trace a function if it's filtered by set_graph_notrace.
++     * Make the index of ret stack negative to indicate that it should
++     * ignore further functions.  But it needs its own ret stack entry
++     * to recover the original index in order to continue tracing after
++     * returning from the function.
++     */
++    if (ftrace_graph_notrace_addr(trace->func))
++        return 1;
++
++    /*
++     * Stop here if exit_only_mode is set. We only send function return
++     * events to host.
++     */
++    if(exit_only_mode)
++        return 1;
++
++#ifdef CONFIG_KALLSYMS
++    if(include_hash_code)
++        hash_code = get_hash_code(trace->func);
++#endif
++    
++    /*
++     * Do hypercall to send function entry event to host
++     */
++    do_hypercall(HYPERGRAPH_HYPERCALL_NR,
++                 trace->func,
++                 FUNCTION_ENTRY,
++                 hash_code,
++                 trace->depth);
++
++    return 1;
++}
++
++static void trace_hypergraph_return(struct ftrace_graph_ret *trace)
++{
++    /*
++     * Do hypercall to send function exit event to host
++     */
++    do_hypercall(HYPERGRAPH_HYPERCALL_NR,
++                 trace->func,
++                 (exit_only_mode ? FUNCTION_EXIT_ONLY : FUNCTION_EXIT),
++                 (trace->rettime - trace->calltime),
++                 trace->depth);
++}
++
++static void hypergraph_trace_start(struct trace_array *tr)
++{
++    tracing_enabled = 1;
++}
++
++static void hypergraph_trace_stop(struct trace_array *tr)
++{
++    tracing_enabled = 0;
++}
++
++static int hypergraph_trace_init(struct trace_array *tr)
++{
++	int ret;
++
++    ret = register_trace_sched_switch(probe_sched_switch, NULL);
++    if (ret) {
++        pr_info("sched trace: Couldn't activate tracepoint"
++            " probe to kernel_sched_switch\n");
++    }
++
++    hypergraph_array = tr;
++
++    ret = register_ftrace_graph(&trace_hypergraph_return,
++                        &trace_hypergraph_entry);
++
++    if (ret)
++		return ret;
++
++    // Enable tracing during bootup
++    if(unlikely(bootup_tracing_enabled == 1)){
++        bootup_tracing_enabled = 0;
++        hypergraph_trace_start(tr);
++    }
++
++	return 0;
++}
++
++static void hypergraph_trace_reset(struct trace_array *tr)
++{
++    tracing_enabled = 0;
++	unregister_ftrace_graph();
++    unregister_trace_sched_switch(probe_sched_switch, NULL);
++}
++
++static struct tracer hypergraph_trace __tracer_data = {
++    .name		= "hypergraph",
++    .init		= hypergraph_trace_init,
++    .reset		= hypergraph_trace_reset,
++    .start      = hypergraph_trace_start,
++    .stop       = hypergraph_trace_stop
++};
++
++static ssize_t hypergraph_depth_write(struct file *filp, const char __user *ubuf,
++                                      size_t cnt, loff_t *ppos)
++{
++	unsigned long val;
++	int ret;
++
++	ret = kstrtoul_from_user(ubuf, cnt, 10, &val);
++	if (ret)
++		return ret;
++
++	max_depth = val;
++	*ppos += cnt;
++	return cnt;
++}
++
++static ssize_t hypergraph_depth_read(struct file *filp, char __user *ubuf,
++                                     size_t cnt, loff_t *ppos)
++{
++	char buf[15]; /* More than enough to hold UINT_MAX + "\n"*/
++	int n;
++
++	n = sprintf(buf, "%d\n", max_depth);
++	return simple_read_from_buffer(ubuf, cnt, ppos, buf, n);
++}
++
++static const struct file_operations hypergraph_depth_fops = {
++	.open		= tracing_open_generic,
++    .write		= hypergraph_depth_write,
++    .read		= hypergraph_depth_read,
++	.llseek		= generic_file_llseek,
++};
++
++static __init int init_hypergraph_tracefs(void)
++{
++	struct dentry *d_tracer;
++
++	d_tracer = tracing_init_dentry();
++	if (IS_ERR(d_tracer))
++		return 0;
++
++    trace_create_file("max_hypergraph_depth", 0644, d_tracer,
++              NULL, &hypergraph_depth_fops);
++
++	return 0;
++}
++fs_initcall(init_hypergraph_tracefs);
++
++/*
++ * command line interface to allow users to set config on boot up.
++ */
++static __init int set_max_hypergraph_depth(char *str)
++{
++    long val;
++    if (kstrtol(str, 10, &val) == 0)
++        max_depth = val;
++
++    return 1;
++}
++__setup("ftrace_hypergraph_max_depth=", set_max_hypergraph_depth);
++
++static __init int hypergraph_irqs_enable(char *str)
++{
++    long val;
++    if (kstrtol(str, 10, &val) == 0)
++        hypergraph_irqs_enabled = val > 0;
++
++    return 1;
++}
++__setup("ftrace_hypergraph_irqs_enable=", hypergraph_irqs_enable);
++
++static __init int hypergraph_exit_only_mode(char *str)
++{
++    long val;
++    if (kstrtol(str, 10, &val) == 0)
++        exit_only_mode = val > 0;
++
++    return 1;
++}
++__setup("ftrace_hypergraph_exit_only=", hypergraph_exit_only_mode);
++
++static __init int hypergraph_include_hash_code(char *str)
++{
++    long val;
++    if (kstrtol(str, 10, &val) == 0)
++        include_hash_code = val > 0;
++
++    return 1;
++}
++__setup("ftrace_hypergraph_include_hash_code=", hypergraph_include_hash_code);
++
++static __init int init_hypergraph_trace(void)
++{
++    int ret;
++    if (!x86_hyper){
++        pr_info("ftrace hypergraph tracer is not registered: no hypervisor was detected\n");
++        return 0;
++    }
++    bootup_tracing_enabled = is_default_bootup_tracer(hypergraph_trace.name);
++
++    ret = register_tracer(&hypergraph_trace);
++    return ret;
++}
++
++early_initcall(init_hypergraph_trace);
+-- 
+2.7.4
+
