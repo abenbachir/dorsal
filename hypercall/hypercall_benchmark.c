@@ -9,15 +9,12 @@ static struct timespec ts_start, ts_end;
 #define tic(start) clock_gettime(CLOCK_MONOTONIC, &start)
 #define toc(end) clock_gettime(CLOCK_MONOTONIC, &end)
 #define elapsed_nsec(start, end) (end.tv_nsec + 1E9 * end.tv_sec) - (start.tv_nsec + 1E9 * start.tv_sec)
-// #define do_hypercall(hypercall_nr,payload,uid, arg1, arg2, arg3) asm volatile(".byte 0x0F,0x01,0xC1\n"::"a"(hypercall_nr), "b"(payload), "c"(uid), "d"(arg1), "e"(arg2), "f"(arg3))
-#define do_hypercall(hypercall_nr,payload,uid, arg1, arg2) \
-    __asm__ __volatile__(".byte 0x0F,0x01,0xC1\n"::"a"(hypercall_nr), "b"(payload), "c"(uid), "d"(arg1), "S"(arg2))
 
-// static inline void do_hypercall(unsigned int hypercall_nr, int payload, unsigned long uid)
-// {
-//     // FIXME: should use kvm_x86_ops
-//     asm volatile(".byte 0x0F,0x01,0xC1\n"::"a"(hypercall_nr), "b"(payload), "c"(uid));
-// }
+#define do_hypercall_1(nr) __asm__ __volatile__(".byte 0x0F,0x01,0xC1\n"::"a"(nr))
+#define do_hypercall_2(nr, p1) __asm__ __volatile__(".byte 0x0F,0x01,0xC1\n"::"a"(nr), "b"(p1))
+#define do_hypercall_3(nr, p1, p2) __asm__ __volatile__(".byte 0x0F,0x01,0xC1\n"::"a"(nr), "b"(p1), "c"(p2))
+#define do_hypercall_4(nr, p1, p2, p3) __asm__ __volatile__(".byte 0x0F,0x01,0xC1\n"::"a"(nr), "b"(p1), "c"(p2), "d"(p3))
+#define do_hypercall_5(nr, p1, p2, p3, p4) __asm__ __volatile__(".byte 0x0F,0x01,0xC1\n"::"a"(nr), "b"(p1), "c"(p2), "d"(p3), "S"(p4))
 
 void nsleep(long nanoseconds)
 {
@@ -37,32 +34,30 @@ void nsleep(long nanoseconds)
 }
 
 
-void benchmark_case1()
+void benchmark_case1(int repeat/* 1E6 */)
 {
     struct timespec start, end;
     ulong i = 0;
-    ulong repeat = 1E6;
 
     for ( i=0; i < repeat; i++) {
         tic(ts_start);
-        do_hypercall(101, 0, 0, 0, 0);
+        do_hypercall_1(0);
         toc(ts_end);
         unsigned long int ns = elapsed_nsec(ts_start, ts_end);
         printf("%lu,with_clock_gettime\n", ns);
     }
 }
 
-void benchmark_case2()
+void benchmark_case2(int repeat/* 50 */)
 {
     struct timespec start, end;
     ulong samples = 1E6;
     for (int i=0; i < samples; i++) {
         // warmup
         
-        int repeat = 50;
         tic(ts_start);
         for (int j=0; j < repeat; j++) {
-            do_hypercall(101, 0, 0, 0, 0);
+            do_hypercall_1(0);
         }
         toc(ts_end);
         unsigned long int ns = elapsed_nsec(ts_start, ts_end);
@@ -72,46 +67,42 @@ void benchmark_case2()
 int main(int argc, char** argv)
 {
     printf("elapsed_time\n");
-    struct timespec start, end;
+    struct timespec ts_start, ts_end;
     ulong samples = 1E6;
 
     for (int i=0; i < samples; i++) {
-        // warmup
-        
         int repeat = 30;
         tic(ts_start);
-        // for (int j=0; j < repeat; j++) {
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-            do_hypercall(0, 0, 0, 0, 0);
-        // }
+            do_hypercall_1(0);
+            do_hypercall_1(0);
+            do_hypercall_1(0);
+            do_hypercall_1(0);
+            do_hypercall_1(0);
+            do_hypercall_1(0);
+            do_hypercall_1(0);
+            do_hypercall_1(0);
+            do_hypercall_1(0);
+            do_hypercall_1(0);
+            do_hypercall_1(0);
+            do_hypercall_1(0);
+            do_hypercall_1(0);
+            do_hypercall_1(0);
+            do_hypercall_1(0);
+            do_hypercall_1(0);
+            do_hypercall_1(0);
+            do_hypercall_1(0);
+            do_hypercall_1(0);
+            do_hypercall_1(0);
+            do_hypercall_1(0);
+            do_hypercall_1(0);
+            do_hypercall_1(0);
+            do_hypercall_1(0);
+            do_hypercall_1(0);
+            do_hypercall_1(0);
+            do_hypercall_1(0);
+            do_hypercall_1(0);
+            do_hypercall_1(0);
+            do_hypercall_1(0);
         toc(ts_end);
         unsigned long int ns = elapsed_nsec(ts_start, ts_end);
         printf("%f\n", (double)ns/repeat);

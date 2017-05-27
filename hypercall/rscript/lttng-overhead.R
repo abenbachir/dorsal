@@ -1,57 +1,46 @@
 #!/usr/bin/env Rscript
 library(ggplot2)
 library(ggrepel)
+# write.csv(data1, file="./hypercall/data/hypercall-host-disabled.csv", row.names = FALSE)
 
 data1 <- read.table("./hypercall/data/hypercall-host-disabled.csv", header=T, sep=",")
-data2 <- read.table("./hypercall/data/hypercall-host-enabled-lttng2-10.csv", header=T, sep=",")
-data3 <- read.table("./hypercall/data/hypercall-host-enbaled-lttng2-7.csv", header=T, sep=",")
-data4 <- read.table("./hypercall/data/hypercall-host-enabled-ftrace.csv", header=T, sep=",")
-data5 <- read.table("./hypercall/data/hypercall-host-enabled-ebpf.csv", header=T, sep=",")
+data2 <- read.table("./hypercall/data/hypercall-host-lttng2.10.csv", header=T, sep=",")
+data3 <- read.table("./hypercall/data/hypercall-host-lttng2.7.csv", header=T, sep=",")
+data4 <- read.table("./hypercall/data/hypercall-host-ftrace.csv", header=T, sep=",")
+data5 <- read.table("./hypercall/data/hypercall-host-perf.csv", header=T, sep=",")
 
-colors <- c("#0f2d54", "#5f2054","#af2d54", "#ff2d54", "#ff5d54")
-data1$tracer <- "None"
-data2$tracer <- "Lttng 2.10 (hypercall only)"
-data4$tracer <- "lttng (exit+hypercall+entry)"
-data5$tracer <- "eBPF/bcc (exit+hypercall+entry)"
+colors <- c("#0f2054", "#5f2054","#ef2daf", "#ff0d54", "#ff8d54")
+data1$tracer <- 'Baseline'
+data <- rbind(data1, data2, data3, data4, data5)
 
-median1 <- round(median(data1$elapsed_time))
-median2 <- round(median(data2$elapsed_time))
-median3 <- round(median(data3$elapsed_time))
-median4 <- round(median(data4$elapsed_time))
-median5 <- round(median(data5$elapsed_time))
+densMode <- function(x){
+  td <- density(x, adjust=5)
+  maxDens <- which.max(td$y)
+  list(x=td$x[maxDens], y=td$y[maxDens])
+}
+data <- ddply(data,"tracer",
+              transform,
+              val_median = round(median(elapsed_time)),
+              val_mean = round(mean(elapsed_time)),
+              med = densMode(elapsed_time)
+        )
+xdat <- unique(data[c("tracer","val_median", "val_mean", "med.x","med.y")])
 
-# data <- merge(data1, data2, all=TRUE)
-# data <- merge(data, data3, all=TRUE)
-# data <- merge(data, data4, all=TRUE)
-# data <- merge(data, data5, all=TRUE)
+xdat$med.y[xdat$tracer == 'Ftrace'] <- 0.23
+xdat$med.y[xdat$tracer == 'Baseline'] <- 0.485
+xdat$med.y[xdat$tracer == 'Lttng 2.10'] <- 0.1
+xdat$med.y[xdat$tracer == 'Lttng 2.7'] <- 0.09
+xdat$med.y[xdat$tracer == 'Perf'] <- 0.22
 
-# y1 <- 0.49
-# y2 <- 0.13
-# y3 <- 0.135
-# y4 <- 0.43
-# y5 <- 0.23
-# p <- ggplot() +
-#   
-#   geom_point(aes(x=median1, y=y1)) + 
-#   geom_label_repel(aes(x=median1, y=y1, label=paste(median1,'ns')), nudge_x = 10) +
-#   
-#   geom_point(aes(x=median2, y=y2)) + 
-#   geom_label_repel(aes(x=median2, y=y2, label=paste(median2,'ns')), nudge_x = 10) +
-#   
-#   geom_point(aes(x=median3, y=y3)) + 
-#   geom_label_repel(aes(x=median3, y=y3, label=paste(median3,'ns')), nudge_x = 10) +
-#   
-#   geom_point(aes(x=median4, y=y4)) + 
-#   geom_label_repel(aes(x=median4, y=y4, label=paste(median4,'ns')), nudge_x = 10) +
-#   
-#   geom_point(aes(x=median5, y=y5)) + 
-#   geom_label_repel(aes(x=median5, y=y5, label=paste(median5,'ns')), nudge_x = 10) +
-#   
-#   geom_density(data=data, aes(elapsed_time, fill = tracer), adjust = 5, alpha = 0.5) +
-#   labs(x ="Nanoseconds", y ="Density", fill = "Host Tracing") +
-#   geom_vline(xintercept = c(median1, median2, median3, median4), linetype="dotted") +
-#   # scale_fill_manual(values = colors) +
-#   xlim(275, 700) +
-#   theme_light()
-# 
-# plot(p)
+p <- ggplot() +
+  # geom_point(data=xdat, aes(x=med.x, y=med.y)) +
+  geom_label_repel(data=xdat, aes(x=val_median, y=med.y, label=paste(tracer,'[',val_median,'ns ]')), nudge_x = 20,nudge_y = 0.05) +
+  geom_density(data=data, aes(elapsed_time, fill = tracer), adjust=5, alpha = 0.7) +
+  
+  # geom_vline(xintercept = c(median1, median2, median3, median4, median5), linetype="dotted") +
+  scale_fill_manual(values = colors) +
+  labs(x ="Nanoseconds", y ="Density", fill = "Host Tracers") +
+  xlim(280, 490) +
+  theme_light()
+
+plot(p)
