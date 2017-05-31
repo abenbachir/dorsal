@@ -41,7 +41,7 @@ void benchmark_case1(int repeat/* 1E6 */)
 
     for ( i=0; i < repeat; i++) {
         tic(ts_start);
-        do_hypercall_1(0);
+        do_hypercall_5(i,i,i,i,i);
         toc(ts_end);
         unsigned long int ns = elapsed_nsec(ts_start, ts_end);
         printf("%lu,with_clock_gettime\n", ns);
@@ -57,7 +57,7 @@ void benchmark_case2(int repeat/* 50 */)
         
         tic(ts_start);
         for (int j=0; j < repeat; j++) {
-            do_hypercall_1(0);
+            do_hypercall_5(j,j,j,j,j);
         }
         toc(ts_end);
         unsigned long int ns = elapsed_nsec(ts_start, ts_end);

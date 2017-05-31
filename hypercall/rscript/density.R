@@ -4,7 +4,7 @@ library(ggrepel)
 library(scales)
 
 y <- 0.1
-data <- read.table("./hypercall/data/hypercall-host-disabled.csv", header=T, sep=",")
+data <- read.table("./hypercall/data/hypercall-host-ftrace-3-events-filter.csv", header=T, sep=",")
 median <- round(median(data$elapsed_time))
 mean <- round(mean(data$elapsed_time))
 std <- round(sd(data$elapsed_time))
@@ -17,11 +17,11 @@ p <- ggplot() +
                    color=muted("red")
   ) +
   geom_vline(xintercept = c(median), linetype="dotted", color=muted("red")) +
-  geom_density(data=data, aes(elapsed_time), adjust = 5, alpha = 0.5) +
+  geom_density(data=data, aes(elapsed_time), adjust = 1, alpha = 0.5) +
   labs(x ="Nanoseconds", y ="Density", fill = "Host Tracing") +
   # geom_vline(xintercept = c(median1, median2), linetype="dotted") +
   scale_fill_manual(values = colors) +
-  xlim(280, 305) +
+  xlim(280, 500) +
   theme_light()
 
 plot(p)
