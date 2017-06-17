@@ -6,9 +6,10 @@ set -x
 #ssh root@ubuntu 'cat /dev/null > /sys/kernel/debug/tracing/trace'
 
 lttng create full-bootup-tracing
-lttng enable-channel -k --subbuf-size=16777216 --num-subbuf=64 vm_channel
-#lttng enable-event -k "kvm_x86_exit,kvm_x86_hypercall,kvm_x86_entry" -c vm_channel
-lttng enable-event -k "kvm_x86_hypercall" -c vm_channel
+lttng enable-channel -k --subbuf-size=16777216 --num-subbuf=128 vm_channel
+# lttng enable-event -k "kvm_x86_exit,kvm_x86_hypercall,kvm_x86_entry" -c vm_channel
+# lttng enable-event -k "kvm_x86_hypercall" -c vm_channel
+lttng enable-event -k "hypergraph_host" -c vm_channel
 #lttng enable-event -k -a -c vm_channel
 lttng start
 

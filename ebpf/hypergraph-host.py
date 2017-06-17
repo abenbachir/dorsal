@@ -44,8 +44,6 @@ def cb(cpu, data, size):
 
 
 prog = """
-#include <linux/sched.h>
-
 #define EXIT_REASON 18
 struct kvm_data {
     u8 start;
@@ -64,8 +62,8 @@ BPF_PERF_OUTPUT(events);
 BPF_ARRAY(kvm_data_list, struct kvm_data, 16);
 
 TRACEPOINT_PROBE(kvm, kvm_exit) {
-    int rc;    
-    /*if (args->exit_reason == EXIT_REASON) {
+    /*int rc;    
+    if (args->exit_reason == EXIT_REASON) {
         int cpu_id = bpf_get_smp_processor_id();
         struct kvm_data* data_ptr = kvm_data_list.lookup(&cpu_id);
         if(!data_ptr)
@@ -99,8 +97,8 @@ TRACEPOINT_PROBE(kvm, kvm_hypercall) {
 }
 
 TRACEPOINT_PROBE(kvm, kvm_entry) {
-        
-    /*int cpu_id = bpf_get_smp_processor_id();
+/*     
+    int cpu_id = bpf_get_smp_processor_id();
     struct kvm_data* data_ptr = kvm_data_list.lookup(&cpu_id);
     if(!data_ptr)
         return 0;
@@ -111,12 +109,12 @@ TRACEPOINT_PROBE(kvm, kvm_entry) {
     data_ptr->overhead = bpf_ktime_get_ns() - data_ptr->overhead;
     data_ptr->start = 0;
     data_ptr->vcpu_id = args->vcpu_id;
-*/
-    int rc;
-    /*struct kvm_data event = *data_ptr;
-    if ((rc = events.perf_submit(args, &event, sizeof(event))) < 0)
-        bpf_trace_printk("perf_output failed: %d\\n", rc);*/
 
+    int rc;
+    struct kvm_data event = *data_ptr;
+    if ((rc = events.perf_submit(args, &event, sizeof(event))) < 0)
+        bpf_trace_printk("perf_output failed: %d\\n", rc);
+*/
     return 0;
 };
 

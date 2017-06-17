@@ -1,0 +1,86 @@
+
+8122826 events of non hypercall exit reasons 
+
+hypergraph entry/exit, 1 CPU:
+size : 18.5 GB
+events : 225357724 hypercalls + [225357724 kvm exits of reason=18] * 2  + 16245652 kvm_exit/kvm_entry of reason!=18
+duratin : 3 min 21 seconds 
+
+hypergraph exit_only, 1 CPU:
+size : 9.25 GB
+events : 112678862 hypercalls + [112678862 kvm exits of reason=18] * 2  + 16245652 kvm_exit/kvm_entry of reason!=18
+duratin : 1 min 4 seconds
+
+hypergraph event_aggregation + entry/exit, 1 CPU:
+size : 5 GB
+events : 225357724 hypercalls
+duratin :  
+
+hypergraph event_aggregation + exit_only, 1 CPU:
+size : 5 GB
+events : 112678862 hypercalls
+duratin : 
+
+=======================================================================================
+
+105467646 function entry and exit
+tracing disabled at run_init_process
+
+baseline : 
+duratin : 1.05189349967 secs
+
+hypergraph func_entry_exit:
+size 	: 	9.4 GB
+events 	:	322 M = 316440645 + 5669900 kvm_exits_entries != 18
+duratin : 	1-CPU= 01 min 19.22 secs, 2-CPU= 01 min 4.07 sces
+
+Host optimization : event_aggregation + func_entry_exit
+size 	: 	6.7 GB
+events 	:	105 M
+duratin : 	1-CPU= 57 secs, 2-CPU= 61 secs
+
+Guest optimization : func_exit_only:
+size 	: 	4.8 GB
+events 	:	163905207 = 158044719 + 5860488	kvm_exits_entries != 18
+duratin : 	1-CPU= 40.977 secs , 2-CPU=41.168
+
+Host+Guest optimization : event_aggregation + func_exit_only:
+size 	: 	3.4 GB
+events 	:	52679596
+duratin : 	1-CPU= 30.695 secs (+/- 2.5) , 2-CPU= 32.039 secs
+
+Host+Guest optimization : 1 st level filering + event_aggregation + func_exit_only:
+size 	: 	648 MB
+events 	:	10134561	
+duratin : 	1-CPU= 9.591
+
+Function to be disabled : note_page,_raw_spin_lock_irqsave,_raw_spin_unlock_irqrestore,_cond_resched,kmem_cache_alloc,kmem_cache_free,acpi_os_release_object,acpi_ut_delete_generic_state,acpi_ut_create_generic_state,acpi_ut_pop_generic_state,acpi_ut_push_generic_state,acpi_ut_create_update_state,acpi_ut_create_update_state_and_push,acpi_ps_get_opcode_info,acpi_os_acquire_lock,acpi_os_release_lock,acpi_ut_update_ref_count
+
+
+Host+Guest optimization : filering + event_aggregation + func_exit_only:
+size 	: 	221 MB
+events 	:	3456030
+duratin : 	1-CPU= 2.6 secs
+
+Function to be disabled : note_page,kmem_cache_alloc,kmem_cache_free,__slab_free,acpi_*,_raw_spin_*,mutex_*,_cond_resched,console_conditional_schedule,console_trylock,console_unlock
+
+
+
+console_conditional_schedule,319464,0.606
+
+
+console_device,1,0.000
+
+console_lock
+4
+0.000
+1613
+
+console_trylock
+509
+0.001
+1614
+
+console_unlock
+511
+0.001

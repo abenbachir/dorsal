@@ -1,9 +1,9 @@
 #!/usr/bin/env Rscript
 library(ggplot2)
-data=read.table("./bootup-trace/rscript/overhead_kernel_user_space_functions.csv", header=T, sep=',')
+# data=read.table("./bootup-trace/rscript/overhead_kernel_user_space_functions.csv", header=T, sep=',')
 
 data <- subset(data, overhead >= 0 & overhead < 10)
-# 
+
 pl<-ggplot(data, aes(x = reorder(function_name, overhead, FUN=median),  function_name, y = overhead )) +
   geom_boxplot(outlier.colour = "red", outlier.size=1) +
   # coord_flip() +

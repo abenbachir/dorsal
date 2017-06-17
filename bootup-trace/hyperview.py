@@ -155,7 +155,7 @@ class HashTable:
 
 
 def main(argv):
-    path = "/home/abder/lttng-traces/bootup-tracing-20170516-153725"
+    path = ""
     kernel_symbols_path = "./logs/kallsyms.map"
     input_word = ""
     input_cpuid = ""
@@ -225,9 +225,9 @@ def main(argv):
             data_pr_cpu[cpu_id]['pid'] = next_pid
             data_pr_cpu[cpu_id]['prev_task'] = process_list.get_name(prev_pid)
             data_pr_cpu[cpu_id]['task'] = process_list.get_name(next_pid)
-            print("".join(['-'] * 200))
+            print("".join(['-'] * 100))
             print("sched_switch on CPU %s  |  pid:%s->%s, tid:%s->%s" % (cpu_id, prev_pid, next_pid, prev_tgid, next_tgid))
-            print("".join(['-'] * 200))
+            print("".join(['-'] * 100))
         else:
             # if show_pid != data_pr_cpu[cpu_id]['pid']:
             #     continue
@@ -249,7 +249,7 @@ def main(argv):
                 data_pr_cpu[cpu_id]['func_entry_timestamp'] = timestamp
                 data_pr_cpu[cpu_id]['func_entry_function_name'] = function_name
                 data_pr_cpu[cpu_id]['stack_head'] = function_name
-                if function_name_from_hash.lower() != function_name.lower():
+                if function_name_from_hash and function_name_from_hash.lower() != function_name.lower():
                     print("OOPS : %s [%s]" % (function_name, function_name_from_hash))
 
             is_leaf = not is_entry and data_pr_cpu[cpu_id]['stack_head'] == function_name
