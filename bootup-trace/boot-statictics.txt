@@ -49,7 +49,7 @@ size 	: 	3.4 GB
 events 	:	52679596
 duratin : 	1-CPU= 30.695 secs (+/- 2.5) , 2-CPU= 32.039 secs
 
-Host+Guest optimization : 1 st level filering + event_aggregation + func_exit_only:
+Host+Guest optimization : 1st level filtering + event_aggregation + func_exit_only:
 size 	: 	648 MB
 events 	:	10134561	
 duratin : 	1-CPU= 9.591
@@ -57,30 +57,10 @@ duratin : 	1-CPU= 9.591
 Function to be disabled : note_page,_raw_spin_lock_irqsave,_raw_spin_unlock_irqrestore,_cond_resched,kmem_cache_alloc,kmem_cache_free,acpi_os_release_object,acpi_ut_delete_generic_state,acpi_ut_create_generic_state,acpi_ut_pop_generic_state,acpi_ut_push_generic_state,acpi_ut_create_update_state,acpi_ut_create_update_state_and_push,acpi_ps_get_opcode_info,acpi_os_acquire_lock,acpi_os_release_lock,acpi_ut_update_ref_count
 
 
-Host+Guest optimization : filering + event_aggregation + func_exit_only:
+Host+Guest optimization : filtering + event_aggregation + func_exit_only:
 size 	: 	221 MB
 events 	:	3456030
 duratin : 	1-CPU= 2.6 secs
 
 Function to be disabled : note_page,kmem_cache_alloc,kmem_cache_free,__slab_free,acpi_*,_raw_spin_*,mutex_*,_cond_resched,console_conditional_schedule,console_trylock,console_unlock
 
-
-
-console_conditional_schedule,319464,0.606
-
-
-console_device,1,0.000
-
-console_lock
-4
-0.000
-1613
-
-console_trylock
-509
-0.001
-1614
-
-console_unlock
-511
-0.001
