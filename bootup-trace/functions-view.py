@@ -8,16 +8,19 @@ from queue import *
 HELP = "Usage: python hyperview.py path/to/trace --cpuid <CPU_ID> --pid <CPU>"
 USERSPACE_HYPERCALL_NR = 2000
 KERNELSPACE_HYPERCALL_NR = 1000
+KERNELSPACE_HYPERCALL_NR_2 = 1004
 SCHED_SWITCH_HYPERCALL_NR = 1001
-KVM_HYPERCALL = "kvm_x86_hypercall"
+KVM_X86_HYPERCALL = "kvm_x86_hypercall"
+KVM_HYPERCALL = "kvm_hypercall"
 HYPERGRAPH_HOST = "hypergraph_host"
 KVM_ENTRY = "kvm_x86_entry"
-KVM_EXIT = "kvm_x86_entry"
+KVM_EXIT = "kvm_x86_exit"
 
 
 def ns_to_us(timestamp):
     return (timestamp/float(1000))
-
+def ns_to_ms(timestamp):
+    return (timestamp/float(1000000))
 def format_value(field_type, value):
     if field_type == 1:
         return int(value)
@@ -89,19 +92,22 @@ class Symbols:
     def get_name(self, ip):
         if ip in self.mappings:
             return self.mappings[ip]
-        # else:  # loop for
-        #     symbol = self.bst_lookup(ip, 0, len(self.bst) - 1)
-        #     mapping = self.mappings[symbol]
-        #     return mapping
+        else:  # loop for
+            symbol = self.bst_lookup(ip, 0, len(self.bst) - 1)
+            mapping = self.mappings[symbol]
+            return mapping
         return ip
 
 
 class HashTable:
+
     def __init__(self, file_path):
         self.file_path = file_path
         self.mappings = dict()
         with open(file_path) as f:
             lines = f.readlines()
+            self.arch = 64 if len(lines[0].strip().split(' ')[0]) > 8 else 32
+
             for line in lines:
                 try:
                     values = line.strip().split(' ')
@@ -109,7 +115,9 @@ class HashTable:
                         continue
                     ip = values[0]
                     ip = int(ip, 16)
+
                     function_name = values[1].strip() if len(values) <= 2 else values[2]
+                    function_name = function_name.replace('\t', ' ')
                     hash_code = self.string_hash(function_name)
                     if hash_code not in self.mappings:
                         self.mappings[hash_code] = [function_name]
@@ -126,11 +134,11 @@ class HashTable:
         length = len(name) - 1
         while length >= 0:
             p = name[index]
-            x = ((1000003 * x) ^ ord(p)) % 2 ** 64
+            x = ((1000003 * x) ^ ord(p)) % 2 ** self.arch
             index += 1
             length -= 1
 
-        x = (x ^ len(name)) % 2 ** 64
+        x = (x ^ len(name)) % 2 ** self.arch
         if x == -1:
             x = -2
         return x
@@ -142,31 +150,9 @@ class HashTable:
         return None
 
 
-class Stack:
-    def __init__(self):
-        self.items = []
-    def __str__(self):
-        return ';'.join(self.items)
-    def is_empty(self):
-        return self.items == []
-
-    def push(self, item):
-        self.items.append(item)
-
-    def pop(self):
-        return self.items.pop()
-
-    def peek(self):
-        return self.items[len(self.items) - 1]
-
-    def size(self):
-        return len(self.items)
-
-
 def main(argv):
-    path = ""
-
-    kernel_symbols_path = os.path.join("./logs", "kallsyms.map")
+    path = "/home/abder/ciena-trace-5/"
+    kernel_symbols_path = "/home/abder/ciena-trace-5/mapping/kallsyms-x86.map"
     
     try:
         path = argv[0]
@@ -177,7 +163,7 @@ def main(argv):
             raise TypeError(HELP)
 
     # Create TraceCollection and add trace:
-    # hash_table = HashTable(kernel_symbols_path)
+    hash_table = HashTable(kernel_symbols_path)
     kernel_symbols = Symbols(kernel_symbols_path)
     process_list = Process(os.path.join("./logs", "process.txt"))
 
@@ -186,8 +172,9 @@ def main(argv):
     if trace_handle is None:
         raise IOError("Error adding trace")
     next_pid = 1
+    start_timestamp = 0
     for event in traces.events:
-        if event.name != KVM_HYPERCALL and event.name != HYPERGRAPH_HOST:
+        if event.name != KVM_HYPERCALL and event.name != KVM_X86_HYPERCALL and event.name != HYPERGRAPH_HOST:
             continue
 
         fields = dict()
@@ -196,36 +183,41 @@ def main(argv):
             fields[k] = format_value(field_type, v)
 
         timestamp = event.timestamp
+        if start_timestamp == 0:
+            start_timestamp = timestamp
         nr = fields['nr']
         cpu_id = event['cpu_id']
 
         is_sched_switch = (nr == SCHED_SWITCH_HYPERCALL_NR)
+        is_kernelspace = (nr == KERNELSPACE_HYPERCALL_NR or nr == KERNELSPACE_HYPERCALL_NR_2)
         if is_sched_switch:
             prev_pid = fields['a0']
             prev_tgid = fields['a1']
             next_pid = fields['a2']
             next_tgid = fields['a3']
+        elif is_kernelspace:
+            function_ip = fields['a0']
+            parent_ip = fields['a1']
+            function_hash_code = fields["a2"]
+            parent_hash_code = fields["a3"]
+            function_name = kernel_symbols.get_name(function_ip)
+            parent_name = kernel_symbols.get_name(parent_ip)
 
-        else:
-            function_address = fields['a0']
-            is_entry = fields['a1'] == 0
-            hash_code = fields["a2"]
-            depth = fields["a3"]
-            function_name = kernel_symbols.get_name(function_address)
+            function_name_from_hash = hash_table.get_name(function_hash_code)
+            parent_name_from_hash = hash_table.get_name(parent_hash_code)
 
-            duration = fields["a2"]
-            print("%s\t %s\t %s\t %s\t %s" % (str(function_name).rjust(50),
-                                                   duration,
-                                                   depth,
-                                                   next_pid,
-                                                   timestamp
-                                                   )
-                      )
+            if function_name.lower() != function_name_from_hash.lower():
+                print("\nOops (current) : ip=%s, from_kallsyms=%s, from_hash=%s\n" % (function_ip, function_name,
+                                                                        function_name_from_hash))
+            if parent_name.lower() != parent_name_from_hash.lower():
+                print("\nOops (parent) : ip=%s, from_kallsyms=%s, from_hash=%s\n" % (parent_ip, parent_name,
+                                                                        parent_name_from_hash))
+            duration = ns_to_ms(timestamp - start_timestamp)
+            print("(%s) %s ms\t%s <-%s" % (cpu_id, duration, function_name, parent_name))
 
 if __name__ == "__main__":
-    print("%s\t dur\t depth\t pid\t exit_time" % "function_name".rjust(50))
-    try:
-        main(sys.argv[1:])
-    except Exception as ex:
-        raise ex
+    print("CPU  |  function <- parent")
+
+    main(sys.argv[1:])
+
 

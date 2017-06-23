@@ -3,6 +3,7 @@
     2 kthreadd
     3 kworker/0:0
     4 kworker/0:0H
+    5 kworker/u4:0
     6 ksoftirqd/0
     7 rcu_sched
     8 rcu_bh
@@ -27,6 +28,7 @@
    27 devfreq_wq
    28 watchdogd
    29 kworker/u4:1
+   30 kworker/0:1
    32 kauditd
    33 kswapd0
    34 vmstat
@@ -46,67 +48,69 @@
    87 scsi_tmf_0
    88 scsi_eh_1
    89 scsi_tmf_1
+   90 kworker/u4:2
    91 kworker/u4:3
    92 bioset
-   94 bioset
+   93 bioset
+   94 kworker/u4:4
    95 kworker/0:1H
    99 ipv6_addrconf
   120 charger_manager
+  161 bioset
   162 bioset
   163 bioset
   164 bioset
+  166 bioset
   167 bioset
   168 bioset
-  171 bioset
-  173 bioset
-  174 bioset
-  199 ttm_swap
+  169 bioset
+  207 ttm_swap
   210 kdmflush
   211 bioset
   215 kdmflush
   216 bioset
-  287 raid5wq
+  280 kworker/0:2
+  289 raid5wq
   325 bioset
-  352 jbd2/dm-0-8
-  353 ext4-rsv-conver
-  408 systemd-journal
-  416 kworker/0:7
-  417 lvmetad
-  422 iscsi_eh
-  428 systemd-udevd
-  444 kworker/u5:0
-  445 ib-comp-wq
-  446 ib_addr
-  447 ib_mcast
-  448 ib_nl_sa_wq
-  467 ib_cm
-  469 iw_cm_wq
-  472 rdma_cm
-  537 systemd-timesyn
-  698 dhclient
-  865 dbus-daemon
-  871 acpid
-  873 accounts-daemon
-  874 systemd-logind
-  875 lxcfs
-  877 atd
-  885 cron
-  886 rsyslogd
-  887 snapd
-  966 polkitd
- 1048 systemd-resolve
- 1097 sshd
- 1123 iscsid
- 1124 iscsid
- 1157 agetty
- 1226 kworker/u4:0
- 1345 kworker/0:1
- 1351 kworker/0:2
- 1414 kworker/0:3
- 1480 kworker/0:4
- 1599 sshd
- 1608 systemd
- 1609 (sd-pam)
- 1659 sshd
- 1660 bash
- 1661 ps
+  350 jbd2/dm-0-8
+  351 ext4-rsv-conver
+  396 systemd-journal
+  405 kworker/0:3
+  408 kworker/0:4
+  410 kworker/0:5
+  411 lvmetad
+  413 kworker/0:6
+  414 iscsi_eh
+  415 systemd-udevd
+  417 kworker/0:7
+  448 kworker/u5:0
+  449 ib-comp-wq
+  451 ib_addr
+  452 ib_mcast
+  453 ib_nl_sa_wq
+  460 ib_cm
+  463 iw_cm_wq
+  471 rdma_cm
+  502 systemd-timesyn
+  675 dhclient
+  827 cron
+  828 accounts-daemon
+  829 rsyslogd
+  830 acpid
+  832 systemd-logind
+  834 atd
+  836 lxcfs
+  837 dbus-daemon
+  883 snapd
+ 1014 polkitd
+ 1027 systemd-resolve
+ 1081 sshd
+ 1110 iscsid
+ 1111 iscsid
+ 1144 agetty
+ 1532 sshd
+ 1541 systemd
+ 1542 (sd-pam)
+ 1592 sshd
+ 1594 bash
+ 1595 ps

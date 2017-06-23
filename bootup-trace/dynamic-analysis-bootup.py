@@ -10,6 +10,7 @@ USERSPACE_HYPERCALL_NR = 2000
 KERNELSPACE_HYPERCALL_NR = 1000
 SCHED_SWITCH_HYPERCALL_NR = 1001
 KVM_HYPERCALL = "kvm_x86_hypercall"
+HYPERGRAPH_HOST = "hypergraph_host"
 KVM_ENTRY = "kvm_x86_entry"
 KVM_EXIT = "kvm_x86_entry"
 
@@ -163,7 +164,7 @@ class Stack:
 
 
 def main(file):
-    path = "/home/abder/lttng-traces/full-bootup-tracing-20170614-193113"
+    path = "/home/abder/lttng-traces/full-bootup-tracing-20170619-172936"
     kernel_symbols_path = os.path.join("./logs", "kallsyms.map")
     data_pr_cpu = {}
 
@@ -178,7 +179,7 @@ def main(file):
         raise IOError("Error adding trace")
     next_pid = 1
     for event in traces.events:
-        if event.name != KVM_HYPERCALL:
+        if event.name != KVM_HYPERCALL and event.name != HYPERGRAPH_HOST:
             continue
 
         fields = dict()
@@ -195,6 +196,7 @@ def main(file):
                 'func_entry_function_name': "", "stack_head":"", "stack": Stack()
             }
         is_sched_switch = (nr == SCHED_SWITCH_HYPERCALL_NR)
+        is_kernelspace = (nr == KERNELSPACE_HYPERCALL_NR)
         if is_sched_switch:
             prev_pid = fields['a0']
             prev_tgid = fields['a1']
@@ -210,7 +212,7 @@ def main(file):
             data_pr_cpu[next_pid]['pid'] = next_pid
             data_pr_cpu[next_pid]['prev_task'] = process_list.get_name(prev_pid)
             data_pr_cpu[next_pid]['task'] = process_list.get_name(next_pid)
-        else:
+        elif is_kernelspace:
             function_address = fields['a0']
             is_entry = fields['a1'] == 0
             hash_code = fields["a2"]
@@ -224,21 +226,24 @@ def main(file):
                 continue
 
             duration = fields["a2"]
-            current = data_pr_cpu[next_pid]['stack'].pop()
+            if not data_pr_cpu[next_pid]['stack'].is_empty():
+                current = data_pr_cpu[next_pid]['stack'].pop()
             parent = data_pr_cpu[next_pid]['stack'].peek() if not data_pr_cpu[next_pid]['stack'].is_empty() else ''
             data_pr_cpu[next_pid]['current_parent'] = parent
-            file.write("%s,%s,%s,%s,%s,%s\n" % (function_name,
-                                                   timestamp,
-                                                   duration, depth,
-                                                   data_pr_cpu[next_pid]['task'],
-                                                   data_pr_cpu[next_pid]['current_parent']
-                                                   #str(data_pr_cpu[next_pid]['stack'])
-                                                   )
+            file.write("%s,%s,%s,%s,%s,%s,%s\n" % (function_name,
+                                                data_pr_cpu[next_pid]['current_parent'],
+                                                next_pid,
+                                                data_pr_cpu[next_pid]['task'],
+                                                timestamp,
+                                                depth,
+                                                duration
+                                                #str(data_pr_cpu[next_pid]['stack'])
+                                               )
                       )
 
 if __name__ == "__main__":
     f = open('dynamic-analysis.csv', 'w')
-    f.write("function_name,exit_time,duration,depth,process,parent\n")
+    f.write("function_name,parent,pid,process,exit_timestamp,depth,duration\n")
     try:
         main(f)
     except Exception as ex:

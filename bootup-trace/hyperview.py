@@ -9,9 +9,12 @@ HELP = "Usage: python hyperview.py path/to/trace --cpuid <CPU_ID> --pid <CPU>"
 USERSPACE_HYPERCALL_NR = 2000
 KERNELSPACE_HYPERCALL_NR = 1000
 SCHED_SWITCH_HYPERCALL_NR = 1001
-KVM_HYPERCALL = "kvm_x86_hypercall"
+KVM_X86_HYPERCALL = "kvm_x86_hypercall"
+KVM_HYPERCALL = "kvm_hypercall"
+HYPERGRAPH_HOST = "hypergraph_host"
 KVM_ENTRY = "kvm_x86_entry"
-KVM_EXIT = "kvm_x86_entry"
+KVM_EXIT = "kvm_x86_exit"
+
 
 HEADER = """tracer: hypergraph
 
@@ -101,10 +104,10 @@ class Symbols:
     def get_name(self, ip):
         if ip in self.mappings:
             return self.mappings[ip]
-        # else:  # loop for
-        #     symbol = self.bst_lookup(ip, 0, len(self.bst) - 1)
-        #     mapping = self.mappings[symbol]
-        #     return mapping
+        else:  # loop for
+            symbol = self.bst_lookup(ip, 0, len(self.bst) - 1)
+            mapping = self.mappings[symbol]
+            return mapping
         return ip
 
 
@@ -131,18 +134,18 @@ class HashTable:
                 except Exception as ex:
                     print(ex)
 
-    def string_hash(self, name):
+    def string_hash(self, name, arch=32):
         index = 0
         p = name[index]
         x = ord(p) << 7
         length = len(name) - 1
         while length >= 0:
             p = name[index]
-            x = ((1000003 * x) ^ ord(p)) % 2 ** 64
+            x = ((1000003 * x) ^ ord(p)) % 2 ** arch
             index += 1
             length -= 1
 
-        x = (x ^ len(name)) % 2 ** 64
+        x = (x ^ len(name)) % 2 ** arch
         if x == -1:
             x = -2
         return x
@@ -155,8 +158,8 @@ class HashTable:
 
 
 def main(argv):
-    path = ""
-    kernel_symbols_path = "./logs/kallsyms.map"
+    path = "/home/abder/ciena-functions-trace/"
+    kernel_symbols_path = "/home/abder/ciena-functions-trace/mapping/kallsyms-x86.map"
     input_word = ""
     input_cpuid = ""
     input_pid = ""
@@ -185,8 +188,8 @@ def main(argv):
             input_pid = arg
 
     # Create TraceCollection and add trace:
-    hash_table = HashTable(kernel_symbols_path)
     kernel_symbols = Symbols(kernel_symbols_path)
+    hash_table = HashTable(kernel_symbols_path)
     process_list = Process("./logs/process.txt")
 
     traces = babeltrace.reader.TraceCollection()
@@ -196,9 +199,7 @@ def main(argv):
 
     print(HEADER)
     for event in traces.events:
-        # if event.name != KVM_EXIT:
-
-        if event.name != KVM_HYPERCALL:
+        if event.name != KVM_HYPERCALL and event.name != KVM_X86_HYPERCALL and event.name != HYPERGRAPH_HOST:
             continue
 
         fields = dict()
@@ -215,6 +216,7 @@ def main(argv):
                 'prev_pid': 0, 'pid': 1, 'prev_task': '-', 'task': '-', 'func_entry_timestamp': 0, 'func_entry_function_name': "", "stack_head":""
             }
         is_sched_switch = (nr == SCHED_SWITCH_HYPERCALL_NR)
+        is_kernelspace = (nr == KERNELSPACE_HYPERCALL_NR)
         if is_sched_switch:
             prev_pid = fields['a0']
             prev_tgid = fields['a1']
@@ -228,10 +230,9 @@ def main(argv):
             print("".join(['-'] * 100))
             print("sched_switch on CPU %s  |  pid:%s->%s, tid:%s->%s" % (cpu_id, prev_pid, next_pid, prev_tgid, next_tgid))
             print("".join(['-'] * 100))
-        else:
+        elif is_kernelspace:
             # if show_pid != data_pr_cpu[cpu_id]['pid']:
             #     continue
-            is_kernelspace = (nr == KERNELSPACE_HYPERCALL_NR)
             function_address = fields['a0']
             is_entry = fields['a1'] == 0
             hash_code = fields["a2"]
@@ -258,14 +259,16 @@ def main(argv):
             # name = ";\n" if is_leaf else "%s()" % (function_name) if is_entry else "}} /* {} */".format(function_name)
             name = "%s() {" % (function_name) if is_entry else "}"
             line = "%s)   <%s>-%s\t| %s\t| d=%s | %s%s" % \
-                   (cpu_id, data_pr_cpu[cpu_id]['task'].ljust(5)[0:5], data_pr_cpu[cpu_id]['pid'], elapsed_time.ljust(10), str(depth).ljust(2), "".join([' '*(cpu_id-1)*0])+"".join(['| '*depth]),name)
+                   (cpu_id, data_pr_cpu[cpu_id]['task'].ljust(5)[0:5], 
+                    data_pr_cpu[cpu_id]['pid'], 
+                    elapsed_time.ljust(10), 
+                    str(depth).ljust(2), 
+                    "".join([' '*(cpu_id-1)*0])+"".join(['| '*depth]),name)
             print(line)
 
 if __name__ == "__main__":
-    try:
-        main(sys.argv[1:])
-    except Exception as ex:
-        print(ex)
+    main(sys.argv[1:])
+
 """
 do_one_initcall 3222275001
 kallsyms_lookup 3223023465

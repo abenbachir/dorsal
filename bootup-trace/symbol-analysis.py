@@ -1,14 +1,35 @@
 import hashlib
 
 
+def string_hash(name, arch=32):
+    index = 0
+    p = name[index]
+    x = ord(p) << 7
+    length = len(name) - 1
+    while length >= 0:
+        p = name[index]
+        x = ((1000003 * x) ^ ord(p)) % 2 ** arch
+        index += 1
+        length -= 1
+
+    x = (x ^ len(name)) % 2 ** arch
+    if x == -1:
+        x = -2
+    return x
+
 # filepath = "./logs/available_functions.txt"
-filepath = "./logs/System.map"
+filepath = "./logs/kallsyms.map"
 
 shortnames = list()
 functions = dict()
 length_frequencies = dict()
 max_length = 0
 count = 0
+
+print("hsiFlareAcc_init   [hsiFlare]=%s\n hsiFlareAcc_init [hsiFlare]=%s\n hsiFlareAcc_init=%s\n" % (string_hash("hsiFlareAcc_init   [hsiFlare]"),
+            string_hash("hsiFlareAcc_init [hsiFlare]"),
+            string_hash("hsiFlareAcc_init"),
+            ))
 with open(filepath) as f:
     lines = f.readlines()
     count = len(lines)
@@ -20,13 +41,13 @@ with open(filepath) as f:
             ip = values[0]
             ip = int(ip, 16)
             function_name = values[1] if len(values) <= 2 else values[2]
-            function_name = function_name.rstrip()
+            function_name = function_name.rstrip().replace('\t', ' ')
             # function_name = line.strip()
             # if function_name in functions:
             #     continue
             max_length = len(function_name) if len(function_name) > max_length else max_length
 
-            shortname = hash(function_name)
+            shortname = string_hash(function_name)
             # size = 40
             # shortname = function_name[:size]
             # if len(function_name) > size:
@@ -62,4 +83,4 @@ unique_names = set(shortnames)
 #     if count > 1:
 #         print("[%s] %s %d" % (ip, name, count))
 
-print("Clash functions : %d" % (len(shortnames)- len(unique_names) - duplicate))
+print("Clash functions : %d" % (len(shortnames) - len(unique_names) - duplicate))

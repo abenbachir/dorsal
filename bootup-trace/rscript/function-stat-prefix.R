@@ -5,24 +5,26 @@ library(scales)
 library(ggrepel)
 library(stringi)
 # function_name,exit_time,duration,depth,process
-data_freq <- read.table("./bootup-trace/rscript/bootup-func-frequencies.csv", header=T, sep=",")
-
+data_freq <- read.table("./bootup-trace/rscript/bootup-func-frequencies-after-optim-1.csv", header=T, sep=",")
+# data_freq <- subset(data_freq, startsWith(as.character(function_name),"__"))
 data_stat <- ddply(data_freq, "function_name", 
               transform,
+              # prefix = function_name
               prefix    = paste(unlist(strsplit(as.character(function_name),"[_]"))[1], '_', sep='')
+              # prefix    = substr(as.character(function_name), 0, 6)
 )
 data_stat <- count(data_stat, c("prefix"))
 data_stat$percentage <- round((data_stat$freq/sum(data_stat$freq)) * 100, 2)
-data_stat = subset(data_stat, percentage >= 0.2 )
+data_stat = subset(data_stat, percentage >= 1 )
 # colors <- c("#0f2054", "#5f2054", "#ff0d54", "#ff8d54")
 colors <- c('18.06 %'="#1f2054", '26.57 %'="#3f2054", '21.56 %'="#9f2d54", '14.65 %'="#6f2d54", '14.65 %'="#1f2054",'1.47 %'= "#ff0d54")
 
 
 plot <- ggplot(data_stat, aes(reorder(prefix, -percentage))) +
   geom_bar(aes(weight = percentage),  width= 0.7, colour="transparent", fill = '#3f2054') +
-  # coord_flip() +
+  coord_flip() +
   geom_text(aes(y=percentage, label=paste(percentage,'%') ), color="#3f2054",  fontface = "bold",
-            size = 3.5, position=position_dodge(width=0.9), vjust=-1) +
+            size = 3.5, position=position_dodge(width=0.9), hjust=-0.1) +
   # scale_fill_manual(values = colors) +
   labs(x ="Function prefix", y ="%") +
   theme_light() +
