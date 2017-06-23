@@ -7,17 +7,26 @@ library(stringi)
 # function_name,exit_time,duration,depth,process
 
 filters <- c('note_page',
-            'kmem_cache_alloc','kmem_cache_free',
-            '__slab_free',
-            'acpi_*',
+            '*kmem_cache*',
+            '*slab*',
+            '*acpi*',
             '_raw_spin_*',
-            'mutex_*',
-            '_cond_resched','console_conditional_schedule','console_trylock','console_unlock'
+            '*mutex*',
+            '_cond_resched',
+            '*console*'
           )
-data <- read.table("./bootup-trace/bootup-functions.csv", header=T, sep=",")
+data <- read.table("./bootup-trace/rscript/bootup-func-frequencies.csv", header=T, sep=",")
 
+total <- sum(data$freq)
 
-grep(glob2rx("acpi_*"), data, value = TRUE)
+acpi <- subset(data,  grepl(glob2rx("*acpi*") , function_name) )
 
+slab <- subset(data,  grepl(glob2rx("*slab*") , function_name) )
 
-acpi <- subset(data,  grepl(glob2rx("acpi_*") , function_name) )
+raw_spin <- subset(data,  grepl(glob2rx("_raw_spin*") , function_name) )
+
+console <- subset(data,  grepl(glob2rx("*console*") , function_name) )
+
+kmem_cache <- subset(data,  grepl(glob2rx("*kmem_cache*") , function_name) )
+
+reste <- subset(data, grepl(paste(filters, collapse = '|'), function_name, invert=TRUE))
