@@ -21,7 +21,7 @@ data <- read.table("./bootup-trace/rscript/bootup-func-frequencies.csv", header=
 total <- sum(data$freq)
 
 reste <- subset(data, !grepl(paste(filters, collapse = '|'), function_name))
-# colnames(data_stat) <- c("filter", "total_func", "total_freq", "percentage")
+
 data_stat = data.frame(filter = 'reste', 
                        total_func = length(reste$function_name), 
                        total_freq = sum(reste$freq), 
