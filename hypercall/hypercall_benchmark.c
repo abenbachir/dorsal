@@ -68,7 +68,7 @@ int main(int argc, char** argv)
 {
     printf("elapsed_time\n");
     struct timespec ts_start, ts_end;
-    ulong samples = 1E6;
+    ulong samples = 1E5;
 
     for (int i=0; i < samples; i++) {
         int repeat = 30;

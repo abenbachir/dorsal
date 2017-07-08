@@ -7,6 +7,7 @@ import babeltrace.reader
 
 HELP = "Usage: python hyperview.py path/to/trace --cpuid <CPU_ID> --pid <CPU>"
 USERSPACE_HYPERCALL_NR = 2000
+INITCALL_HYPERCALL_NR = 3000
 KERNELSPACE_HYPERCALL_NR = 1000
 SCHED_SWITCH_HYPERCALL_NR = 1001
 KVM_X86_HYPERCALL = "kvm_x86_hypercall"
@@ -156,10 +157,23 @@ class HashTable:
             return values[0]
         return None
 
-
+initcall_types = {
+    0: 'early',
+    1: 'pure',
+    2: 'core',
+    3: 'postcore',
+    4: 'arch',
+    5: 'subsys',
+    6: 'fs',
+    7: 'rootfs',
+    8: 'device',
+    9: 'late',
+    10: 'console',
+    11: 'security'
+}
 def main(argv):
-    path = "/home/abder/ciena-functions-trace/"
-    kernel_symbols_path = "/home/abder/ciena-functions-trace/mapping/kallsyms-x86.map"
+    path = ""
+    kernel_symbols_path = "./logs/kallsyms.map"
     input_word = ""
     input_cpuid = ""
     input_pid = ""
@@ -198,6 +212,7 @@ def main(argv):
         raise IOError("Error adding trace")
 
     print(HEADER)
+    start_timestamp = 0
     for event in traces.events:
         if event.name != KVM_HYPERCALL and event.name != KVM_X86_HYPERCALL and event.name != HYPERGRAPH_HOST:
             continue
@@ -208,6 +223,7 @@ def main(argv):
             fields[k] = format_value(field_type, v)
 
         timestamp = event.timestamp
+        start_timestamp = timestamp if start_timestamp == 0 else start_timestamp
 
         nr = fields['nr']
         cpu_id = event['cpu_id']
@@ -217,6 +233,7 @@ def main(argv):
             }
         is_sched_switch = (nr == SCHED_SWITCH_HYPERCALL_NR)
         is_kernelspace = (nr == KERNELSPACE_HYPERCALL_NR)
+        is_initcall = (nr == INITCALL_HYPERCALL_NR)
         if is_sched_switch:
             prev_pid = fields['a0']
             prev_tgid = fields['a1']
@@ -230,6 +247,12 @@ def main(argv):
             print("".join(['-'] * 100))
             print("sched_switch on CPU %s  |  pid:%s->%s, tid:%s->%s" % (cpu_id, prev_pid, next_pid, prev_tgid, next_tgid))
             print("".join(['-'] * 100))
+        elif is_initcall:
+            phase = fields['a0']
+            is_sync = fields['a1'] == 1
+            print("".join(['='] * 100))
+            print("Start initcall phase : %s %s + %s ms" % (initcall_types.get(phase), "sync" if is_sync else "", ns_to_ms(timestamp-start_timestamp)) )
+            print("".join(['='] * 100))
         elif is_kernelspace:
             # if show_pid != data_pr_cpu[cpu_id]['pid']:
             #     continue
@@ -258,13 +281,15 @@ def main(argv):
                                                 + " us" if data_pr_cpu[cpu_id]['func_entry_timestamp'] > 0 else "")
             # name = ";\n" if is_leaf else "%s()" % (function_name) if is_entry else "}} /* {} */".format(function_name)
             name = "%s() {" % (function_name) if is_entry else "}"
-            line = "%s)   <%s>-%s\t| %s\t| d=%s | %s%s" % \
+            line = "%s)   <%s>-%s\t| %s\t| d=%s | %s%s +%s ms" % \
                    (cpu_id, data_pr_cpu[cpu_id]['task'].ljust(5)[0:5], 
                     data_pr_cpu[cpu_id]['pid'], 
                     elapsed_time.ljust(10), 
                     str(depth).ljust(2), 
-                    "".join([' '*(cpu_id-1)*0])+"".join(['| '*depth]),name)
+                    "".join([' '*(cpu_id-1)*0])+"".join(['| '*depth]),name, ns_to_ms(timestamp-start_timestamp))
             print(line)
+        elif nr == 1002 or nr == 1003:
+            print("%s %s %s ms" % (">>>>> ","Start Tracing" if nr == 1002 else "Stop Tracing", ns_to_ms(timestamp-start_timestamp)))
 
 if __name__ == "__main__":
     main(sys.argv[1:])

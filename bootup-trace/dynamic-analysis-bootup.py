@@ -162,9 +162,9 @@ class Stack:
     def size(self):
         return len(self.items)
 
-
+functions = {}
 def main(file):
-    path = "/home/abder/lttng-traces/full-bootup-tracing-20170619-172936"
+    path = "/home/abder/lttng-traces/full-bootup-tracing-20170623-182929"
     kernel_symbols_path = os.path.join("./logs", "kallsyms.map")
     data_pr_cpu = {}
 
@@ -230,7 +230,7 @@ def main(file):
                 current = data_pr_cpu[next_pid]['stack'].pop()
             parent = data_pr_cpu[next_pid]['stack'].peek() if not data_pr_cpu[next_pid]['stack'].is_empty() else ''
             data_pr_cpu[next_pid]['current_parent'] = parent
-            file.write("%s,%s,%s,%s,%s,%s,%s\n" % (function_name,
+            """file.write("%s,%s,%s,%s,%s,%s,%s\n" % (function_name,
                                                 data_pr_cpu[next_pid]['current_parent'],
                                                 next_pid,
                                                 data_pr_cpu[next_pid]['task'],
@@ -239,13 +239,20 @@ def main(file):
                                                 duration
                                                 #str(data_pr_cpu[next_pid]['stack'])
                                                )
-                      )
+                      )"""
+            if function_name not in functions:
+                functions[function_name] = 0
 
+            functions[function_name] = functions[function_name] + 1
+            #print("%s,%s" % (function_name, functions[function_name]))
 if __name__ == "__main__":
-    f = open('dynamic-analysis.csv', 'w')
-    f.write("function_name,parent,pid,process,exit_timestamp,depth,duration\n")
+    f = open('bootup-functions.csv', 'w')
+    f.write("function_name,frequency\n")
+    #f.write("function_name,parent,pid,process,exit_timestamp,depth,duration\n")
     try:
         main(f)
+        for function_name, freq in functions.items():
+            f.write("%s,%s\n" % (function_name, freq))
     except Exception as ex:
         f.close()
         raise ex

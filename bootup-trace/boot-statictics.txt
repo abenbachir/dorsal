@@ -64,3 +64,38 @@ duratin : 	1-CPU= 2.6 secs
 
 Function to be disabled : note_page,kmem_cache_alloc,kmem_cache_free,__slab_free,acpi_*,_raw_spin_*,mutex_*,_cond_resched,console_conditional_schedule,console_trylock,console_unlock
 
+Host+Guest optimization : filtering + event_aggregation + func_exit_only:
+size 	: 	207 MB
+events 	:	3246959
+duratin : 	1-CPU= 2.5032 secs
+
+Function to be disabled : note_page,*kmem_cache*,*slab*,*acpi*,_raw_spin_*,*mutex*,_cond_resched,*console*,*fb*
+
+
+
+==============================================================================================
+
+
+1)   <syste>-1	| start_kernel(){ at 0 ms
+		Start initcall phase : console  + 18.107493 ms
+		Start initcall phase : security  + 19.470359 ms
+		Start initcall phase : early  + 51.91873 ms
+>>>>>  	Start Tracing at 52.726984 ms
+		Start initcall phase : pure  + 54.32023 ms
+		Start initcall phase : core  + 54.412276 ms
+		Start initcall phase : core sync + 54.585488 ms
+		Start initcall phase : postcore  + 54.639572 ms
+		Start initcall phase : postcore sync + 54.709212 ms
+		Start initcall phase : arch  + 54.743597 ms
+		Start initcall phase : arch sync + 54.810266 ms
+		Start initcall phase : subsys  + 55.409326 ms
+		Start initcall phase : subsys sync + 140.69907 ms
+		Start initcall phase : fs  + 141.400358 ms
+		Start initcall phase : fs sync + 155.121511 ms
+		Start initcall phase : rootfs  + 723.229133 ms
+		Start initcall phase : device  + 723.746593 ms
+		Start initcall phase : device sync + 891.885536 ms
+		Start initcall phase : late  + 892.191756 ms
+		Start initcall phase : late sync + 904.351889 ms
+>>>>>  	Stop Tracing at 1037.700269 ms
+1)   <syste>-1	|  d=0  | run_init_process() { at 1037.701913 ms

@@ -30,6 +30,6 @@ void benchmark(int repeat)
 }
 int main(int argc, char** argv)
 {
-    benchmark(50);
+    benchmark(2);
     return 0;
 }

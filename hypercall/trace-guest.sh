@@ -7,9 +7,9 @@ lttng enable-channel -k --subbuf-size=16777216 --num-subbuf=64 vm_channel
 
 #lttng enable-event -k "kvm_x86_exit" --filter="exit_reason == 18" -c vm_channel
 #lttng enable-event -k "kvm_x86_hypercall,kvm_x86_entry" -c vm_channel
-#lttng enable-event -k "kvm_x86_hypercall" -c vm_channel
-lttng enable-event -k "kvm_x86_hypercall,kvm_x86_entry,kvm_x86_exit" -c vm_channel
-#lttng enable-event -k "hypergraph_host" -c vm_channel
+#lttng enable-event -k "kvm_*" -c vm_channel
+#lttng enable-event -k "kvm_x86_hypercall,kvm_x86_entry,kvm_x86_exit" -c vm_channel
+lttng enable-event -k "hypergraph_host" -c vm_channel
 lttng start
 
 #ssh abder@ubuntu '/home/abder/hypercall_benchmark' > ./hypercall-with-trace-enabled.dat
