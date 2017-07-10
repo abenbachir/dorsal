@@ -27,7 +27,7 @@ duratin :
 tracing disabled at run_init_process
 
 baseline : 
-duratin : 1.05189349967 secs
+duratin : 868.520 ms from here(901.071 ms, 881.668 ms, 861.460 ms, 864.917 ms, 868.520 ms)
 
 hypergraph func_entry_exit:
 size 	: 	9.4 GB
@@ -35,21 +35,25 @@ events 	:	322 M = 316440645 + 5669900 kvm_exits_entries != 18
 duratin : 	1-CPU= 01 min 19.22 secs, 2-CPU= 01 min 4.07 sces
 
 Host optimization : event_aggregation + func_entry_exit
+-------------------------
 size 	: 	6.7 GB
 events 	:	105 M
 duratin : 	1-CPU= 57 secs, 2-CPU= 61 secs
 
-Guest optimization : func_exit_only:
+Guest optimization : func_exit_only
+-------------------------
 size 	: 	4.8 GB
 events 	:	163905207 = 158044719 + 5860488	kvm_exits_entries != 18
 duratin : 	1-CPU= 40.977 secs , 2-CPU=41.168
 
-Host+Guest optimization : event_aggregation + func_exit_only:
+Host+Guest optimization : event_aggregation + func_exit_only
+-------------------------
 size 	: 	3.4 GB
 events 	:	52679596
 duratin : 	1-CPU= 30.695 secs (+/- 2.5) , 2-CPU= 32.039 secs
 
 Host+Guest optimization : 1st level filtering + event_aggregation + func_exit_only:
+-------------------------
 size 	: 	648 MB
 events 	:	10134561	
 duratin : 	1-CPU= 9.591
@@ -58,6 +62,7 @@ Function to be disabled : note_page,_raw_spin_lock_irqsave,_raw_spin_unlock_irqr
 
 
 Host+Guest optimization : filtering + event_aggregation + func_exit_only:
+-------------------------
 size 	: 	221 MB
 events 	:	3456030
 duratin : 	1-CPU= 2.6 secs
@@ -65,12 +70,39 @@ duratin : 	1-CPU= 2.6 secs
 Function to be disabled : note_page,kmem_cache_alloc,kmem_cache_free,__slab_free,acpi_*,_raw_spin_*,mutex_*,_cond_resched,console_conditional_schedule,console_trylock,console_unlock
 
 Host+Guest optimization : filtering + event_aggregation + func_exit_only:
+-------------------------
 size 	: 	207 MB
 events 	:	3246959
 duratin : 	1-CPU= 2.5032 secs
 
 Function to be disabled : note_page,*kmem_cache*,*slab*,*acpi*,_raw_spin_*,*mutex*,_cond_resched,*console*,*fb*
 
+
+Host+Guest optimization : bootup level tracing + filtering + event_aggregation + func_exit_only:
+-------------------------
+Function to be disabled : note_page,*kmem_cache*,*slab*,*acpi*,_raw_spin_*,*mutex*,_cond_resched,*console*,*fb*
+0:00:0.883035482999
+
+level			| size		| duration		| events 	| overhead	
+-------------------------------------------------------------------
+early 			| 1.4 MB	| 0.912 secs 	| 20365		| 4.76%		
+pure 			| 385 kB	| 0.902 secs 	| 5305		| 3.7%
+core,sync		| 541 kB	| 0.896	secs	| 7739		| 3.14%	
+postcore,sync	| 385 kB	| 0.894 secs 	| 5304		| 2.85%
+arch,sync		| 2.1 MB	| 0.921 secs	| 32216		| 5.7%
+subsys,sync		| 7.5 MB	| 0.973 secs	| 115709	| 10.74%
+fs,sync			| 155 MB	| 2.138 secs	| 2424709	| 59.37%
+rootfs 			| 721 kB	| 0.9	secs	| 10554		| 3.5%
+device,sync	 	| 26.4 MB	| 1.039 secs	| 412346	| 16.4%
+late,sync 		| 16.6 MB	| 0.958 secs	| 258066	| 9.34%
+
+
+
+
+
+
+pure : 914.94,896.41,894.61,908.129,912.62,894.314
+core: 893.155,898.464,900.731,895.007
 
 
 ==============================================================================================

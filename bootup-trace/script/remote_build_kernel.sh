@@ -5,7 +5,7 @@ virsh setvcpus --live ubuntu 4
 
 #scp ~/$linuxsource/kernel/trace/trace_functions.c ubuntu:~/linux/kernel/trace/
 scp ~/$linuxsource/kernel/trace/trace_hypergraph.c ubuntu:~/linux/kernel/trace/
-scp ~/$linuxsource/kernel/trace/trace_hyperinitcall.c ubuntu:~/linux/kernel/trace/
+scp ~/$linuxsource/kernel/trace/trace_hyperlevel.c ubuntu:~/linux/kernel/trace/
 
 #scp ~/$linuxsource/kernel/trace/trace_sched_switch.c ubuntu:~/linux/kernel/trace/
 #scp ~/$linuxsource/kernel/trace/trace_functions_graph.c ubuntu:~/linux/kernel/trace/
