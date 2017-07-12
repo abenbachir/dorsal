@@ -34,7 +34,8 @@ p <- ggplot(unique_data, aes(x=reorder(mode, median), y=median)) +
   geom_text(aes(label=paste(overhead,'%') ), colour='white',  fontface = "bold",
             # label.padding = unit(0.5, "lines"),
             # label.r = unit(0.7, "lines"),
-            label.size = 0, size = 5,
+            # label.size = 0, 
+            size = 5,
             position=position_dodge(width=0.9), vjust=2) +
   # coord_flip() +
   scale_fill_manual(values = colors) +
