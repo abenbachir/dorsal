@@ -7,7 +7,7 @@ import babeltrace.reader
 
 HELP = "Usage: python hyperview.py path/to/trace --cpuid <CPU_ID> --pid <CPU>"
 USERSPACE_HYPERCALL_NR = 2000
-INITCALL_HYPERCALL_NR = 3000
+LEVEL_HYPERCALL_NR = 3000
 KERNELSPACE_HYPERCALL_NR = 1000
 SCHED_SWITCH_HYPERCALL_NR = 1001
 KVM_X86_HYPERCALL = "kvm_x86_hypercall"
@@ -233,7 +233,7 @@ def main(argv):
             }
         is_sched_switch = (nr == SCHED_SWITCH_HYPERCALL_NR)
         is_kernelspace = (nr == KERNELSPACE_HYPERCALL_NR)
-        is_initcall = (nr == INITCALL_HYPERCALL_NR)
+        is_initcall = (nr == LEVEL_HYPERCALL_NR)
         if is_sched_switch:
             prev_pid = fields['a0']
             prev_tgid = fields['a1']
@@ -244,9 +244,9 @@ def main(argv):
             data_pr_cpu[cpu_id]['pid'] = next_pid
             data_pr_cpu[cpu_id]['prev_task'] = process_list.get_name(prev_pid)
             data_pr_cpu[cpu_id]['task'] = process_list.get_name(next_pid)
-            print("".join(['-'] * 100))
-            print("sched_switch on CPU %s  |  pid:%s->%s, tid:%s->%s" % (cpu_id, prev_pid, next_pid, prev_tgid, next_tgid))
-            print("".join(['-'] * 100))
+            #print("".join(['-'] * 100))
+            #print("sched_switch on CPU %s  |  pid:%s->%s, tid:%s->%s" % (cpu_id, prev_pid, next_pid, prev_tgid, next_tgid))
+            #print("".join(['-'] * 100))
         elif is_initcall:
             phase = fields['a0']
             is_sync = fields['a1'] == 1
@@ -287,7 +287,7 @@ def main(argv):
                     elapsed_time.ljust(10), 
                     str(depth).ljust(2), 
                     "".join([' '*(cpu_id-1)*0])+"".join(['| '*depth]),name, ns_to_ms(timestamp-start_timestamp))
-            print(line)
+            #sprint(line)
         elif nr == 1002 or nr == 1003:
             print("%s %s %s ms" % (">>>>> ","Start Tracing" if nr == 1002 else "Stop Tracing", ns_to_ms(timestamp-start_timestamp)))
 

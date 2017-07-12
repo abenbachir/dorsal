@@ -98,14 +98,26 @@ late,sync 		| 16.6 MB	| 0.958 secs	| 258066	| 9.34%
 
 
 
+console = 0.834078 ms, 0 events
+security = 138.961187 ms, 0 events
+early = 93.703889 ms, 20091 events
+pure = 2.624085 ms, 4868 events
+core = 1.973065 ms, 3449 events
+core_sync = 2.033812 ms, 3800 events
+postcore = 1.49384 ms, 2723 events
+postcore_sync = 1.281101 ms, 2381 events
+arch = 0.676801 ms, 1171 events
+arch_sync = 16.897094 ms, 30626 events
+subsys = 141.481393 ms, 112486 events
+subsys_sync = 1.603474 ms, 2962 events
+fs = 279.300567 ms, 497719 events
+fs_sync = 1591.931094 ms, 1927592 events
+rootfs = 6.048166 ms, 10121 events
+device = 407.284377 ms, 408668 events
+device_sync = 3.418742 ms, 5840 events
+late = 87.868856 ms, 133163 events
+Boot-up time = 2608.425825 ms
 
-
-
-pure : 914.94,896.41,894.61,908.129,912.62,894.314
-core: 893.155,898.464,900.731,895.007
-
-
-==============================================================================================
 
 
 1)   <syste>-1	| start_kernel(){ at 0 ms

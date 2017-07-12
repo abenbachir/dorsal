@@ -51,68 +51,67 @@
    90 kworker/u4:2
    91 kworker/u4:3
    95 ipv6_addrconf
-  116 charger_manager
-  117 bioset
-  118 bioset
-  119 kworker/u4:4
-  120 kworker/0:1H
-  121 kworker/u4:5
-  162 bioset
+   97 kworker/u4:4
+   99 bioset
+  101 bioset
+  104 kworker/u4:5
+  105 kworker/u4:6
+  107 kworker/0:1H
+  122 charger_manager
   163 bioset
   164 bioset
   165 bioset
-  167 bioset
+  166 bioset
   168 bioset
   169 bioset
+  170 bioset
   171 bioset
-  201 kdmflush
   202 ttm_swap
-  205 bioset
-  210 kdmflush
-  212 bioset
-  287 raid5wq
-  309 kworker/0:2
-  324 bioset
-  349 jbd2/dm-0-8
-  350 ext4-rsv-conver
-  394 systemd-journal
+  212 kdmflush
+  213 bioset
+  217 kdmflush
+  218 bioset
+  289 raid5wq
+  311 kworker/0:2
+  326 bioset
+  351 jbd2/dm-0-8
+  352 ext4-rsv-conver
   398 kworker/0:3
-  402 kworker/0:4
-  408 kworker/0:5
-  409 kworker/0:6
-  410 lvmetad
-  412 kworker/0:7
-  415 kworker/0:8
+  401 kworker/0:4
+  403 systemd-journal
+  406 kworker/0:5
+  409 lvmetad
   418 iscsi_eh
-  420 systemd-udevd
-  425 kworker/u5:0
-  426 ib-comp-wq
-  427 ib_addr
-  428 ib_mcast
-  429 ib_nl_sa_wq
+  422 systemd-udevd
+  427 kworker/u5:0
+  428 ib-comp-wq
+  429 ib_addr
+  430 ib_mcast
+  431 ib_nl_sa_wq
   444 ib_cm
-  445 iw_cm_wq
-  460 rdma_cm
-  547 systemd-timesyn
-  721 dhclient
-  887 rsyslogd
-  888 lxcfs
-  891 dbus-daemon
-  911 acpid
-  912 accounts-daemon
-  913 atd
-  914 systemd-logind
-  933 cron
-  947 snapd
- 1072 polkitd
- 1078 systemd-resolve
- 1141 sshd
- 1168 iscsid
- 1169 iscsid
- 1202 agetty
- 1588 sshd
- 1597 systemd
- 1598 (sd-pam)
- 1648 sshd
- 1649 bash
- 1650 ps
+  452 iw_cm_wq
+  461 rdma_cm
+  502 systemd-timesyn
+  698 dhclient
+  829 snapd
+  830 systemd-logind
+  831 lxcfs
+  832 accounts-daemon
+  833 rsyslogd
+  834 atd
+  851 acpid
+  854 dbus-daemon
+  908 cron
+  968 polkitd
+ 1042 systemd-resolve
+ 1099 sshd
+ 1124 iscsid
+ 1125 iscsid
+ 1157 agetty
+ 1479 kworker/0:6
+ 1533 sshd
+ 1542 systemd
+ 1543 (sd-pam)
+ 1593 sshd
+ 1594 bash
+ 1595 ps
