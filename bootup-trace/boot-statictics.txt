@@ -97,25 +97,26 @@ device,sync	 	| 26.4 MB	| 1.039 secs	| 412346	| 16.4%
 late,sync 		| 16.6 MB	| 0.958 secs	| 258066	| 9.34%
 
 
+level,time,events
+console,0.834078, 0
+security,138.961187, 0
+early,93.703889, 20091 			
+pure,2.624085,4868
+core,1.973065, 3449
+core_sync,2.033812, 3800
+postcore,1.49384, 2723
+postcore_sync,1.281101, 2381
+arch,0.676801, 1171
+arch_sync,16.897094, 30626
+subsys,141.481393, 112486
+subsys_sync,1.603474, 2962
+fs,279.300567, 497719
+fs_sync,1591.931094, 1927592
+rootfs,6.048166, 10121
+device,407.284377, 408668
+device_sync,3.418742, 5840
+late,87.868856, 133163
 
-console = 0.834078 ms, 0 events
-security = 138.961187 ms, 0 events
-early = 93.703889 ms, 20091 events
-pure = 2.624085 ms, 4868 events
-core = 1.973065 ms, 3449 events
-core_sync = 2.033812 ms, 3800 events
-postcore = 1.49384 ms, 2723 events
-postcore_sync = 1.281101 ms, 2381 events
-arch = 0.676801 ms, 1171 events
-arch_sync = 16.897094 ms, 30626 events
-subsys = 141.481393 ms, 112486 events
-subsys_sync = 1.603474 ms, 2962 events
-fs = 279.300567 ms, 497719 events
-fs_sync = 1591.931094 ms, 1927592 events
-rootfs = 6.048166 ms, 10121 events
-device = 407.284377 ms, 408668 events
-device_sync = 3.418742 ms, 5840 events
-late = 87.868856 ms, 133163 events
 Boot-up time = 2608.425825 ms
 
 
