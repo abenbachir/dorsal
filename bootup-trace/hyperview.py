@@ -244,9 +244,9 @@ def main(argv):
             data_pr_cpu[cpu_id]['pid'] = next_pid
             data_pr_cpu[cpu_id]['prev_task'] = process_list.get_name(prev_pid)
             data_pr_cpu[cpu_id]['task'] = process_list.get_name(next_pid)
-            #print("".join(['-'] * 100))
-            #print("sched_switch on CPU %s  |  pid:%s->%s, tid:%s->%s" % (cpu_id, prev_pid, next_pid, prev_tgid, next_tgid))
-            #print("".join(['-'] * 100))
+            print("".join(['-'] * 100))
+            print("sched_switch on CPU %s  |  pid:%s->%s, tid:%s->%s" % (cpu_id, prev_pid, next_pid, prev_tgid, next_tgid))
+            print("".join(['-'] * 100))
         elif is_initcall:
             phase = fields['a0']
             is_sync = fields['a1'] == 1
@@ -287,7 +287,7 @@ def main(argv):
                     elapsed_time.ljust(10), 
                     str(depth).ljust(2), 
                     "".join([' '*(cpu_id-1)*0])+"".join(['| '*depth]),name, ns_to_ms(timestamp-start_timestamp))
-            #sprint(line)
+            print(line)
         elif nr == 1002 or nr == 1003:
             print("%s %s %s ms" % (">>>>> ","Start Tracing" if nr == 1002 else "Stop Tracing", ns_to_ms(timestamp-start_timestamp)))
 

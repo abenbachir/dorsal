@@ -11,6 +11,7 @@ END_HYPERCALL_NR = 1003
 KERNELSPACE_HYPERCALL_NR = 1000
 SCHED_SWITCH_HYPERCALL_NR = 1001
 LEVEL_HYPERCALL_NR = 3000
+START_KERNEL_HYPERCALL_NR = 5000
 KVM_X86_HYPERCALL = "kvm_x86_hypercall"
 KVM_HYPERCALL = "kvm_hypercall"
 HYPERGRAPH_HOST = "hypergraph_host"
@@ -43,6 +44,9 @@ initcall_types = {
     10: 'console',
     11: 'security'
 }
+level = 'l3'
+
+
 def main(argv):
     path = ""
 
@@ -64,6 +68,7 @@ def main(argv):
     current_level = ""
     current_level_starttime = 0
     nr_events = 0
+    print('boot_level,time')
     for event in traces.events:
         if event.name != KVM_HYPERCALL and event.name != KVM_X86_HYPERCALL and event.name != HYPERGRAPH_HOST:
             continue
@@ -76,15 +81,19 @@ def main(argv):
         timestamp = event.timestamp
 
         nr = fields['nr']
-        if nr == START_HYPERCALL_NR:
+        if nr == START_KERNEL_HYPERCALL_NR:
+        # if nr == START_HYPERCALL_NR:
             start_timestamp = timestamp
+
         elif nr == END_HYPERCALL_NR:
             end_timestamp = timestamp
         elif nr == LEVEL_HYPERCALL_NR:
             level_nr = fields['a0']
             is_sync = fields['a1'] == 1
             if current_level:
-                print("%s = %s ms, %s events" % (current_level, ns_to_ms(timestamp-current_level_starttime), nr_events) )
+                print("%s,%s,%s" % (level,current_level, ns_to_ms(timestamp-current_level_starttime)) )
+            else:
+                print("%s,%s,%s" % (level,"very_early", ns_to_ms(timestamp - start_timestamp)))
 
             current_level = "".join([initcall_types.get(level_nr), "_sync" if is_sync else ""])
             current_level_starttime = timestamp
@@ -92,7 +101,8 @@ def main(argv):
         elif nr == SCHED_SWITCH_HYPERCALL_NR or nr == KERNELSPACE_HYPERCALL_NR:
             nr_events += 1
 
-    print("Boot-up time = %s ms" % ns_to_ms(end_timestamp-start_timestamp))
+    print("%s,%s,%s" % (level,current_level, ns_to_ms(end_timestamp - current_level_starttime)))
+    print("%s,bootup,%s" %(level,ns_to_ms(end_timestamp-start_timestamp)))
 
 if __name__ == "__main__":
     main(sys.argv[1:])
