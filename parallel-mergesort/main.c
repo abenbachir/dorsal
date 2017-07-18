@@ -1,7 +1,13 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
 #include <time.h>
+
+#define tic(start) clock_gettime(CLOCK_MONOTONIC, &start)
+#define toc(end) clock_gettime(CLOCK_MONOTONIC, &end)
+#define elapsed_nsec(start, end) (end.tv_nsec + 1E9 * end.tv_sec) - (start.tv_nsec + 1E9 * start.tv_sec)
+
 
 int* a;
 int* b; //sorted array
@@ -38,7 +44,8 @@ void writer(char* filename){
 
 struct index{int p,r;};
 
-void* merge_sort(void* param){
+void* merge_sort(void* param)
+{
 	struct index* pr = (struct index*) param;
 	int p = pr->p,  r = pr->r , ret1,ret2;
 	if (p==r)
@@ -81,30 +88,36 @@ void* merge_sort(void* param){
 	return NULL;
 }
 
-int main(void) {
+int main(void) 
+{
+	static struct timespec ts_start, ts_end;
+	static struct timespec ts_start_sorting, ts_end_sorting;
     char* filename= "input.txt";
+    unsigned long int sorting_time;
+    printf("total_time,sorting_time,sorting_overhead,io_overhead\n");
+    tic(ts_start);
+
 	if(reader(filename)){
         printf("File not found %s\n", filename);
         return 0;
     }
+
 	b = (int*)malloc(sizeof(int)*n);
 	struct index start;
 	start.p = 0;
 	start.r = n-1;
 	pthread_t start_thread;
-
-	struct timeval tv;
-	gettimeofday(&tv,NULL);
-	long long t1 = tv.tv_usec;
-
+	
+	tic(ts_start_sorting);
 	pthread_create(&start_thread,NULL,merge_sort,&start);
 	pthread_join(start_thread,NULL);
-
-	gettimeofday(&tv,NULL);
-	long long t2 = tv.tv_usec;
-
-	printf("elapsed time = %lld usec\n",t2-t1);
-	print(a);
+	toc(ts_end_sorting);
+	sorting_time = elapsed_nsec(ts_start_sorting, ts_end_sorting);
+	
 	writer("sorted.txt");
+	toc(ts_end);	
+	unsigned long int total_time = elapsed_nsec(ts_start, ts_end);
+
+	printf("%lu,%lu,%f,%f\n", total_time, sorting_time, (double)sorting_time/total_time, (double)(total_time-sorting_time)/total_time);
 	return 0;
 }
