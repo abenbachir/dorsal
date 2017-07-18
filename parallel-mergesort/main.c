@@ -94,7 +94,7 @@ int main(void)
 	static struct timespec ts_start_sorting, ts_end_sorting;
     char* filename= "input.txt";
     unsigned long int sorting_time;
-    printf("total_time,sorting_time,sorting_overhead,io_overhead\n");
+    // printf("total_time,sorting_time,sorting_overhead,io_overhead\n");
     tic(ts_start);
 
 	if(reader(filename)){
