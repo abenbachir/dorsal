@@ -200,7 +200,7 @@ def main(argv):
             input_cpuid = arg
         if opt == '--pid':
             input_pid = arg
-
+    
     # Create TraceCollection and add trace:
     kernel_symbols = Symbols(kernel_symbols_path)
     hash_table = HashTable(kernel_symbols_path)
