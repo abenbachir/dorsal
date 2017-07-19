@@ -15,9 +15,10 @@ if __name__ == "__main__":
     iterations = 1
     hostname = socket.gethostname()
   
-    cmd1 = "dd if=/dev/zero of=/tmp/sb-io-test bs=1K count=1K conv=fdatasync"
-    cmd2 = "dd if=/dev/zero of=/tmp/sb-io-test bs=1K count=1b conv=fdatasync"
+    cmd1 = "dd if=/dev/zero of=/tmp/test bs=1K count=500 conv=fdatasync"
+    cmd2 = "dd if=/dev/zero of=/tmp/test bs=1K count=500 oflag=sync iflag=sync"
     
+    cmd = cmd2
     try:
         if len(argv) >= 1:
             iterations = int(argv[0])
@@ -38,7 +39,7 @@ if __name__ == "__main__":
         f.write("hostname,time,speed,size,tracing_enabled\n")
 
     for iteration in xrange(iterations):
-        lines = subprocess.Popen(cmd2.split(' '),
+        lines = subprocess.Popen(cmd.split(' '),
                                        stdout=subprocess.PIPE,
                                        stderr=subprocess.STDOUT).stdout.readlines()
         # 1048576 bytes (1.0 MB, 1.0 MiB) copied, 0.00603379 s, 174 MB/s
@@ -46,8 +47,7 @@ if __name__ == "__main__":
         measured_time = values[4].strip(' ').split(' ')[0]
         size = values[0].strip(' ').split(' ')[0]
         speed = values[5].strip(' ').split(' ')[0]
-        f.write("%s,%s,%s,%s,%s" % (hostname,measured_time ,speed, size, tracing_enabled))
-        f.write('\n')
-        time.sleep(1)
+        f.write("%s,%s,%s,%s,%s\n" % (hostname,measured_time ,speed, size, tracing_enabled))
+        # time.sleep(1)
 
     f.close()

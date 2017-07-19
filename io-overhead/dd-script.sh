@@ -1,17 +1,15 @@
 
 # run without tracing 
-python dd.py 30
+python dd.py 60
 
 # run with tracing
-for i in {1..30}
+for i in {1..60}
 do
-	lttng create dd-tracing
-	# lttng enable-channel -k --subbuf-size=16777216 --num-subbuf=128 vm_channel
-	# lttng enable-event -k -a -c vm_channel
-	lttng enable-event -k "sched_switch" -c vm_channel
-	# lttng enable-event -k --syscall -a -c vm_channel
-	lttng enable-event -k --syscall open,close,read,write -c vm_channel
-	# lttng enable-event -k "ext4_da_write_begin,ext4_da_write_end" -c vm_channel
+	lttng create io-hypertracing-tracing
+	lttng enable-channel -k --subbuf-size=4k --num-subbuf=32 vm_channel
+	lttng enable-event -k "block_getrq,block_rq*" -c vm_channel
+	lttng enable-event -k "block_bio_backmerge,block_bio_frontmerge" -c vm_channel
+	lttng enable-event -k "block_sleeprq" -c vm_channel
 	lttng start
 
 	python dd.py 1 1
