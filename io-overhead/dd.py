@@ -18,7 +18,7 @@ if __name__ == "__main__":
     cmd1 = "dd if=/dev/zero of=/tmp/test bs=1K count=500 conv=fdatasync"
     cmd2 = "dd if=/dev/zero of=/tmp/test bs=1K count=500 oflag=sync iflag=sync"
     
-    cmd = cmd2
+    cmd = cmd1
     try:
         if len(argv) >= 1:
             iterations = int(argv[0])

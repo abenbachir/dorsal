@@ -1,9 +1,9 @@
 
 # run without tracing 
-python dd.py 60
+python dd.py 30
 
 # run with tracing
-for i in {1..60}
+for i in {1..30}
 do
 	lttng create io-hypertracing-tracing
 	lttng enable-channel -k --subbuf-size=4k --num-subbuf=32 vm_channel
