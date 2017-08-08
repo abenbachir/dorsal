@@ -15,10 +15,10 @@ if __name__ == "__main__":
     iterations = 1
     hostname = socket.gethostname()
   
-    cmd1 = "dd if=/dev/zero of=/tmp/test bs=1K count=500 conv=fdatasync"
-    cmd2 = "dd if=/dev/zero of=/tmp/test bs=1K count=500 oflag=sync iflag=sync"
+    cmd1 = "dd if=/dev/zero of=/tmp/test bs=1K count=1K conv=fdatasync"
+    cmd2 = "dd if=/dev/zero of=/tmp/test bs=1K count=1K oflag=sync iflag=sync"
     
-    cmd = cmd1
+    cmd = cmd2
     try:
         if len(argv) >= 1:
             iterations = int(argv[0])

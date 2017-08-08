@@ -1,0 +1,9 @@
+layer,copied_input_blocks,event_type,tracing_events
+L1,10,Collected,184
+L2,10,Collected,225
+L1,100,Collected,1628
+L2,100,Collected,1976
+L1,1000,Collected,16233
+L2,1000,Collected,19782
+L1,10000,Collected,165140
+L2,10000,Collected,199445

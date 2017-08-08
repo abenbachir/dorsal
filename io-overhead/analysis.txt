@@ -1,0 +1,79 @@
+dd : 1117634,1119132,1115540,1115417,1118864=1117317
+
+dd with tracing in L1 : 1188158,1181573,1181790=1183840-
+
+events traced with lttng are = 20432
+
+additional exits caused by enabling lttng : 1183840-1117317 = 66522 (70% more)
+
+
+traced events :
+count,guest_l2_events,guest_l1_events
+5,135,107
+10,225,184
+100,1976,1628
+1000,19782,16233
+
+
+layer,copied_input_blocks,collected_events
+L1,10,184
+L2,10,225
+L1,100,1628
+L2,100,1976
+L1,1000,16233
+L2,1000,19782
+
+----------------------------------
+
+6414,6645
+Events hist :
+1723 	kvm_mmu_paging_element
+838 	kvm_x86_entry
+837 	kvm_x86_exit
+563 	kvm_fpu
+454 	kvm_mmu_pagetable_walk
+389 	kvm_x86_cpuid
+300 	kvm_mmio
+258 	kvm_x86_emulate_insn
+258 	kvm_userspace_exit
+196 	kvm_x86_vcpu_match_mmio
+120 	kvm_x86_msr
+88 	kvm_set_irq
+88 	kvm_x86_pic_set_irq
+88 	kvm_ioapic_set_irq
+67 	kvm_x86_inj_virq
+67 	kvm_x86_eoi
+67 	kvm_x86_apic_accept_irq
+62 	kvm_mmu_handle_mmio_page_fault
+62 	kvm_x86_pio
+62 	kvm_x86_apic
+36 	kvm_x86_pv_eoi
+31 	kvm_ack_irq
+
+
+
+
+562035
+
+114440 	kvm_fpu
+89802 	kvm_mmu_paging_element
+65053 	kvm_x86_exit
+65053 	kvm_x86_entry
+54557 	kvm_userspace_exit
+54275 	kvm_x86_pio
+29760 	kvm_mmu_pagetable_walk
+29474 	kvm_x86_emulate_insn
+13245 	kvm_x86_pic_set_irq
+13245 	kvm_ioapic_set_irq
+13245 	kvm_set_irq
+7033 	kvm_x86_msr
+2878 	kvm_x86_inj_virq
+2877 	kvm_x86_eoi
+2877 	kvm_x86_apic_accept_irq
+2824 	kvm_x86_pv_eoi
+445 	kvm_x86_cpuid
+433 	kvm_mmio
+282 	kvm_x86_vcpu_match_mmio
+99 	kvm_x86_apic
+92 	kvm_mmu_handle_mmio_page_fault
+46 	kvm_ack_irq
