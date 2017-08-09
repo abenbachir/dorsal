@@ -23,15 +23,15 @@ data_filtered = subset(data, event == 'kvm_x86_exit')
 
 data_filtered <- ddply(data_filtered, .(layer, tracing_enabled, copied_input_blocks),
                        transform,
-                       tracing_events = freq
+                       total_events = freq
 )
+print(data_filtered)
+data_filtered <- unique(data_filtered[c("layer", "tracing_enabled", "copied_input_blocks", "total_events")])
 
-data_filtered <- unique(data_filtered[c("layer", "tracing_enabled", "copied_input_blocks", "tracing_events")])
-
-# data_filtered <- ddply(data_filtered, .(layer, copied_input_blocks),
-#                        transform,
-#                        tracing_events = abs(sum(total_events)-2*total_events)
-# )
+data_filtered <- ddply(data_filtered, .(layer, copied_input_blocks),
+                       transform,
+                       tracing_events = abs(sum(total_events)-2*total_events)
+)
 
 data_filtered <- unique(data_filtered[c("layer", "copied_input_blocks", "tracing_events")])
 
