@@ -1,2 +1,2 @@
-sorted array of size 5 :
-1 2 3 4 5 
+sorted array of size 14 :
+0 4 9 9 10 14 20 39 40 43 82 92 94 100 
