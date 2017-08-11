@@ -4,7 +4,7 @@ library(ggrepel)
 library(plyr)
 
 # level,time,events
-data <- read.table("./io-overhead/io-worst-case.csv", header=T, sep=",")
+data <- read.table("./io-overhead/data/abder-pc-dd.csv", header=T, sep=",")
 data$time <- data$time
 data$tracing_enabled <- as.character(data$tracing_enabled)
 data <- ddply(data, .(hostname, tracing_enabled),
