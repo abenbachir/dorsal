@@ -1,9 +1,0 @@
-layer,copied_input_blocks,event_type,tracing_events
-L1,10,Hypertracing,184
-L2,10,Hypertracing,225
-L1,100,Hypertracing,1628
-L2,100,Hypertracing,1976
-L1,1000,Hypertracing,16233
-L2,1000,Hypertracing,19782
-L1,10000,Hypertracing,165140
-L2,10000,Hypertracing,199445

@@ -88,25 +88,28 @@ int main(int argc, char** argv)
     //     printf("Can not open %s\n",out_filename);
     //     return -1;
     // }
-    
+    fseek(fp, 0L, SEEK_END);
+    unsigned long file_size = ftell(fp);
+    rewind(fp);
+
     unsigned long int hc_filename = 0;
     memcpy(&hc_filename, filename, sizeof(hc_filename));
     delim_hypercall(HYPERSTREAM_START_NR, hc_filename);
     tic(ts_start);
     while (fgets(buffer, sizeof(buffer), fp)) {
-        // nr = buffer[0];
-        // a0 = buffer[1];
-        // a1 = buffer[2];
-        // a2 = buffer[3];
-        // a3 = buffer[4];
-        // a4 = buffer[5];
-        // a5 = buffer[6];
-        // a6 = buffer[7];
-        // a7 = buffer[8];
-        // a8 = buffer[9];
-        // do_hypercall_64(nr, a0, a1, a2, a3, a4, a5, a6, a7, a8);
-        do_hypercall_64(buffer[0], buffer[1], buffer[2], buffer[3], buffer[4], 
-            buffer[5], buffer[6], buffer[7], buffer[8], buffer[9]);
+        nr = buffer[0];
+        a0 = buffer[1];
+        a1 = buffer[2];
+        a2 = buffer[3];
+        a3 = buffer[4];
+        a4 = buffer[5];
+        a5 = buffer[6];
+        a6 = buffer[7];
+        a7 = buffer[8];
+        a8 = buffer[9];
+        do_hypercall_64(nr, a0, a1, a2, a3, a4, a5, a6, a7, a8);
+        // do_hypercall_64(buffer[0], buffer[1], buffer[2], buffer[3], buffer[4], 
+        //     buffer[5], buffer[6], buffer[7], buffer[8], buffer[9]);
 
         // kvm_hypercall_handler_64(buffer[0], buffer[1], buffer[2], buffer[3], buffer[4], 
         //     buffer[5], buffer[6], buffer[7], buffer[8], buffer[9]);
@@ -121,7 +124,19 @@ int main(int argc, char** argv)
         // fprintf(output, buffer_output);
     }
     toc(ts_end);
-    printf("%lu\n", elapsed_nsec(ts_start, ts_end));
+    unsigned long stream_latency = elapsed_nsec(ts_start, ts_end);
+    unsigned long hypercall_size = sizeof(buffer)*8; // in bits
+
+    
+    long double theoritical_througthput = (hypercall_size/1E9)/(300/1E9);
+    printf("Theoritical througthput=%Lf Gbits/s per CPU\n", theoritical_througthput);
+
+    long double real_througthput = file_size*8/(stream_latency/1E9);// hypercall size in bits divide by the hypercall path latency
+    printf("Practical througthput=%Lf Gbits/s per CPU\n", (long double)real_througthput/1E9);
+    
+
+    printf("hypercall_size=%lu bits, file_size=%lu bytes, latency=%lf s\n",
+        hypercall_size, file_size, stream_latency/1E9);
     // end
     delim_hypercall(HYPERSTREAM_END_NR, hc_filename);
 
