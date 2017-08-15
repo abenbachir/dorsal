@@ -92,22 +92,22 @@ static int __init io_hypertracing_init(void) {
 	int ret;
 
 	for_each_kernel_tracepoint(set_tracepoint, NULL);
-	if (tp_sysenter == NULL) {
-		printk(KERN_INFO "io_hypertracing: failed to find tracepoints.\n");
-		return 1;
-	}
-	ret = tracepoint_probe_register(tp_sysenter, syscall_entry_probe, NULL);
+	// if (tp_sysenter == NULL) {
+	// 	printk(KERN_INFO "io_hypertracing: failed to find tracepoints.\n");
+	// 	return 1;
+	// }
+	// ret = tracepoint_probe_register(tp_sysenter, syscall_entry_probe, NULL);
 
-	if (ret) {
-		printk(KERN_INFO "io_hypertracing: failed initializing syscall_entry_probe.\n");
-		return 1;
-	}
+	// if (ret) {
+	// 	printk(KERN_INFO "io_hypertracing: failed initializing syscall_entry_probe.\n");
+	// 	return 1;
+	// }
 
-	if (tp_sysenter == NULL) {
-		printk(KERN_INFO "io_hypertracing: failed to find tracepoints.\n");
-		return 1;
-	}
-	ret = tracepoint_probe_register(tp_sysexit, syscall_exit_probe, NULL);
+	// if (tp_sysenter == NULL) {
+	// 	printk(KERN_INFO "io_hypertracing: failed to find tracepoints.\n");
+	// 	return 1;
+	// }
+	// ret = tracepoint_probe_register(tp_sysexit, syscall_exit_probe, NULL);
 
 	if (tp_sched_switch == NULL) {
 		printk(KERN_INFO "io_hypertracing: failed to find tracepoints.\n");
@@ -123,8 +123,8 @@ static int __init io_hypertracing_init(void) {
 
 static void __exit io_hypertracing_cleanup(void) {
 	printk(KERN_INFO "io_hypertracing: removing module.\n");
-	tracepoint_probe_unregister(tp_sysenter, syscall_entry_probe, NULL);
-	tracepoint_probe_unregister(tp_sysexit, syscall_exit_probe, NULL);
+	// tracepoint_probe_unregister(tp_sysenter, syscall_entry_probe, NULL);
+	// tracepoint_probe_unregister(tp_sysexit, syscall_exit_probe, NULL);
 	tracepoint_probe_unregister(tp_sched_switch, probe_sched_switch, NULL);
 }
 

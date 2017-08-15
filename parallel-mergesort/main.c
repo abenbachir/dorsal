@@ -92,15 +92,15 @@ int main(void)
 {
 	static struct timespec ts_start, ts_end;
 	static struct timespec ts_start_sorting, ts_end_sorting;
-    char* filename= "input.txt";
-    unsigned long int sorting_time;
-    // printf("total_time,sorting_time,sorting_overhead,io_overhead\n");
-    tic(ts_start);
+	char* filename= "input.txt";
+	unsigned long int sorting_time;
+	// printf("total_time,sorting_time,sorting_overhead,io_overhead\n");
+	tic(ts_start);
 
 	if(reader(filename)){
-        printf("File not found %s\n", filename);
-        return 0;
-    }
+		printf("File not found %s\n", filename);
+		return 0;
+	}
 
 	b = (int*)malloc(sizeof(int)*n);
 	struct index start;

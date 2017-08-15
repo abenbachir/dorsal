@@ -32,6 +32,7 @@ data_filtered <- ddply(data_filtered, .(layer, copied_input_blocks),
                        transform,
                        tracing_events = abs(sum(total_events)-2*total_events)
 )
+print(data_filtered)
 
 data_filtered <- unique(data_filtered[c("layer", "copied_input_blocks", "tracing_events")])
 

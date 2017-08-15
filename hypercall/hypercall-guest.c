@@ -21,15 +21,15 @@ void benchmark(int repeat)
 
     for ( i=0; i < repeat; i++) {
         tic(ts_start);
-        do_hypercall(i, i, i, i, i);
+        do_hypercall(99, i, i, i, i);
         toc(ts_end);
         unsigned long int ns = elapsed_nsec(ts_start, ts_end);
-        printf("%lu\n", ns);
+        // printf("%lu\n", ns);
         // sleep(1);
     }
 }
 int main(int argc, char** argv)
 {
-    benchmark(3);
+    benchmark(10);
     return 0;
 }
