@@ -1,7 +1,9 @@
 #!/usr/bin/env Rscript
+# install.packages("reshape2")
 library(ggplot2)
 library(ggrepel)
 library(plyr)
+library(reshape2)
 source("./hypertracing/rscript/global.R")
 # layer,tracer,workload,configuration,time,event,freq,total_event_cost,cost_per_event
 data <- read.table("./hypertracing/data/cpu-workload-exits-cost-1_1000.csv", header=T, sep=",")
@@ -23,22 +25,26 @@ data_filtered <- ddply(data_filtered, .(layer, tracer, workload, configuration),
 )
 data_filtered <- unique(data_filtered[c("layer", "tracer", "workload", "configuration", "time_avg","total_exits_cost")])
 
-df2 <- melt(data_filtered, id.vars=c("time_avg", "total_exits_cost"))
+data_filtered$workload_time <- data_filtered$time_avg - data_filtered$total_exits_cost
+baseline = data_filtered$time_avg[data_filtered$tracer == 'None']
+data_filtered$exit_overhead <- paste(round((1 - data_filtered$workload_time/data_filtered$time_avg)*100,2),'%')
+data_filtered$overhead <- paste(round((1 - baseline/data_filtered$time_avg)*100,1),'%')
+data_filtered <- melt(data_filtered, id.vars=c("layer", "tracer", "workload", "configuration", "overhead", "exit_overhead","time_avg"))
 
-plot <- ggplot(data_filtered, aes(x=reorder(tracer, total_exits_cost), y = total_exits_cost)) +
-  geom_bar(aes(fill=tracer), position="dodge",stat="identity") +
-  # scale_y_continuous(breaks = seq(0, max(data_filtered$total_exits_cost), 100)) +
+plot <- ggplot(data_filtered, aes(x=reorder(tracer, time_avg), y = value)) +
+  geom_bar(aes(fill=variable), position="stack",stat="identity") +
+  # scale_y_continuous(breaks = seq(0, max(data$time), 500)) +
   facet_wrap(~configuration, ncol=2) +
   # coord_flip() +
   # geom_label_repel(aes(y=tracing_events, label=paste(tracing_events,event_type)),
   #                  size = 3, segment.size = 0.3, colour="black", fill="white",
   #                  min.segment.length = unit(0, "lines"), nudge_x = 0
   # ) +
-  # geom_text(aes(y=max, label=label ), colour='black', size = 3.4,
-  #           position=position_dodge(width=0.9), vjust=-1) +
-  
+  geom_text(aes(y=time_avg, label=exit_overhead ), colour='black', size = 3.4,
+            position=position_dodge(width=0.9), vjust=-1) +
+  # 
   # scale_fill_manual(values = colors) +
-  labs(x ="Virtualization Layers", y ="Exits Cost (us)", fill="Tracing") +
+  labs(x ="Tracers", y ="Workload and Exits Cost (ms)", fill="Cost of") +
   # scale_fill_manual(values = colors) +
   theme_light() +
   theme(
