@@ -1,9 +1,16 @@
 #!/usr/bin/env bash
 
+virsh vcpupin VM 0 1
+virsh vcpinfo VM
 target=vm
-trace_dir="/home/abder/lttng-traces/hypertracing/cpu"
+trace_dir="/home/abder/lttng-traces/tracers/cpu"
 drop_cache='free && sync && echo 1 > /proc/sys/vm/drop_caches && sync && echo 2 > /proc/sys/vm/drop_caches && sync && echo 3 > /proc/sys/vm/drop_caches && free'
 swapoff='swapoff -a && swapon -a'
+
+reset(){
+    ssh $target 'sudo pkill lttng; pgrep lttng -l'
+    ssh root@$target 'echo nop > /sys/kernel/debug/tracing/current_tracer;echo 0 > /sys/kernel/debug/tracing/events/sched/enable'
+}
 
 start_host_tracing() {
     output=$1
@@ -39,6 +46,23 @@ no_tracing()
     ssh root@$target "$drop_cache && ./hypertime && $CMD && ./hypertime end"
 
     stop_host_tracing
+}
+
+hypertracing()
+{
+    nthreads=$1
+    maxprime=$2
+    CMD=$3
+    output="$trace_dir/hypertracing/l1-cpu_benchmark-hypertracing-${nthreads}_${maxprime}-$(dbus-uuidgen)"
+
+    ssh $target 'sudo insmod hypertracing/cpu_hypertracing_guest.ko'
+
+    start_host_tracing "${output}"
+
+    ssh root@$target "$drop_cache && ./hypertime && $CMD && ./hypertime end"
+
+    stop_host_tracing
+    ssh $target 'sudo rmmod cpu_hypertracing_guest'
 }
 
 lttng_tracing()
@@ -93,13 +117,28 @@ perf_tracing()
 
     start_host_tracing "${output}"
 
+    ssh $target "sudo perf record -e 'sched:sched_switch,sched:sched_migrate_task,sched:sched_process_fork,sched:sched_process_exit' -a > /dev/null &"
+    ssh root@$target "pgrep perf -l; $drop_cache && ./hypertime && $CMD && ./hypertime end; sudo pkill perf"
+
+    stop_host_tracing
+    ssh $target "sudo rm perf.data"
+}
+
+perf_old_tracing()
+{
+    nthreads=$1
+    maxprime=$2
+    CMD=$3
+    output="$trace_dir/perf/l1-cpu_benchmark-perf-${nthreads}_${maxprime}-$(dbus-uuidgen)"
+
+    start_host_tracing "${output}"
+
     perf_cmd="sudo perf record -e 'sched:sched_switch,sched:sched_migrate_task,sched:sched_process_fork,sched:sched_process_exit' -a $CMD > /dev/null"
     ssh root@$target "$drop_cache && ./hypertime && $perf_cmd && ./hypertime end"
 
     stop_host_tracing
-    ssh root@$target "sudo pkill perf; sudo rm perf.data"
+#    ssh root@$target "sudo pkill perf; sudo rm perf.data"
 }
-
 
 
 systemtap_tracing()
@@ -115,38 +154,37 @@ systemtap_tracing()
     ssh root@$target "$drop_cache && ./hypertime && $perf_cmd && ./hypertime end"
 
     stop_host_tracing
-    ssh root@$target "sudo pkill perf; sudo rm perf.data"
+    ssh $target "sudo pkill perf; sudo rm perf.data"
 }
 
-ssh $target 'sudo pkill lttng; pgrep lttng -l'
-ssh root@$target 'echo nop > /sys/kernel/debug/tracing/current_tracer;echo 0 > /sys/kernel/debug/tracing/events/sched/enable'
+
+reset
 
 for nthreads in 1
 do
     workload="sysbench"
-    maxprime=10000
+    maxprime=5000
     cmd="sysbench --test=cpu --num-threads=${nthreads} --cpu-max-prime=${maxprime} run"
 
 
 #    for i in {1..50}
 #        do
-#        echo "Preparing benchmark"; sleep 1
+#        echo "Preparing benchmark"; sleep 0.1
 #        no_tracing "${nthreads}" "${maxprime}" "${cmd}"
 #    done
-#
-    for i in {1..50}
-        do
-        echo "Preparing benchmark"; sleep 1
-        perf_tracing "${nthreads}" "${maxprime}" "${cmd}"
-    done
-#
+
+#    for i in {1..50}
+#        do
+#        echo "Preparing benchmark"; sleep 1
+#        perf_tracing "${nthreads}" "${maxprime}" "${cmd}"
+#    done
+
 #    for i in {1..50}
 #        do
 #        echo "Preparing benchmark"; sleep 1
 #        ftrace_tracing "${nthreads}" "${maxprime}" "${cmd}"
 #    done
 #    ssh root@$target 'echo nop > /sys/kernel/debug/tracing/current_tracer;echo 0 > /sys/kernel/debug/tracing/events/sched/enable'
-
 
 #    ssh $target 'sudo lttng-sessiond -d; pgrep lttng -l'
 #    for i in {1..50}
@@ -155,6 +193,14 @@ do
 #        lttng_tracing "${nthreads}" "${maxprime}" "${cmd}"
 #    done
 #    ssh $target 'sudo pkill lttng; pgrep lttng -l'
+
+
+    for i in {1..50}
+        do
+        echo "Preparing Hypertracing Benchmark"; sleep 0.5
+        hypertracing "${nthreads}" "${maxprime}" "${cmd}"
+    done
+
 
     echo ""
 done

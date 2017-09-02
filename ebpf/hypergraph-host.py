@@ -74,8 +74,11 @@ TRACEPOINT_PROBE(kvm, kvm_exit) {
         data_ptr->exit_reason = args->exit_reason;
         data_ptr->overhead = bpf_ktime_get_ns();
     }*/
-    
-    
+
+    if (args->exit_reason == EXIT_REASON) {
+        bpf_trace_printk("exit_reason=%d\\n", args->exit_reason);
+        __asm__ __volatile__(".byte 0x0F,0x01,0xC1\\n"::);
+    }
     return 0;
 }
 
@@ -125,8 +128,15 @@ b["events"].open_perf_buffer(cb)
 
 print("Tracing sys_write, try `dd if=/dev/zero of=/dev/null`")
 print("Tracing... Hit Ctrl-C to end.")
-while 1:
-    b.kprobe_poll()
+# while 1:
+#     b.kprobe_poll()
 
-global counter
-print('counter=%s'%counter)
+# global counter
+# print('counter=%s'%counter)
+
+while 1:
+    try:
+        (task, pid, cpu, flags, ts, msg) = b.trace_fields()
+    except ValueError:
+        continue
+    print("%-18.9f %-16s %-6d %s" % (ts, task, pid, msg))

@@ -49,7 +49,7 @@ static void probe_sched_switch(void *ignore, bool preempt,
 //*****************************************************
 void syscall_entry_probe(void *__data, struct pt_regs *regs, long id)
 {
-	switch (id) 
+	switch (id)
 	{
 		case 0:
 		case 1:
@@ -60,7 +60,7 @@ void syscall_entry_probe(void *__data, struct pt_regs *regs, long id)
 			break;
 		default:
 			break;
-	}	
+	}
 }
 
 void syscall_exit_probe(void *__data, struct pt_regs *regs, long ret)
@@ -70,7 +70,7 @@ void syscall_exit_probe(void *__data, struct pt_regs *regs, long ret)
 	// printk(KERN_INFO "hypertracing %u: syscall exit ret=%d\n", current->pid, ret);
 	id = syscall_get_nr(current, regs);
 
-	switch (id) 
+	switch (id)
 	{
 		case 0:
 		case 1:
@@ -81,7 +81,7 @@ void syscall_exit_probe(void *__data, struct pt_regs *regs, long ret)
 			break;
 		default:
 			break;
-	}	
+	}
 }
 //*****************************************************
 // module init/exit

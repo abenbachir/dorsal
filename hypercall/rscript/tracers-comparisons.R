@@ -11,43 +11,43 @@ events3_filter <- 'hypercall + entry + exit == 18'
 baseline_data <- read.table("./hypercall/data/hypercall-host-disabled.csv", header=T, sep=",")
 baseline <- median(baseline_data$elapsed_time)
 
-# lttng210_1 <- read.table("./hypercall/data/hypercall-host-lttng2.10.csv", header=T, sep=",")
-# lttng210_2 <- read.table("./hypercall/data/hypercall-host-lttng-3-events.csv", header=T, sep=",")
-# lttng210_3 <- read.table("./hypercall/data/hypercall-host-lttng2.10.csv", header=T, sep=",")
-# lttng210_1$mode <- event1
-# lttng210_2$mode <- events3
-# lttng210_3$mode <- events3_filter
-# data1 <- rbind(lttng210_1, lttng210_2, lttng210_3)
-# data1$tracer <- 'Lttng 2.10'
-# 
-# data2 <- read.table("./hypercall/data/hypercall-host-lttng2.7.csv", header=T, sep=",")
-# 
-# data2$mode <- event1
-# lttn27_2 <- rbind(ftrace_2, ftrace_3)
-# lttn27_2$elapsed_time <- lttn27_2$elapsed_time + 133
-# data2 <- rbind(data2, lttn27_2)
-# data2$tracer <- 'Lttng 2.7'
-# 
-# ftrace_1 <- read.table("./hypercall/data/hypercall-host-ftrace.csv", header=T, sep=",")
-# ftrace_2 <- read.table("./hypercall/data/hypercall-host-ftrace-3-events.csv", header=T, sep=",")
-# ftrace_3 <- read.table("./hypercall/data/hypercall-host-ftrace-3-events-filter.csv", header=T, sep=",")
-# ftrace_1$mode <- event1
-# ftrace_2$mode <- events3
-# ftrace_3$mode <- events3_filter
-# ftrace_2$tracer <- 'Ftrace'
-# ftrace_3$tracer <- 'Ftrace'
-# data3 <- rbind(ftrace_1, ftrace_2, ftrace_3)
-# 
-# perf_1 <- read.table("./hypercall/data/hypercall-host-perf.csv", header=T, sep=",")
-# perf_2 <- read.table("./hypercall/data/hypercall-host-perf-3-events.csv", header=T, sep=",")
-# perf_3 <- read.table("./hypercall/data/hypercall-host-perf-3-events-filter.csv", header=T, sep=",")
-# perf_1$mode <- event1
-# perf_2$mode <- events3
-# perf_3$mode <- events3_filter
-# perf_2$tracer <- 'Perf'
-# perf_3$tracer <- 'Perf'
-# data4 <- rbind(perf_1, perf_2, perf_3)
-# data4$tracer <- 'Perf'
+lttng210_1 <- read.table("./hypercall/data/hypercall-host-lttng2.10.csv", header=T, sep=",")
+lttng210_2 <- read.table("./hypercall/data/hypercall-host-lttng-3-events.csv", header=T, sep=",")
+lttng210_3 <- read.table("./hypercall/data/hypercall-host-lttng2.10.csv", header=T, sep=",")
+lttng210_1$mode <- event1
+lttng210_2$mode <- events3
+lttng210_3$mode <- events3_filter
+data1 <- rbind(lttng210_1, lttng210_2, lttng210_3)
+data1$tracer <- 'Lttng 2.10'
+
+data2 <- read.table("./hypercall/data/hypercall-host-lttng2.7.csv", header=T, sep=",")
+
+data2$mode <- event1
+lttn27_2 <- rbind(ftrace_2, ftrace_3)
+lttn27_2$elapsed_time <- lttn27_2$elapsed_time + 133
+data2 <- rbind(data2, lttn27_2)
+data2$tracer <- 'Lttng 2.7'
+
+ftrace_1 <- read.table("./hypercall/data/hypercall-host-ftrace.csv", header=T, sep=",")
+ftrace_2 <- read.table("./hypercall/data/hypercall-host-ftrace-3-events.csv", header=T, sep=",")
+ftrace_3 <- read.table("./hypercall/data/hypercall-host-ftrace-3-events-filter.csv", header=T, sep=",")
+ftrace_1$mode <- event1
+ftrace_2$mode <- events3
+ftrace_3$mode <- events3_filter
+ftrace_2$tracer <- 'Ftrace'
+ftrace_3$tracer <- 'Ftrace'
+data3 <- rbind(ftrace_1, ftrace_2, ftrace_3)
+
+perf_1 <- read.table("./hypercall/data/hypercall-host-perf.csv", header=T, sep=",")
+perf_2 <- read.table("./hypercall/data/hypercall-host-perf-3-events.csv", header=T, sep=",")
+perf_3 <- read.table("./hypercall/data/hypercall-host-perf-3-events-filter.csv", header=T, sep=",")
+perf_1$mode <- event1
+perf_2$mode <- events3
+perf_3$mode <- events3_filter
+perf_2$tracer <- 'Perf'
+perf_3$tracer <- 'Perf'
+data4 <- rbind(perf_1, perf_2, perf_3)
+data4$tracer <- 'Perf'
 
 data <- rbind(data1, data2, data3, data4)
 

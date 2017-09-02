@@ -82,15 +82,16 @@ EXIT_REASONS = {
 }
 
 def main(argv):
-    path = "/home/abder/lttng-traces/tracers/syscall/hypertracing/l1-syscall_benchmark-hypertracing-getcpu_0_2500-caab54155dabc047b7a5e9cc599b0f29"
+    path = ""
     print_header = -1
     try:
         path = argv[0]
+        if not os.path.exists(path):
+            raise Exception("path not found : %s"%path)
         if len(argv) > 1:
             print_header = int(argv[1])
     except Exception as ex:
-        if not path:
-            raise TypeError()
+        raise TypeError()
 
     traces = babeltrace.reader.TraceCollection()
     trace_handle = traces.add_traces_recursive(path, "ctf")
@@ -102,14 +103,9 @@ def main(argv):
     workload = splits[1]
     tracer = splits[2].capitalize()
     configuration = splits[3]
-
-    kvm_events = dict()
-    kvm_exit_freq = dict()
-    kvm_exit_cost = dict()
-    exit_timestamp = 0
-    exit_reason = -1
-    can_collect = False
+    start_time = 0
     elapsed_time = 0
+    elapsed_time_from_hypercall = 0
     for event in traces.events:
         fields = dict()
         for k, v in event.items():
@@ -121,59 +117,19 @@ def main(argv):
         if event.name == "kvm_x86_hypercall":
             hp = fields['nr'] + fields['a0'] + fields['a1'] + fields['a2']
             if hp == 0:
-                can_collect = True
-                elapsed_time = timestamp
+                start_time = timestamp
                 continue
             if hp == 4:
-                can_collect = False
-                elapsed_time = timestamp - elapsed_time
-                elapsed_time
+                elapsed_time_from_hypercall = timestamp - start_time
+                elapsed_time = fields['a3']
                 continue
-
-        # collect only within the boundries
-        if not can_collect:
-            continue
-
-        if event.name == "kvm_x86_exit":
-            exit_timestamp = timestamp
-            exit_reason = fields['exit_reason']
-            if exit_reason not in kvm_exit_freq:
-                kvm_exit_freq[exit_reason] = 0
-                kvm_exit_cost[exit_reason] = 0
-            kvm_exit_freq[exit_reason] = kvm_exit_freq[exit_reason] + 1
-
-        elif event.name == "kvm_x86_entry":
-            if exit_timestamp == 0:
-                continue
-            kvm_exit_cost[exit_reason] = kvm_exit_cost[exit_reason] + (timestamp-exit_timestamp)
-            exit_timestamp = 0
-
-        if event.name not in kvm_events:
-            kvm_events[event.name] = 0
-        kvm_events[event.name] = kvm_events[event.name] + 1
 
     if print_header > 0:
-        print("layer,tracer,workload,configuration,time,event,freq,total_event_cost,cost_per_event")
+        print("layer,tracer,workload,configuration,time")
 
-    if len(kvm_exit_cost) > 0:
-        for exit_reason, cost in sorted(kvm_exit_cost.items(), key=operator.itemgetter(1), reverse=True):
-            freq = kvm_exit_freq[exit_reason]
-            print("%s,%s,%s,%s,%s,%s,%s,%s,%s" % (
-                layer,
-                tracer,
-                workload,
-                configuration,
-                elapsed_time,
-                EXIT_REASONS[exit_reason],
-                freq,
-                cost,
-                round(cost/freq, 2)
-            ))
-    else:
-        print("%s,%s,%s,%s,%s,%s,%s,%s,%s" % (
-            layer, tracer, workload, configuration,
-            elapsed_time, "VMCALL", 0, 0, -1
-        ))
+    print("%s,%s,%s,%s,%s" % (
+        layer, tracer, workload, configuration, elapsed_time
+    ))
 
 if __name__ == "__main__":
     main(sys.argv[1:])

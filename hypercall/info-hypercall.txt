@@ -1,0 +1,8 @@
+bonjour, le tracepoint actuel de kvm_hypercall ne prend seulement que 5 arguments : trace_kvm_hypercall(nr, a0, a1, a2, a3); car dans les architectures x86_32, seulement les registres eax, ebx, ecx, edx et esi sont utilisés, mais dans les architectures x86_64 7 autres registres (r8, r9, r10, r11, r12, r13, r14 et r15) sont ajouté et suppporté dans le VCPU.
+Je sais que à cause de la limitation des MACROS les points de trace sont limités au maximum à 10 arguments, donc j'aimerai que kvm_hypercall prends 10 arguments, est ce qu'il faut changer le tracepoint actuel ou il faut ajouter un nouveau tracepoint genre kvm_hypercall_64 ?
+Pourquoi c'est important d'ajouter d'autres arguments au hypercall ? Un simple benchmark (with tracing disabled) nous dit que le throughput du hypercall avec 5 args et au tour de 0.9 Gbits/s per CPU, donc avec 10 args il augment a 1.9 Gbits/s per CPU.
+
+
+
+
+kvm_emulate_hypercall, 55 ns

@@ -35,9 +35,9 @@
 #define LTTNG_INSTRUMENTATION
 #define TRACE_INCLUDE_PATH events
 #define TRACE_INCLUDE_FILE hypergraph
-#include "events/hypergraph.h"
+// #include "events/hypergraph.h"
 
-DEFINE_TRACE(hypergraph_host);
+// DEFINE_TRACE(hypergraph_host);
 
 #define HYPERCALL_EXIT_REASON 18
 #define GET_CLOCK_MONOTONIC() ktime_to_ns(ktime_get())
@@ -100,10 +100,12 @@ void kvm_exit_handler(void *__data, unsigned int exit_reason, struct kvm_vcpu *v
 	if (exit_reason != HYPERCALL_EXIT_REASON)
 		return;
 
+	// printk("kvm_exit_handler: exit_reason=%lu", exit_reason);
+
 	cpu = smp_processor_id();
 	kvm_nodes_list[cpu].start = 1;
 	kvm_nodes_list[cpu].exit_reason = exit_reason;
-	kvm_nodes_list[cpu].guest_rip = kvm_rip_read(vcpu);
+	// kvm_nodes_list[cpu].guest_rip = kvm_rip_read(vcpu);
 	kvm_nodes_list[cpu].isa = isa;
 	kvm_nodes_list[cpu].kvm_exit_timestamp = GET_CLOCK_MONOTONIC();
 	// printk("kvm_exit exit_reason=%u, guest_rip=%lu, isa=%u\n", exit_reason, guest_rip, isa);
@@ -132,6 +134,8 @@ void kvm_entry_handler(void *__data, unsigned int vcpu_id)
 	if(kvm_nodes_list[cpu].start <= 0)
 		return;
 
+	// printk("kvm_entry_handler: vcpu_id=%lu", vcpu_id);
+	
 	kvm_nodes_list[cpu].start = 0;
 	kvm_nodes_list[cpu].vcpu_id = vcpu_id;
 	kvm_nodes_list[cpu].kvm_entry_timestamp = GET_CLOCK_MONOTONIC();
@@ -182,7 +186,7 @@ int hypergraph_tracepoint_coming(struct tp_module *tp_mod)
 		
 		// register probes if they match
 		for(j = 0; j < TABLE_SIZE; j++) {
-			if (strcmp(tp->name, tracepoint_table[j].name) == 0) {
+			if (strcmp(tp->name, tracepoint_table[j].name) == 0 /*&& tracepoint_table[j].tp == NULL*/) {
 				tracepoint_table[j].tp = tp;
 				ret = hypergraph_tracepoint_probe_register(&tracepoint_table[j]);
 			}

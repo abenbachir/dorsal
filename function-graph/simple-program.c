@@ -73,7 +73,7 @@ int initializeArray(char* filename, long int** array_output)
 		// printf( "%d\n", array[i-1] );
 		token = strtok(NULL, s);		
 	}
-
+	fclose(fp);
     return array_size;
 }
 

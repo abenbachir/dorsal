@@ -1,0 +1,7 @@
+*.ko*
+*.o
+*.o.cmd
+*.mod.*
+*.symvers
+*.order
+syscall-micro-benchmark

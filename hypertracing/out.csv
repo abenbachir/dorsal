@@ -1,0 +1,37 @@
+# without tracing inside the host
+tracer,time,overhead,overhead_x
+None,48122,0,0
+Ftrace,173674,72%,3.6x
+Lttng,185307,74%,3.8x
+Perf,415527,88%,8.6x
+Hypertracing,839880,94%,17x
+
+hypercall,632812,92%
+kprobe,52306,8%,0
+lttng_host_tracing,154762,18%,0
+
+
+
+iteration,vmcall_time,kvm_time,vmresume_time,vmresume_percentage
+0,3099,787,2312,74%
+1,821,244,577,70%
+2,460,128,332,72%
+3,467,127,340,72%
+4,450,128,322,71%
+
+
+
+2000 cycles, 2500 instructions, vmresume = vmentry -> vmexit
+
+800 cycles, 1500 instructions, kvm = vmexit -> vmentry
+
+
+
+
+
+
+L1,None,syscall_benchmark,getcpu_0_1000,48122,VMCALL,0,0,0
+L1,Hypertracing,syscall_benchmark,getcpu_0_1000,685118,VMCALL,0,0,0
+L1,Ftrace,syscall_benchmark,getcpu_0_1000,173674,VMCALL,0,0,0
+L1,Lttng,syscall_benchmark,getcpu_0_1000,185307,VMCALL,0,0,0
+L1,Perf,syscall_benchmark,getcpu_0_1000,415527,VMCALL,0,0,0

@@ -4,7 +4,7 @@ library(ggrepel)
 library(plyr)
 source("./hypertracing/rscript/global.R")
 # layer,tracer,workload,configuration,time,event,freq,total_event_cost,cost_per_event
-data <- read.table("./hypertracing/data/cpu-workload-exits-cost-1_5000.csv", header=T, sep=",")
+data <- read.table("./hypertracing/data/syscall-exits-cost-20us.csv", header=T, sep=",")
 
 data = subset(data, event != 'HLT' )
 # data = subset(data, configuration == '1_10000')
@@ -21,7 +21,7 @@ data_filtered <- unique(data_filtered[c("layer", "tracer", "configuration", "eve
 plot <- ggplot(data_filtered, aes(x=reorder(tracer, freq), y = freq)) +
   geom_bar(aes(fill=tracer), position="dodge",stat="identity") +
   # scale_y_continuous(breaks = seq(0, max(data_filtered$total_event_cost), 1)) +
-  facet_wrap(~event, ncol=4, scale="free") +
+  facet_wrap(configuration~event, ncol=4, scale="free") +
   # coord_flip() +
   # geom_label_repel(aes(y=tracing_events, label=paste(tracing_events,event_type)),
   #                  size = 3, segment.size = 0.3, colour="black", fill="white",

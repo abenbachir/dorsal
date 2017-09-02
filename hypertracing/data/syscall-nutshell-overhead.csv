@@ -1,0 +1,46 @@
+layer,tracer,workload,configuration,baseline,overhead,component,time
+L1,None,syscall_benchmark,getcpu_0_5000,129500,"baseline","Baseline",129500
+L1,Ftrace,syscall_benchmark,getcpu_0_5000,129500,,"Baseline",129500
+L1,Ftrace,syscall_benchmark,getcpu_0_5000,129500,,"Guest Tracing",368066
+L1,Ftrace,syscall_benchmark,getcpu_0_5000,129500,,"Write to disk",9569
+L1,Lttng,syscall_benchmark,getcpu_0_5000,129500,,"Baseline",129500
+L1,Lttng,syscall_benchmark,getcpu_0_5000,129500,,"Guest Tracing",356162
+L1,Lttng,syscall_benchmark,getcpu_0_5000,129500,,"Write to disk",17808
+L1,Perf,syscall_benchmark,getcpu_0_5000,129500,,"Baseline",129500
+L1,Perf,syscall_benchmark,getcpu_0_5000,129500,,"Guest Tracing",943440
+L1,Hypertracing Compress 2,syscall_benchmark,getcpu_0_5000,129500,,"Baseline",129500
+L1,Hypertracing Compress 2,syscall_benchmark,getcpu_0_5000,129500,,"Hypercall",542083
+L1,Hypertracing Compress 2,syscall_benchmark,getcpu_0_5000,129500,,"Syscall Probe",27921
+L1,Hypertracing Compress 2,syscall_benchmark,getcpu_0_5000,129500,,"Time+Compression",85615
+L1,Hypertracing Compress 2,syscall_benchmark,getcpu_0_5000,129500,,"Host Tracing",121594
+L1,Hypertracing,syscall_benchmark,getcpu_0_5000,129500,,"Baseline",129500
+L1,Hypertracing,syscall_benchmark,getcpu_0_5000,129500,,"Hypercall",1585285
+L1,Hypertracing,syscall_benchmark,getcpu_0_5000,129500,,"Syscall Probe",27921
+L1,Hypertracing,syscall_benchmark,getcpu_0_5000,129500,,"Host Tracing",439417
+L1,Strace,syscall_benchmark,getcpu_0_5000,129500,,"Baseline",129500
+L1,Strace,syscall_benchmark,getcpu_0_5000,129500,,"Guest Tracing",15523489
+L1,Strace,syscall_benchmark,getcpu_0_5000,129500,,"Write to disk",4027718
+
+L2,None,syscall_benchmark,getcpu_0_5000,129500,"baseline","Baseline",129500
+L2,Ftrace,syscall_benchmark,getcpu_0_5000,129500,,"Baseline",129500
+L2,Ftrace,syscall_benchmark,getcpu_0_5000,129500,,"Guest Tracing",408660
+L2,Ftrace,syscall_benchmark,getcpu_0_5000,129500,,"Write to disk",10882
+L2,Lttng,syscall_benchmark,getcpu_0_5000,129500,,"Baseline",129500
+L2,Lttng,syscall_benchmark,getcpu_0_5000,129500,,"Guest Tracing",371473
+L2,Lttng,syscall_benchmark,getcpu_0_5000,129500,,"Write to disk",18106
+L2,Perf,syscall_benchmark,getcpu_0_5000,129500,,"Baseline",129500
+L2,Perf,syscall_benchmark,getcpu_0_5000,129500,,"Guest Tracing",1070376
+L2,Hypertracing Compress 2,syscall_benchmark,getcpu_0_5000,129500,,"Baseline",129500
+L2,Hypertracing Compress 2,syscall_benchmark,getcpu_0_5000,129500,,"Hypercall",607778
+L2,Hypertracing Compress 2,syscall_benchmark,getcpu_0_5000,129500,,"Syscall Probe",33553
+L2,Hypertracing Compress 2,syscall_benchmark,getcpu_0_5000,129500,,"Time+Compression",85615
+L2,Hypertracing Compress 2,syscall_benchmark,getcpu_0_5000,129500,,"Host Tracing",146665
+L2,Hypertracing Compress 2,syscall_benchmark,getcpu_0_5000,129500,,"Nested Cost",78447.8
+L2,Hypertracing,syscall_benchmark,getcpu_0_5000,129500,,"Baseline",129500
+L2,Hypertracing,syscall_benchmark,getcpu_0_5000,129500,,"Hypercall",1604786
+L2,Hypertracing,syscall_benchmark,getcpu_0_5000,129500,,"Syscall Probe",33553
+L2,Hypertracing,syscall_benchmark,getcpu_0_5000,129500,,"Host Tracing",466630
+L2,Hypertracing,syscall_benchmark,getcpu_0_5000,129500,,"Nested Cost",93503.9
+L2,Strace,syscall_benchmark,getcpu_0_5000,129500,,"Baseline",129500
+L2,Strace,syscall_benchmark,getcpu_0_5000,129500,,"Guest Tracing",21279000
+L2,Strace,syscall_benchmark,getcpu_0_5000,129500,,"Write to disk",4816000

@@ -10,6 +10,7 @@ static struct timespec ts_start, ts_end;
 #define toc(end) clock_gettime(CLOCK_MONOTONIC, &end)
 #define elapsed_nsec(start, end) (end.tv_nsec + 1E9 * end.tv_sec) - (start.tv_nsec + 1E9 * start.tv_sec)
 
+#define do_hypercall_0() __asm__ __volatile__(".byte 0x0F,0x01,0xC1\n"::)
 #define do_hypercall_1(nr) __asm__ __volatile__(".byte 0x0F,0x01,0xC1\n"::"a"(nr))
 #define do_hypercall_2(nr, p1) __asm__ __volatile__(".byte 0x0F,0x01,0xC1\n"::"a"(nr), "b"(p1))
 #define do_hypercall_3(nr, p1, p2) __asm__ __volatile__(".byte 0x0F,0x01,0xC1\n"::"a"(nr), "b"(p1), "c"(p2))
@@ -73,36 +74,36 @@ int main(int argc, char** argv)
     for (int i=0; i < samples; i++) {
         int repeat = 30;
         tic(ts_start);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
-            do_hypercall_1(0);
+            do_hypercall_0();
+            do_hypercall_0();
+            do_hypercall_0();
+            do_hypercall_0();
+            do_hypercall_0();
+            do_hypercall_0();
+            do_hypercall_0();
+            do_hypercall_0();
+            do_hypercall_0();
+            do_hypercall_0();
+            do_hypercall_0();
+            do_hypercall_0();
+            do_hypercall_0();
+            do_hypercall_0();
+            do_hypercall_0();
+            do_hypercall_0();
+            do_hypercall_0();
+            do_hypercall_0();
+            do_hypercall_0();
+            do_hypercall_0();
+            do_hypercall_0();
+            do_hypercall_0();
+            do_hypercall_0();
+            do_hypercall_0();
+            do_hypercall_0();
+            do_hypercall_0();
+            do_hypercall_0();
+            do_hypercall_0();
+            do_hypercall_0();
+            do_hypercall_0();
         toc(ts_end);
         unsigned long int ns = elapsed_nsec(ts_start, ts_end);
         printf("%f\n", (double)ns/repeat);
