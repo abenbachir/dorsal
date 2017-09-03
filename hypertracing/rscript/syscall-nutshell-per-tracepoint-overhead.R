@@ -20,7 +20,8 @@ colors <- c("Baseline" = "gray10", "Guest Tracing" = "#6f2054", "Write to disk"=
 
 # layer,tracer,workload,configuration,time,event,freq,total_event_cost,cost_per_event
 data <- read.table("./hypertracing/data/syscall-nutshell-overhead.csv", header=T, sep=",")
-data$can_show_overhead <- as.character(data$can_show_overhead)
+data$can_show_overhead <- FALSE
+data$can_show_overhead[data$component == "Guest Tracing" | data$component == "Hypercall"] <- TRUE
 
 # data$tracer[data$tracer == "Hypertracing Compress 2"] <- "Hypertracing\nCompressing 2 events"
 
@@ -49,7 +50,7 @@ data <- ddply(data, .(layer, tracer, workload, configuration),
 data$overhead <- ''
 for(i in 1:nrow(data)) {
   row <- data[i,]
-  if(row$can_show_overhead == "True")
+  if(row$can_show_overhead)
   {
     data[i,]$overhead <- paste(row$total_time_per_event ,'ns', sep=' ')
     # data[i,]$overhead <- paste(round( (1-(row$baseline/row$total_value))*100  ,1),'%')

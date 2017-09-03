@@ -66,6 +66,10 @@ ftrace_overhead = ftrace$time_avg - 510
 perf_overhead = perf$time_avg - 510
 baseline = compression$baseline
 
+compression_color = "darkorange2"
+ftrace_color = "deepskyblue4"
+lttng_color = "#6f2054"
+perf_color = "deeppink"
 plot <- ggplot(data_filtered, aes(compressed_event, time)) +
   scale_x_continuous(breaks = seq(0, max(data_filtered$compressed_event), 1)) +
   scale_y_continuous(breaks = seq(0, max(data_filtered$time), 25)) +
@@ -73,10 +77,10 @@ plot <- ggplot(data_filtered, aes(compressed_event, time)) +
   # geom_point(aes(), size=data_filtered$args_for_payload*2, shape=1, stroke=1) +
   geom_line() +
   
-  geom_hline(yintercept = c(compression_overhead), linetype="dotted") +
-  geom_hline(yintercept = c(lttng_overhead), linetype="dotted") +
-  geom_hline(yintercept = c(ftrace_overhead), linetype="dotted") +
-  geom_hline(yintercept = c(perf_overhead), linetype="dotted") +
+  geom_hline(yintercept = c(compression_overhead), linetype="dashed", color=compression_color) +
+  geom_hline(yintercept = c(lttng_overhead), linetype="dashed", color=lttng_color) +
+  geom_hline(yintercept = c(ftrace_overhead), linetype="dashed", color=ftrace_color) +
+  geom_hline(yintercept = c(perf_overhead), linetype="dashed", color=perf_color) +
   geom_hline(yintercept = c(0), linetype=0) +
   # geom_vline(xintercept = c(data_filtered$compressed_event), linetype="3313") +
   # geom_segment(aes(x = data_filtered$compressed_event, y = 0, xend = data_filtered$compressed_event, yend = time),
@@ -94,10 +98,14 @@ plot <- ggplot(data_filtered, aes(compressed_event, time)) +
   #           position=position_dodge(width=0.9), vjust=-0.15) +
   # 
   # annotate("text", x = 1, y = baseline+baseline*0.2, label = "Baseline                     ") +
-  annotate("text", x = -1, y = lttng_overhead+7, label = "Lttng") +
-  annotate("text", x = -1, y = ftrace_overhead+7, label = "Ftrace") +
-  annotate("text", x = -1, y = perf_overhead+7, label = "Perf") +
-  annotate("text", x = -1, y = compression_overhead+7, label = "Compression") +
+  annotate("label", x = 19, y = lttng_overhead, label = "      Lttng      ", color="white", fill=lttng_color,
+             label.padding = unit(0.45, "lines")) +
+  annotate("label", x = 19, y = ftrace_overhead, label = "     Ftrace     ", color="white", fill=ftrace_color,
+             label.padding = unit(0.45, "lines")) +
+  annotate("label", x = 19, y = perf_overhead, label = "      Perf      ", color="white", fill=perf_color,
+           label.padding = unit(0.45, "lines")) +
+  annotate("label", x = 19, y = compression_overhead, label = "Compression", color="white", fill=compression_color,  
+             label.padding = unit(0.45, "lines")) +
   labs(title = "Offloading Latency of a Hypercall When Enabling Event Compression",x ="Number of compressed events", y ="Latency (ns)", fill="Cost of") +
   # scale_fill_manual(values = colors) +
   theme_light() +
