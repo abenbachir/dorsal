@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 linuxsource="linux"
-target="ubuntu"
-virsh setvcpus --live ubuntu 4
+target="ubuntu2"
+# virsh setvcpus --live ubuntu 4
 
 
 
@@ -17,9 +17,9 @@ scp ~/$linuxsource/kernel/trace/trace.h $target:~/linux/kernel/trace/
 scp ~/$linuxsource/kernel/trace/trace_hypergraph.c $target:~/linux/kernel/trace/
 scp ~/$linuxsource/kernel/trace/trace_hyperbootlevel.c $target:~/linux/kernel/trace/
 
-scp ~/$linuxsource/init/main.c $target:~/linux/init/
-scp ~/$linuxsource/init/Makefile $target:~/linux/init/
-#scp ~/$linuxsource/arch/x86/kernel/head64.c $target:~/linux/arch/x86/kernel/head64.c
+# scp ~/$linuxsource/init/main.c $target:~/linux/init/
+# scp ~/$linuxsource/init/Makefile $target:~/linux/init/
+
 
 
 ssh $target 'cd linux; make -j$(nproc) && sudo make modules_install && sudo make install;'

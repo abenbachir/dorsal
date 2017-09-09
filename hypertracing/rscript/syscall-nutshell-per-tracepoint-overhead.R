@@ -23,14 +23,16 @@ data <- read.table("./hypertracing/data/syscall-nutshell-overhead.csv", header=T
 data$can_show_overhead <- FALSE
 data$can_show_overhead[data$component == "Guest Tracing" | data$component == "Hypercall"] <- TRUE
 
+data$can_show_overhead[data$layer == "L0"] <- TRUE
+
 # data$tracer[data$tracer == "Hypertracing Compress 2"] <- "Hypertracing\nCompressing 2 events"
 
-# data = subset(data, layer == 'L1')
-# data = subset(data, tracer != 'Strace')
+data = subset(data, layer == 'L1')
+data = subset(data, tracer != 'Strace')
 # data = subset(data, !startsWith(as.character(tracer), 'Hypertracing +') )
 
 data = subset(data, component != 'Baseline')
-data$time_per_event <- (data$time*1000)/2500
+data$time_per_event <- (data$time)/5000
 data <- ddply(data, .(layer, tracer, workload, configuration),
               transform,
               total_time = sum(time),

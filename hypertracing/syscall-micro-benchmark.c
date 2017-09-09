@@ -45,7 +45,7 @@ int main(int argc, char** argv)
     if (argc > 2)
         samples = atoi(argv[2]);
 
-    do_hypercall(0,0,0,0,0);
+//    do_hypercall(0,0,0,0,0);
     tic(ts_start);
     for (int i=0; i < samples; i++) {
         int cpu_id = getcpu(); // do syscall here
@@ -54,11 +54,11 @@ int main(int argc, char** argv)
     }
     toc(ts_end);
     long unsigned int ns = elapsed_nsec(ts_start, ts_end);
-    do_hypercall(1,1,1,1,ns);
-    printf("%lu\n", ns);
+//    do_hypercall(1,1,1,1,ns);
+    printf("L0,TO_CHANGE,syscall_benchmark,getcpu_1_10000000,%lu\n", ns);
 
-    FILE *fp = fopen("./results.txt", "w");
-    fprintf(fp,"%lu",ns);
+    FILE *fp = fopen("./results.txt", "a");
+    fprintf(fp,"L0,TO_CHANGE,syscall_benchmark,getcpu_1_10000000,%lu\n",ns);
     fclose(fp);
     return 0;
 }

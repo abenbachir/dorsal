@@ -1,4 +1,21 @@
 layer,tracer,workload,configuration,baseline,overhead,component,time
+L0,None,syscall_benchmark,getcpu_1_10000000,510.71,"baseline","Baseline",510.71
+L0,Ftrace,syscall_benchmark,getcpu_1_10000000,510.71,,"Baseline",510.76
+L0,Ftrace,syscall_benchmark,getcpu_1_10000000,510.71,,"Host Tracing",76
+L0,Ftrace,syscall_benchmark,getcpu_1_10000000,510.71,,"Write to disk",102
+
+
+L0,Lttng,syscall_benchmark,getcpu_1_10000000,510.71,,"Baseline",510.71
+L0,Lttng,syscall_benchmark,getcpu_1_10000000,510.71,,"Host Tracing",74
+L0,Lttng,syscall_benchmark,getcpu_1_10000000,510.71,,"Write to disk",0
+
+L0,Perf,syscall_benchmark,getcpu_1_10000000,510.71,,"Baseline",510.71
+L0,Perf,syscall_benchmark,getcpu_1_10000000,510.71,,"Host Tracing",239.03
+
+L0,Strace,syscall_benchmark,getcpu_1_10000000,510.71,,"Baseline",510.71
+L0,Strace,syscall_benchmark,getcpu_1_10000000,510.71,,"Host Tracing",5432
+L0,Strace,syscall_benchmark,getcpu_1_10000000,510.71,,"Write to disk",1280
+
 L1,None,syscall_benchmark,getcpu_1_10000000,510.71,"baseline","Baseline",510.71
 L1,Ftrace,syscall_benchmark,getcpu_1_10000000,510.71,,"Baseline",510.71
 L1,Ftrace,syscall_benchmark,getcpu_1_10000000,510.71,,"Guest Tracing",75
@@ -13,11 +30,43 @@ L1,Perf,syscall_benchmark,getcpu_1_10000000,510.71,,"Guest Tracing",239.03
 
 
 L1,Hypertracing,syscall_benchmark,getcpu_1_10000000,510.71,,"Baseline",510.71
-L1,Hypertracing,syscall_benchmark,getcpu_1_10000000,510.71,,"Hypercall",0
-L1,Hypertracing,syscall_benchmark,getcpu_1_10000000,510.71,,"Syscall Probe",0
-L1,Hypertracing,syscall_benchmark,getcpu_1_10000000,510.71,,"Host Tracing",0
-L1,Hypertracing,syscall_benchmark,getcpu_1_10000000,510.71,,"Guest Tracing",406
+L1,Hypertracing,syscall_benchmark,getcpu_1_10000000,510.71,,"Hypercall",319
+L1,Hypertracing,syscall_benchmark,getcpu_1_10000000,510.71,,"Syscall Probe",4
+L1,Hypertracing,syscall_benchmark,getcpu_1_10000000,510.71,,"Host Tracing",83
+
+L1,HyperCompres(2),syscall_benchmark,getcpu_1_10000000,510.71,,"Baseline",510.71
+L1,HyperCompres(2),syscall_benchmark,getcpu_1_10000000,510.71,,"Hypercall",108
+L1,HyperCompres(2),syscall_benchmark,getcpu_1_10000000,510.71,,"Syscall Probe",4
+L1,HyperCompres(2),syscall_benchmark,getcpu_1_10000000,510.71,,"Time+Compression",21
+L1,HyperCompres(2),syscall_benchmark,getcpu_1_10000000,510.71,,"Host Tracing",24
 
 L1,Strace,syscall_benchmark,getcpu_1_10000000,510.71,,"Baseline",510.71
 L1,Strace,syscall_benchmark,getcpu_1_10000000,510.71,,"Guest Tracing",2963.08
 L1,Strace,syscall_benchmark,getcpu_1_10000000,510.71,,"Write to disk",1312.41
+
+
+L2,Lttng,syscall_benchmark,getcpu_1_10000000,510.71,,"Baseline",510.71
+L2,Lttng,syscall_benchmark,getcpu_1_10000000,510.71,,"Guest Tracing",81
+L2,Lttng,syscall_benchmark,getcpu_1_10000000,510.71,,"Write to disk",41
+
+L2,Ftrace,syscall_benchmark,getcpu_1_10000000,510.71,,"Baseline",510.71
+L2,Ftrace,syscall_benchmark,getcpu_1_10000000,510.71,,"Guest Tracing",88
+L2,Ftrace,syscall_benchmark,getcpu_1_10000000,510.71,,"Write to disk",166
+
+L2,Perf,syscall_benchmark,getcpu_1_10000000,510.71,,"Baseline",510.71
+L2,Perf,syscall_benchmark,getcpu_1_10000000,510.71,,"Guest Tracing",275
+
+L2,Hypertracing,syscall_benchmark,getcpu_1_10000000,510.71,,"Baseline",510.71
+L2,Hypertracing,syscall_benchmark,getcpu_1_10000000,510.71,,"Hypercall",338
+L2,Hypertracing,syscall_benchmark,getcpu_1_10000000,510.71,,"Syscall Probe",4
+L2,Hypertracing,syscall_benchmark,getcpu_1_10000000,510.71,,"Host Tracing",79
+
+L2,HyperCompres(2),syscall_benchmark,getcpu_1_10000000,510.71,,"Baseline",510.71
+L2,HyperCompres(2),syscall_benchmark,getcpu_1_10000000,510.71,,"Hypercall",112
+L2,HyperCompres(2),syscall_benchmark,getcpu_1_10000000,510.71,,"Syscall Probe",4
+L2,HyperCompres(2),syscall_benchmark,getcpu_1_10000000,510.71,,"Time+Compression",33
+L2,HyperCompres(2),syscall_benchmark,getcpu_1_10000000,510.71,,"Host Tracing",28
+
+L2,Strace,syscall_benchmark,getcpu_1_10000000,510.71,,"Baseline",510.71
+L2,Strace,syscall_benchmark,getcpu_1_10000000,510.71,,"Guest Tracing",4072
+L2,Strace,syscall_benchmark,getcpu_1_10000000,510.71,,"Write to disk",966

@@ -9,8 +9,8 @@ source("./hypertracing/rscript/global.R")
 data <- read.table("./hypertracing/data/syscall-exits-cost-1us.csv", header=T, sep=",")
 
 # data = subset(data, configuration == 'getcpu_0_2500')
-# data = subset(data, layer == 'L1')
-# data = subset(data, tracer != 'Strace' & tracer != 'Strace_flight_recorder')
+# data = subset(data, layer == 'L0')
+data = subset(data, tracer != 'Strace' & tracer != 'Strace_flight_recorder')
 
 data$nb_events <- as.numeric(strsplit(as.character(unique(data$configuration)),"_")[[1]][3])
 # data$nb_events <- 1
@@ -22,7 +22,6 @@ data_filtered <- ddply(data, .(layer, tracer, workload, configuration),
 )
 
 data_filtered <- unique(data_filtered[c("layer", "tracer", "workload", "configuration", "nb_events","time_avg", "time_median", "time_std")])
-
 
 data_filtered <- ddply(data_filtered, .(layer, workload, configuration),
                        transform,

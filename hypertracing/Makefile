@@ -17,18 +17,17 @@ all:
 	scp syscall-micro-benchmark sched-switch-micro-benchmark vm:~/
 	scp syscall-micro-benchmark sched-switch-micro-benchmark root@vm:~/
 
-	# scp syscall-micro-benchmark vm1:~/
-	# scp syscall-micro-benchmark root@vm1:~/
+	scp syscall-micro-benchmark vm1:~/
+	scp syscall-micro-benchmark root@vm1:~/
 
-	# ssh vm1 'ssh nested-vm "scp host:~/utils/hypertracing/syscall-micro-benchmark .; sudo cp syscall-micro-benchmark /root/"'
+	ssh vm1 'ssh nested-vm "scp host:~/utils/hypertracing/syscall-micro-benchmark .; sudo cp syscall-micro-benchmark /root/"'
 
-	# ssh vm1 'ssh nested-vm "scp host:~/utils/hypertracing/cpu_hypertracing_guest.c ./hypertracing/"'
-	# ssh vm1 'ssh nested-vm "scp host:~/utils/hypertracing/syscall_hypertracing_guest.c ./hypertracing/"'
-	# ssh vm1 'ssh nested-vm "scp host:~/utils/hypertracing/syscall_hypertracing_compress_guest.c ./hypertracing/"'
+	ssh vm1 'ssh nested-vm "scp host:~/utils/hypertracing/cpu_hypertracing_guest.c ./hypertracing/"'
+	ssh vm1 'ssh nested-vm "scp host:~/utils/hypertracing/syscall_hypertracing_*.c ./hypertracing/"'
 
-     #ssh vm1 'ssh nested-vm "cd hypertracing; make clean; make"'
+    #ssh vm1 'ssh nested-vm "cd hypertracing; make clean; make"'
 
-    # ssh vm1 'ssh nested-vm "scp host:~/utils/hypertracing/Makefile ./hypertracing/"'
+    #ssh vm1 'ssh nested-vm "scp host:~/utils/hypertracing/Makefile ./hypertracing/"'
 
 
 clean:

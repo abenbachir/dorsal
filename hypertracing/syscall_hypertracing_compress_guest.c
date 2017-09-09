@@ -9,7 +9,7 @@
 #include <linux/un.h>
 #include <linux/trace_clock.h>
 
-#define MAX_EVENT_COMPRESSION 30
+#define MAX_EVENT_COMPRESSION 2
 #define do_hypercall(nr, p1, p2, p3, p4) \
 __asm__ __volatile__(".byte 0x0F,0x01,0xC1\n"::"a"(nr), \
     "b"(p1), \
@@ -52,7 +52,7 @@ void syscall_entry_probe(void *__data, struct pt_regs *regs, long id)
         {
             for (; i < MAX_EVENT_COMPRESSION; i++)
                 diff = tsc_entry*i - diff;
-            do_hypercall(4000, id, 0, 0, 0);
+//            do_hypercall(4000, id, 0, 0, 0);
             syscall_entry_counter = 0;
         }
     }
@@ -78,7 +78,7 @@ void syscall_exit_probe(void *__data, struct pt_regs *regs, long ret)
 //            u64 diff = tsc_exit - tsc_exit;
             for (; i < MAX_EVENT_COMPRESSION; i++)
                 diff = tsc_exit*i - diff;
-            do_hypercall(4000, id, 1, ret, 0);
+//            do_hypercall(4000, id, 1, ret, 0);
 
             syscall_exit_counter = 0;
         }

@@ -55,7 +55,7 @@ hypertracing()
 {
     workload=$1
     CMD=$2
-    output="$trace_dir/hypertracing/l1-syscall_benchmark--hypertracing-${workload}-$(dbus-uuidgen)"
+    output="$trace_dir/hypertracing/l1-syscall_benchmark-hypertracing-${workload}-$(dbus-uuidgen)"
 
     ssh $target 'sudo insmod hypertracing/syscall_hypertracing_guest.ko'
 
@@ -71,7 +71,7 @@ hypertracing_compress()
 {
     workload=$1
     CMD=$2
-    output="$trace_dir/hypertracing/l1-syscall_benchmark-hypertracing_compress_30-${workload}-$(dbus-uuidgen)"
+    output="$trace_dir/hypertracing/l1-syscall_benchmark-hypertracing_compress-${workload}-$(dbus-uuidgen)"
 
     ssh $target 'sudo insmod hypertracing/syscall_hypertracing_compress_guest.ko'
 
@@ -207,9 +207,9 @@ strace_tracing()
     ssh $target "sudo rm strace.txt"
 }
 
-keep_cpu_busy_for_us=0
-events=2500
-#events=5000000
+keep_cpu_busy_for_us=1
+#events=2500
+events=5000000
 total_events=$((events * 2))
 workload="getcpu_${keep_cpu_busy_for_us}_${total_events}"
 cmd="./syscall-micro-benchmark ${keep_cpu_busy_for_us} ${events}"
@@ -226,16 +226,15 @@ repeat=30
 #reset
 #echo "$limiter Hypertracing $limiter"
 #for i in $(eval echo "{1..$repeat}")
-#    do
+#do
 #    sleep 0.1
 #    hypertracing "${workload}" "${cmd}"
-#
 #done
 
 reset
 echo "$limiter Hypertracing Compress $limiter"
 for i in $(eval echo "{1..$repeat}")
-    do
+do
     sleep 0.1
     hypertracing_compress "${workload}" "${cmd}"
 done

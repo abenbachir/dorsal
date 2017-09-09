@@ -60,7 +60,7 @@ hypertracing()
 {
     workload=$1
     CMD=$2
-    output="$trace_dir/hypertracing/l2-syscall_benchmark-hyperT-${workload}-$(dbus-uuidgen)"
+    output="$trace_dir/hypertracing/l2-syscall_benchmark-hypertracing-${workload}-$(dbus-uuidgen)"
 
     ssh $target_l1 "ssh $target_l2 'sudo insmod hypertracing/syscall_hypertracing_guest.ko'"
 
@@ -76,7 +76,7 @@ hypertracing_compress()
 {
     workload=$1
     CMD=$2
-    output="$trace_dir/hypertracing/l2-syscall_benchmark-hyperT_compress_3-${workload}-$(dbus-uuidgen)"
+    output="$trace_dir/hypertracing/l2-syscall_benchmark-hypertracing_compressing-${workload}-$(dbus-uuidgen)"
 
     ssh $target_l1 "ssh $target_l2 'sudo insmod hypertracing/syscall_hypertracing_compress_guest.ko'"
 
@@ -227,13 +227,13 @@ repeat=30
 #    no_tracing "${workload}" "${cmd}"
 #done
 
-reset
-echo "$limiter Perf $limiter"
-for i in $(eval echo "{1..$repeat}")
-do
-    sleep 0.1
-    perf_tracing "${workload}" "${cmd}"
-done
+#reset
+#echo "$limiter Perf $limiter"
+#for i in $(eval echo "{1..$repeat}")
+#do
+#    sleep 0.1
+#    perf_tracing "${workload}" "${cmd}"
+#done
 
 #reset
 #echo "$limiter Hypertracing $limiter"
@@ -241,10 +241,15 @@ done
 #do
 #    sleep 0.1
 #    hypertracing "${workload}" "${cmd}"
-#    sleep 0.1
-#    hypertracing_compress "${workload}" "${cmd}"
 #done
 
+reset
+echo "$limiter Hypertracing Compressing $limiter"
+for i in $(eval echo "{1..$repeat}")
+do
+    sleep 0.1
+    hypertracing_compress "${workload}" "${cmd}"
+done
 
 #reset
 #echo "$limiter Strace $limiter"
