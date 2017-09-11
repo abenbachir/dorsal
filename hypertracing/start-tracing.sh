@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 # set -x
-#virsh vcpupin VM 0 1
+
 # virsh vcpuinfo VM
 target_l1=vm1
 target_l2=nested-vm2
 max_depth=2
 trace_dir="/home/abder/lttng-traces/tracers/syscall"
+
+virsh vcpupin $target_l1 0 0
 
 ftrace_notrace="
 echo global > /sys/kernel/debug/tracing/trace_clock;
@@ -20,17 +22,17 @@ echo *mutex* >> /sys/kernel/debug/tracing/set_ftrace_notrace;
 echo _cond_resched >> /sys/kernel/debug/tracing/set_ftrace_notrace;
 echo *console* >> /sys/kernel/debug/tracing/set_ftrace_notrace;
 echo *fb* >> /sys/kernel/debug/tracing/set_ftrace_notrace;
-echo *kfree* >> /sys/kernel/debug/tracing/set_ftrace_notrace;"
+echo *kfree* >> /sys/kernel/debug/tracing/set_ftrace_notrace"
 
 start_host_tracing() {
     output=$1
-    lttng create hypergraph
+    lttng create hypergraph --output=/home/abder/lttng-traces/hypergraph
     lttng enable-channel -k --subbuf-size=256K --num-subbuf=512 vm_channel
     lttng enable-event -k "sched_switch" -c vm_channel
-#    lttng enable-event -k --syscall -a -c vm_channel
+   # lttng enable-event -k --syscall -a -c vm_channel
     lttng enable-event -k "kvm_x86_hypercall" -c vm_channel
      lttng enable-event -k "func_entry,func_exit,func_entry_exit" --filter '$ctx.cpu_id == 0' -c vm_channel
-#     lttng enable-event -k "func_entry,func_exit,func_entry_exit" -c vm_channel
+    # lttng enable-event -k "func_entry,func_exit,func_entry_exit" -c vm_channel
     lttng add-context -k -t pid -t tid -t procname
 #    sudo insmod /home/abder/lttng/lttng-modules/probes/lttng-fgraph.ko
     lttng start
@@ -75,8 +77,6 @@ hypergraph_tracing()
     setup_l1_ftrace
 #    setup_l2_ftrace
 
-    echo 0 > /proc/lttng-fgraph
-
     start_host_tracing
 
     echo 1 > /proc/lttng-fgraph
@@ -84,13 +84,19 @@ hypergraph_tracing()
     ssh root@$target_l1 "echo 1 > /sys/kernel/debug/tracing/tracing_on &&
      $CMD && echo 0 > /sys/kernel/debug/tracing/tracing_on"
     
+    # sudo cat /proc/kallsyms > script/kallsyms.map
+    # cat /proc/cpuinfo > /tmp/test.txt
+
     echo 0 > /proc/lttng-fgraph
-    # sleep 0.01
+
     stop_host_tracing
+
     cat /proc/lttng-fgraph
     dump_symbols
 }
 
 
-cmd="echo 'test'"
+cmd="cat /proc/cpuinfo > /tmp/test.txt"
 hypergraph_tracing "${cmd}"
+
+./script/babeltrace_to_ctf.py /home/abder/lttng-traces/hypergraph

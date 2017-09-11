@@ -26,6 +26,7 @@ def main(argv):
     input_cpuid = None
     kernel_symbols_path = "/home/abder/utils/hypertracing/script/kallsyms.map"
     kernel_symbols_l1_path = "/home/abder/utils/hypertracing/script/kallsyms-l1.map"
+    syscall_list_filepath = "/home/abder/utils/hypertracing/script/syscalls.txt"
     try:
         if len(argv) > 0:
             path = argv[0]
@@ -75,10 +76,12 @@ def main(argv):
     clock2 = btw.Clock('monotonic')
     kernel_writer.add_clock(clock1)
     kernel_writer.add_environment_field("domain", "kernel")
-    kernel_writer.add_environment_field("tracer_name", "lttng")
+    kernel_writer.add_environment_field("tracer_name", "lttng-modules")
+    kernel_writer.add_environment_field("tracer_major", 2)
+    kernel_writer.add_environment_field("tracer_minor", 10)
     ust_writer.add_clock(clock2)
     ust_writer.add_environment_field("domain", "ust")
-    ust_writer.add_environment_field("tracer_name", "lttng")
+    ust_writer.add_environment_field("tracer_name", "lttng-ust")
     # create one default stream class and assign our clock to it
     kernel_stream_class = btw.StreamClass('channel')
     kernel_stream_class.clock = clock1
@@ -143,12 +146,24 @@ def main(argv):
     sched_switch_event_class.add_field(int32_type, "next_prio")
     kernel_stream_class.add_event_class(sched_switch_event_class)
 
-    sys_entry_open_event_class = btw.EventClass("syscall_entry_open")
-    # sys_entry_open_event_class.add_field(int32_type, "fd")
-    kernel_stream_class.add_event_class(sys_entry_open_event_class)
-    sys_exit_open_event_class = btw.EventClass("syscall_exit_open")
-    sys_exit_open_event_class.add_field(int32_type, "ret")
-    kernel_stream_class.add_event_class(sys_exit_open_event_class)
+    # sys_entry_open_event_class = btw.EventClass("syscall_entry_open")
+    # kernel_stream_class.add_event_class(sys_entry_open_event_class)
+    # sys_exit_open_event_class = btw.EventClass("syscall_exit_open")
+    # kernel_stream_class.add_event_class(sys_exit_open_event_class)
+
+    # syscall event class
+    syscalls_event_class = {}
+    for name in load_syscalls(syscall_list_filepath):
+        sys_func_name = "sys_%s" % name
+        sys_entry_event_class = btw.EventClass("syscall_entry_%s" % name)
+        sys_exit_event_class = btw.EventClass("syscall_exit_%s" % name)
+        kernel_stream_class.add_event_class(sys_entry_event_class)
+        kernel_stream_class.add_event_class(sys_exit_event_class)
+        syscalls_event_class[sys_func_name] = {
+            'entry': sys_entry_event_class,
+            'exit': sys_exit_event_class
+        }
+
 
     # create our single stream
     cpu_count = multiprocessing.cpu_count()
@@ -198,11 +213,14 @@ def main(argv):
             entry_event.payload(VPID_FIELD_NAME).value = event_obj.pid
             entry_event.payload(PROCNAME_FIELD_NAME).value = event_obj.procname
             per_cpu_streams['ust'][event_obj.cpu_id].append_event(entry_event)
-
-            if event_obj.function_name.lower() == "sys_open":
-                syscall_event_entry = btw.Event(sys_entry_open_event_class)
-                syscall_event_entry.clock().time = event_obj.timestamp
-                per_cpu_streams['kernel'][event_obj.cpu_id].append_event(syscall_event_entry)
+            # handle syscall entry
+            if event_obj.function_name.lower().startswith("sys_"):
+                # print("cpu=%s, %s" % (event_obj.cpu_id,event_obj.function_name))
+                if event_obj.function_name.lower() in syscalls_event_class:
+                    event_class = syscalls_event_class[event_obj.function_name.lower()]['entry']
+                    syscall_event_entry = btw.Event(event_class)
+                    syscall_event_entry.clock().time = event_obj.timestamp
+                    per_cpu_streams['kernel'][event_obj.cpu_id].append_event(syscall_event_entry)
 
         if isinstance(event_obj, FunctionExit):
             exit_event = btw.Event(func_exit_event_class)
@@ -212,11 +230,13 @@ def main(argv):
             exit_event.payload(VPID_FIELD_NAME).value = event_obj.pid
             exit_event.payload(PROCNAME_FIELD_NAME).value = event_obj.procname
             per_cpu_streams['ust'][event_obj.cpu_id].append_event(exit_event)
-            if event_obj.function_name.lower() == "sys_open":
-                syscall_event_exit = btw.Event(sys_exit_open_event_class)
-                syscall_event_exit.clock().time = event_obj.timestamp
-                syscall_event_exit.payload("ret").value = 1
-                per_cpu_streams['kernel'][event_obj.cpu_id].append_event(syscall_event_exit)
+            # handle syscall exit
+            if event_obj.function_name.lower().startswith("sys_"):
+                if event_obj.function_name.lower() in syscalls_event_class:
+                    event_class = syscalls_event_class[event_obj.function_name.lower()]['exit']
+                    syscall_event_exit = btw.Event(event_class)
+                    syscall_event_exit.clock().time = event_obj.timestamp
+                    per_cpu_streams['kernel'][event_obj.cpu_id].append_event(syscall_event_exit)
 
         if isinstance(event_obj, dict):
             # print(event_obj)

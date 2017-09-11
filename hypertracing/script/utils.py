@@ -382,4 +382,18 @@ def handle_l0_event(event):
             return obj
         return None
 
-syscalls = ["sys_open"]
+def load_syscalls(filepath):
+    syscalls = []
+    with open(filepath) as f:
+        lines = f.readlines()
+        for i in range(2, len(lines)):
+            line = lines[i]
+            try:
+                values = line.strip().split(' ')
+                if not values[0]:
+                    continue
+                syscalls.append(values[0].rstrip())
+
+            except Exception as ex:
+                print(ex)
+    return syscalls
