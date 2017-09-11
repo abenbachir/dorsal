@@ -8,6 +8,14 @@ import sys
 import babeltrace.reader
 from utils import *
 
+
+# try:
+#     import babeltrace.reader
+# except ImportError:
+#     pass
+# quick fix for debian-based distros
+#     sys.path.append("/usr/local/lib/python%d.%d/site-packages" % (sys.version_info.major, sys.version_info.minor))
+
 function_entry_map = dict()
 PH_ENTRY = "B"
 PH_EXIT = "E"

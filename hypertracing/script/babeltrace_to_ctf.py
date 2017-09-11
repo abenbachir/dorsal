@@ -6,61 +6,22 @@ import os
 import getopt
 import sys
 import babeltrace.reader
+import babeltrace.writer as btw
 from utils import *
+import multiprocessing
 
-function_entry_map = dict()
-PH_ENTRY = "B"
-PH_EXIT = "E"
-
-cpu_metadatas = dict()
-def to_chrome_entry_exit_event(event_obj, ph):
-    event = {
-        'pid': "CPU %s - %s (pid %s)" % (event_obj.cpu_id, event_obj.procname, event_obj.pid),
-        'tid': event_obj.tid,
-        'name': event_obj.function_name,
-        'ph': ph,
-        'ts': ns_to_us(event_obj.timestamp),
-        'cat': event_obj.virt_level,
-        'args': {
-            'cpu': event_obj.cpu_id,
-            'depth': event_obj.depth
-        },
-    }
-
-    cpu_metadatas[event_obj.cpu_id] = 1
-    return event
-
-
-def to_chrome_dur_event(event_obj):
-    event = {
-        'pid': event_obj.pid,
-        'tid': event_obj.tid,
-        'name': event_obj.function_name,
-        'ph': 'X',
-        'dur': ns_to_us(event_obj.dur),
-        'tdur': ns_to_us(event_obj.dur),
-        'ts': ns_to_us(event_obj.timestamp),
-        'args': {
-            # 'cpu_id_entry': fields['cpu_id'],
-            'cpu': event_obj.cpu_id,
-            'depth': event_obj.depth
-        },
-    }
-    cpu_metadatas[event_obj.cpu_id] = 1
-    return event
-
-def add_metadata(events, name, pid, tid, args):
-    events.append({
-        'pid': pid,
-        'tid': tid,
-        'name': name,
-        'ph': 'M',
-        'cat': "__metadata",
-        'args': args,
-    })
+VTID_FIELD_NAME = "vtid"
+VPID_FIELD_NAME = "vpid"
+ADDR_FIELD_NAME = "addr"
+NAME_FIELD_NAME = "name"
+PROCNAME_FIELD_NAME = "procname"
+FUNC_ENTRY_EVENT_NAME = "func_entry"
+FUNC_EXIT_EVENT_NAME = "func_exit"
+SCHED_SWITCH_EVENT_NAME = "sched_switch"
+PREV_COMM_FIELD_NAME = "_prev_comm"
 
 def main(argv):
-    path = "/home/abder/lttng-traces/hypergraph-20170907-155406"
+    path = "/home/abder/lttng-traces/hypergraph-20170910-204405"
     output = None
     input_cpuid = None
     kernel_symbols_path = "/home/abder/utils/hypertracing/script/kallsyms.map"
@@ -103,25 +64,124 @@ def main(argv):
         raise IOError("Error adding trace")
 
     print("--- Converting traces ---")
-    trace_events = []
-    count = 0
-    start = 0
+
+    # temporary directory holding the CTF trace
+    trace_path = "/home/abder/lttng-traces/fgraph-traces"
+    # our writer
+    kernel_writer = btw.Writer(os.path.join(trace_path, "kernel"))
+    ust_writer = btw.Writer(os.path.join(trace_path, "ust"))
+    # create one default clock and register it to the writer
+    clock1 = btw.Clock('monotonic')
+    clock2 = btw.Clock('monotonic')
+    kernel_writer.add_clock(clock1)
+    kernel_writer.add_environment_field("domain", "kernel")
+    kernel_writer.add_environment_field("tracer_name", "lttng")
+    ust_writer.add_clock(clock2)
+    ust_writer.add_environment_field("domain", "ust")
+    ust_writer.add_environment_field("tracer_name", "lttng")
+    # create one default stream class and assign our clock to it
+    kernel_stream_class = btw.StreamClass('channel')
+    kernel_stream_class.clock = clock1
+    ust_stream_class = btw.StreamClass('channel')
+    ust_stream_class.clock = clock2
+
+    # create fields
+    int8_type = btw.IntegerFieldDeclaration(8)
+    int8_type.signed = 1
+    int8_type.encoding = babeltrace.common.CTFStringEncoding.UTF8
+    int8_type.alignment = 8
+
+    array_type = btw.ArrayFieldDeclaration(int8_type, 20)
+    int32_type = btw.IntegerFieldDeclaration(32)
+    int32_type.signed = 1
+    uint32_type = btw.IntegerFieldDeclaration(32)
+    uint32_type.signed = 0
+    uint32_type.alignment = 8
+    uint64_type = btw.IntegerFieldDeclaration(64)
+    uint64_type.signed = 0
+    uint64_type.alignment = 8
+    int64_type = btw.IntegerFieldDeclaration(64)
+    int64_type.signed = 1
+    string_type = btw.StringFieldDeclaration()
+    string_type.encoding = babeltrace.common.CTFStringEncoding.UTF8
+
+    packet_context_type = ust_stream_class.packet_context_type
+    packet_context_type.add_field(uint32_type, "cpu_id")
+    ust_stream_class.packet_context_type = packet_context_type
+
+    packet_context_type = kernel_stream_class.packet_context_type
+    packet_context_type.add_field(uint32_type, "cpu_id")
+    kernel_stream_class.packet_context_type = packet_context_type
+
+    # Set a stream event context
+    # stream_event_context_type = btw.StructureFieldDeclaration()
+    # stream_event_context_type.add_field(uint32_type, "cpu_id")
+    # stream_class.event_context_type = stream_event_context_type
+
+    # add this field declaration to event class
+    func_entry_event_class = btw.EventClass(FUNC_ENTRY_EVENT_NAME)
+    func_entry_event_class.add_field(uint64_type, ADDR_FIELD_NAME)
+    func_entry_event_class.add_field(uint32_type, VTID_FIELD_NAME)
+    func_entry_event_class.add_field(uint32_type, VPID_FIELD_NAME)
+    func_entry_event_class.add_field(string_type, PROCNAME_FIELD_NAME)
+    ust_stream_class.add_event_class(func_entry_event_class)
+
+    func_exit_event_class = btw.EventClass(FUNC_EXIT_EVENT_NAME)
+    func_exit_event_class.add_field(uint64_type, ADDR_FIELD_NAME)
+    func_exit_event_class.add_field(int32_type, VTID_FIELD_NAME)
+    func_exit_event_class.add_field(int32_type, VPID_FIELD_NAME)
+    func_exit_event_class.add_field(string_type, PROCNAME_FIELD_NAME)
+    ust_stream_class.add_event_class(func_exit_event_class)
+
+    sched_switch_event_class = btw.EventClass(SCHED_SWITCH_EVENT_NAME)
+    sched_switch_event_class.add_field(array_type, "prev_comm")
+    sched_switch_event_class.add_field(int32_type, "prev_tid")
+    sched_switch_event_class.add_field(int32_type, "prev_prio")
+    sched_switch_event_class.add_field(int64_type, "prev_state")
+    sched_switch_event_class.add_field(array_type, "next_comm")
+    sched_switch_event_class.add_field(int32_type, "next_tid")
+    sched_switch_event_class.add_field(int32_type, "next_prio")
+    kernel_stream_class.add_event_class(sched_switch_event_class)
+
+    sys_entry_open_event_class = btw.EventClass("syscall_entry_open")
+    # sys_entry_open_event_class.add_field(int32_type, "fd")
+    kernel_stream_class.add_event_class(sys_entry_open_event_class)
+    sys_exit_open_event_class = btw.EventClass("syscall_exit_open")
+    sys_exit_open_event_class.add_field(int32_type, "ret")
+    kernel_stream_class.add_event_class(sys_exit_open_event_class)
+
+    # create our single stream
+    cpu_count = multiprocessing.cpu_count()
+    per_cpu_streams = {'ust': [], 'kernel': []}
+    # ust streams
+    for i in range(0, cpu_count):
+        ust_stream = ust_writer.create_stream(ust_stream_class)
+        ust_stream.packet_context.field("cpu_id").value = i
+        per_cpu_streams['ust'].append(ust_stream)
+    # kernel streams
+    for i in range(0, cpu_count):
+        kernel_stream = kernel_writer.create_stream(kernel_stream_class)
+        kernel_stream.packet_context.field("cpu_id").value = i
+        per_cpu_streams['kernel'].append(kernel_stream)
+
+    kallsyms = {}
     for event in traces.events:
         event_obj = None
         if is_hypercall_event(event.name):
             start = 1
             event_obj = handle_l1_event(event)
-            if isinstance(event_obj, FunctionEntryExit):
-                print(event_obj.virt_level, kernel_symbols_l1.get_name(event_obj.address), hash_table.get_name(event_obj.hash_code))
-
+            if isinstance(event_obj, EventFunction):
+                name = hash_table.get_name(event_obj.hash_code)
+                if name is None:
+                    name = kernel_symbols_l1.get_name(event_obj.address)
                 event_obj.function_name = kernel_symbols_l1.get_name(event_obj.address)
-
-        # if start <= 0:
-        #     continue
-        if not is_hypercall_event(event.name):
+                # quick hack to use only one kallsyms file : Convert guest addr to host addr
+                if kernel_symbols.get_addr(event_obj.function_name) :
+                    event_obj.address = kernel_symbols.get_addr(event_obj.function_name)
+        else:
             event_obj = handle_l0_event(event)
-            if isinstance(event_obj, FunctionEntryExit):
-                print(event_obj.virt_level, kernel_symbols.get_name(event_obj.address), hash_table.get_name(event_obj.hash_code))
+            if isinstance(event_obj, EventFunction):
+                # print(event_obj.virt_level, kernel_symbols.get_name(event_obj.address), hash_table.get_name(event_obj.hash_code))
                 event_obj.function_name = kernel_symbols.get_name(event_obj.address)
 
         if event_obj is None:
@@ -131,37 +191,65 @@ def main(argv):
         #     continue
 
         if isinstance(event_obj, FunctionEntry):
-            event_json = to_chrome_entry_exit_event(event_obj, PH_ENTRY)
-            trace_events.append(event_json)
+            entry_event = btw.Event(func_entry_event_class)
+            entry_event.clock().time = event_obj.timestamp
+            entry_event.payload(ADDR_FIELD_NAME).value = event_obj.address
+            entry_event.payload(VTID_FIELD_NAME).value = event_obj.tid
+            entry_event.payload(VPID_FIELD_NAME).value = event_obj.pid
+            entry_event.payload(PROCNAME_FIELD_NAME).value = event_obj.procname
+            per_cpu_streams['ust'][event_obj.cpu_id].append_event(entry_event)
+
+            if event_obj.function_name.lower() == "sys_open":
+                syscall_event_entry = btw.Event(sys_entry_open_event_class)
+                syscall_event_entry.clock().time = event_obj.timestamp
+                per_cpu_streams['kernel'][event_obj.cpu_id].append_event(syscall_event_entry)
 
         if isinstance(event_obj, FunctionExit):
-            count += 1
-            event_json = to_chrome_entry_exit_event(event_obj, PH_EXIT)
-            trace_events.append(event_json)
-        if count > 50000:
-            break
-    print("--- Done ---")
-    # add_metadata(trace_events, "thread_name", 0, KERNELSPACE_HYPERCALL_NR, {'name': "Kernelspace"})
-    # add_metadata(trace_events, "thread_name", 0, USERSPACE_HYPERCALL_NR, {'name': "Userspace"})
-    # add_metadata(trace_events, "process_name", 0, USERSPACE_HYPERCALL_NR, {'name': "VM0"})
-    # add_metadata(trace_events, "process_labels", 0, USERSPACE_HYPERCALL_NR, {'labels': "Ubuntu 16.04"})
-    # add_metadata(trace_events, "thread_sort_index", 0, KERNELSPACE_HYPERCALL_NR, {'sort_index': -5})
-    # add_metadata(trace_events, "thread_sort_index", 0, USERSPACE_HYPERCALL_NR, {'sort_index': -10})
+            exit_event = btw.Event(func_exit_event_class)
+            exit_event.clock().time = event_obj.timestamp
+            exit_event.payload(ADDR_FIELD_NAME).value = event_obj.address
+            exit_event.payload(VTID_FIELD_NAME).value = event_obj.tid
+            exit_event.payload(VPID_FIELD_NAME).value = event_obj.pid
+            exit_event.payload(PROCNAME_FIELD_NAME).value = event_obj.procname
+            per_cpu_streams['ust'][event_obj.cpu_id].append_event(exit_event)
+            if event_obj.function_name.lower() == "sys_open":
+                syscall_event_exit = btw.Event(sys_exit_open_event_class)
+                syscall_event_exit.clock().time = event_obj.timestamp
+                syscall_event_exit.payload("ret").value = 1
+                per_cpu_streams['kernel'][event_obj.cpu_id].append_event(syscall_event_exit)
 
-    # for cpu_id, val in cpu_metadatas.items():
-    #     add_metadata(trace_events, "process_name", cpu_id, 0, {'name': "CPU"})
-    #     add_metadata(trace_events, "thread_sort_index", cpu_id, 0, {'sort_index': -5})
-        # add_metadata(trace_events, "process_labels", cpu_id, 0, {'labels': "CPU "})
+        if isinstance(event_obj, dict):
+            # print(event_obj)
+            if event_obj['type'] == SCHED_SWITCH_EVENT_NAME:
+                fields = event_obj["fields"]
+                sched_event = btw.Event(sched_switch_event_class)
+                sched_event.clock().time = event.timestamp
+                prev_comm_field = sched_event.payload("prev_comm")
+                next_comm_field = sched_event.payload("next_comm")
 
+                for j in range(20):
+                    if j < len(fields["prev_comm"]):
+                        prev_comm_field.field(j).value = ord(fields["prev_comm"][j])
+                    else:
+                        prev_comm_field.field(j).value = 0
+                    if j < len(fields["next_comm"]):
+                        next_comm_field.field(j).value = ord(fields["next_comm"][j])
+                    else:
+                        next_comm_field.field(j).value = 0
 
-    content = json.dumps({
-        "traceEvents": trace_events,
-        "displayTimeUnit": "ns"
-    })
-    with open(output, "w") as f:
-        f.write(content)
+                sched_event.payload("prev_tid").value = fields["prev_tid"]
+                sched_event.payload("prev_prio").value = fields["prev_prio"]
+                sched_event.payload("prev_state").value = fields["prev_state"]
+                sched_event.payload("next_tid").value = fields["next_tid"]
+                sched_event.payload("next_prio").value = fields["next_prio"]
+                per_cpu_streams['kernel'][fields['cpu_id']].append_event(sched_event)
 
+    # flush the streams
 
+    for domain, streams in per_cpu_streams.items():
+        print("%s flushing streams" % domain)
+        for i in range(0, len(streams)):
+            streams[i].flush()
 
 if __name__ == "__main__":
     main(sys.argv[1:])

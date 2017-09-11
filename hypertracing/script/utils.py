@@ -5,7 +5,7 @@ import json
 import os
 import getopt
 import sys
-import babeltrace.reader
+
 
 HELP = "Usage: python babeltrace_json.py path/to/directory -o <outputfile>"
 CATEGORY = "LTTng"
@@ -94,6 +94,7 @@ class Symbols:
         self.filepath = filepath
         self.bst = []
         self.mappings = dict()
+        self.name_mappings = dict()
         with open(filepath) as f:
             lines = f.readlines()
             for line in lines:
@@ -107,8 +108,14 @@ class Symbols:
                     # binarySearchTree[ip] = function_name
                     self.bst.append(ip)
                     self.mappings[ip] = function_name.rstrip().replace('\t', ' ')
+                    self.name_mappings[function_name.rstrip().replace('\t', ' ')] = ip
                 except Exception as ex:
                     print(ex)
+
+    def get_addr(self, name):
+        if name in self.name_mappings:
+            return self.name_mappings[name]
+        return None
 
     def bst_lookup(self, value, start, end):
         if end - start <= 1:
@@ -193,6 +200,7 @@ l1_hash_dict = dict()
 
 
 class EventFunction:
+    function_name = ""
     dur = 0
     guest_dur = 0
     is_leaf = False
@@ -251,27 +259,27 @@ def handle_l1_event(event):
         l1_pr_cpu[cpu_id]['pid'] = next_pid
         l1_pr_cpu[cpu_id]['prev_tid'] = prev_tgid
         l1_pr_cpu[cpu_id]['tid'] = next_tgid
-        return "sched_switch", timestamp, cpu_id, prev_pid, next_pid, prev_tgid, next_tgid
+        sched_fields = {timestamp, cpu_id, prev_pid, next_pid, prev_tgid, next_tgid}
+        return None
+        # return {"type": "sched_switch", "fields": sched_fields}
 
     if is_kernelspace:
-        # if show_pid != l1_pr_cpu[cpu_id]['pid']:
-        #     continue
-        faddress = fields['a0']
+        addr = fields['a0']
         is_entry = fields['a1'] == 0
         hash_code = fields["a2"]
         depth = fields["a3"]
-        function_name = faddress
+        function_name = addr
         pid = fields['pid']
         tid = fields['tid']
-        procname = "Guest CPU %s" % (cpu_id) #"".join(fields['procname'])
+        procname = "KVM Guest CPU%s" % (cpu_id) #"".join(fields['procname'])
 
         if is_entry:
-            if faddress not in l1_hash_dict:
-                l1_hash_dict[faddress] = hash_code
+            if addr not in l1_hash_dict:
+                l1_hash_dict[addr] = hash_code
             l1_pr_cpu[cpu_id]['func_entry_timestamp'] = timestamp
             l1_pr_cpu[cpu_id]['func_entry_function_name'] = function_name
             l1_pr_cpu[cpu_id]['stack_head'] = function_name
-            entry_obj = FunctionEntry(timestamp, faddress, hash_code, depth,
+            entry_obj = FunctionEntry(timestamp, addr, hash_code, depth,
                                  l1_pr_cpu[cpu_id]['pid'],
                                  l1_pr_cpu[cpu_id]['tid'],
                                  cpu_id,
@@ -282,8 +290,8 @@ def handle_l1_event(event):
         guest_dur = fields["a2"]
         dur = timestamp - l1_pr_cpu[cpu_id]['func_entry_timestamp']
 
-        hash_code = l1_hash_dict[faddress] if faddress in l1_hash_dict else 0
-        exit_obj = FunctionExit(timestamp, faddress, hash_code, depth,
+        hash_code = l1_hash_dict[addr] if addr in l1_hash_dict else 0
+        exit_obj = FunctionExit(timestamp, addr, hash_code, depth,
                       l1_pr_cpu[cpu_id]['pid'],
                       l1_pr_cpu[cpu_id]['tid'],
                       cpu_id,
@@ -293,7 +301,7 @@ def handle_l1_event(event):
         exit_obj.is_leaf = is_leaf
         exit_obj.procname = procname
         return exit_obj
-
+    return None
 
 def handle_l0_event(event):
     fields = get_fields(event)
@@ -320,7 +328,7 @@ def handle_l0_event(event):
         l0_pr_cpu[cpu_id]['tid'] = next_tgid
         l0_pr_cpu[cpu_id]['prev_task'] = fields["prev_comm"]
         l0_pr_cpu[cpu_id]['task'] = fields["next_comm"]
-        return "sched_switch", timestamp, cpu_id, prev_pid, next_pid, prev_tgid, next_tgid
+        return {"type": event.name, "fields":fields}
 
     if is_kernelspace:
         # if show_pid != l0_pr_cpu[cpu_id]['pid']:
@@ -328,8 +336,8 @@ def handle_l0_event(event):
         pid = fields['pid']
         tid = fields['tid']
         procname = "".join(fields['procname'])
-        faddress = fields['ip']
-        function_name = faddress
+        addr = fields['ip']
+        function_name = addr
         is_entry = event.name == "func_entry"
         is_exit = event.name == "func_exit"
         is_entry_exit = event.name == "func_entry_exit"
@@ -338,12 +346,12 @@ def handle_l0_event(event):
 
         if is_entry:
             hash_code = fields["hash"]
-            if faddress not in l1_hash_dict:
-                l1_hash_dict[faddress] = hash_code
+            if addr not in l1_hash_dict:
+                l1_hash_dict[addr] = hash_code
             l0_pr_cpu[cpu_id]['func_entry_timestamp'] = timestamp
             l0_pr_cpu[cpu_id]['func_entry_function_name'] = function_name
             l0_pr_cpu[cpu_id]['stack_head'] = function_name
-            entry_obj = FunctionEntry(timestamp, faddress, hash_code, depth, pid, tid, cpu_id,"L0")
+            entry_obj = FunctionEntry(timestamp, addr, hash_code, depth, pid, tid, cpu_id,"L0")
             entry_obj.procname = procname
             return entry_obj
         if is_exit:
@@ -351,8 +359,8 @@ def handle_l0_event(event):
             is_leaf = not is_entry and l0_pr_cpu[cpu_id]['stack_head'] == function_name
             # dur = timestamp - l0_pr_cpu[cpu_id]['func_entry_timestamp']
 
-            hash_code = l1_hash_dict[faddress] if faddress in l1_hash_dict else 0
-            exit_obj = FunctionExit(timestamp, faddress, hash_code, depth, pid, tid, cpu_id, "L0")
+            hash_code = l1_hash_dict[addr] if addr in l1_hash_dict else 0
+            exit_obj = FunctionExit(timestamp, addr, hash_code, depth, pid, tid, cpu_id, "L0")
             exit_obj.dur = dur
             exit_obj.guest_dur = dur
             exit_obj.is_leaf = is_leaf
@@ -364,8 +372,8 @@ def handle_l0_event(event):
             is_leaf = not is_entry and l0_pr_cpu[cpu_id]['stack_head'] == function_name
             # dur = timestamp - l0_pr_cpu[cpu_id]['func_entry_timestamp']
 
-            hash_code = l1_hash_dict[faddress] if faddress in l1_hash_dict else 0
-            obj = FunctionExitOnly(timestamp, faddress, hash_code, depth, pid, tid, cpu_id, "L0")
+            hash_code = l1_hash_dict[addr] if addr in l1_hash_dict else 0
+            obj = FunctionExitOnly(timestamp, addr, hash_code, depth, pid, tid, cpu_id, "L0")
             obj.dur = dur
             obj.guest_dur = dur
             obj.is_leaf = is_leaf
@@ -373,3 +381,5 @@ def handle_l0_event(event):
             obj.calltime = calltime
             return obj
         return None
+
+syscalls = ["sys_open"]
