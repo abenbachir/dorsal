@@ -4,10 +4,9 @@
 # virsh vcpuinfo VM
 target_l1=vm1
 target_l2=nested-vm2
-max_depth=2
-trace_dir="/home/abder/lttng-traces/tracers/syscall"
+max_depth=10
+trace_dir="/home/abder/lttng-traces/hypergraph"
 
-virsh vcpupin $target_l1 0 0
 
 ftrace_notrace="
 echo global > /sys/kernel/debug/tracing/trace_clock;
@@ -22,16 +21,21 @@ echo *mutex* >> /sys/kernel/debug/tracing/set_ftrace_notrace;
 echo _cond_resched >> /sys/kernel/debug/tracing/set_ftrace_notrace;
 echo *console* >> /sys/kernel/debug/tracing/set_ftrace_notrace;
 echo *fb* >> /sys/kernel/debug/tracing/set_ftrace_notrace;
-echo *kfree* >> /sys/kernel/debug/tracing/set_ftrace_notrace"
+echo *kfree* >> /sys/kernel/debug/tracing/set_ftrace_notrace;
+echo *notifiers* >> /sys/kernel/debug/tracing/set_ftrace_notrace;
+echo rcu* >> /sys/kernel/debug/tracing/set_ftrace_notrace;
+echo __* >> /sys/kernel/debug/tracing/set_ftrace_notrace;
+echo unlock_page >> /sys/kernel/debug/tracing/set_ftrace_notrace;
+echo alloc_set_pte >> /sys/kernel/debug/tracing/set_ftrace_notrace"
 
 start_host_tracing() {
     output=$1
-    lttng create hypergraph --output=/home/abder/lttng-traces/hypergraph
-    lttng enable-channel -k --subbuf-size=256K --num-subbuf=512 vm_channel
+    lttng create hypergraph --output=$trace_dir
+    lttng enable-channel -k --subbuf-size=128K --num-subbuf=4048 vm_channel
     lttng enable-event -k "sched_switch" -c vm_channel
    # lttng enable-event -k --syscall -a -c vm_channel
     lttng enable-event -k "kvm_x86_hypercall" -c vm_channel
-     lttng enable-event -k "func_entry,func_exit,func_entry_exit" --filter '$ctx.cpu_id == 0' -c vm_channel
+    lttng enable-event -k "func_entry,func_exit,func_entry_exit" --filter '$ctx.cpu_id == 0' -c vm_channel
     # lttng enable-event -k "func_entry,func_exit,func_entry_exit" -c vm_channel
     lttng add-context -k -t pid -t tid -t procname
 #    sudo insmod /home/abder/lttng/lttng-modules/probes/lttng-fgraph.ko
@@ -52,7 +56,8 @@ setup_l1_ftrace()
 {
     ssh root@$target_l1 "echo 0 > /sys/kernel/debug/tracing/tracing_on;
         $ftrace_notrace
-    	echo hypergraph > /sys/kernel/debug/tracing/current_tracer"
+    	echo hypergraph > /sys/kernel/debug/tracing/current_tracer;
+        echo $max_depth > /sys/kernel/debug/tracing/max_hypergraph_depth"
 
 }
 
@@ -65,17 +70,23 @@ setup_l2_ftrace()
 
 dump_symbols()
 {
-    sudo cat /proc/kallsyms > script/kallsyms.map
-    ssh $target_l1 "sudo cat /proc/kallsyms" > script/kallsyms-l1.map
+    mkdir -p $trace_dir/mapping
+    sudo cat /proc/kallsyms > $trace_dir/mapping/kallsyms.map
+    ssh $target_l1 "ps -eo pid,comm" > $trace_dir/mapping/process-l1.map
+    ssh $target_l1 "sudo cat /proc/kallsyms" > $trace_dir/mapping/kallsyms-l1.map
 #    ssh $target_l1 "ssh $target_l2 'sudo cat /proc/kallsyms'" > script/kallsyms-l1.map
 
 }
 hypergraph_tracing()
 {
     CMD=$1
+    virsh vcpupin $target_l1 0 0
     setup_l0_ftrace
     setup_l1_ftrace
 #    setup_l2_ftrace
+    sudo rmmod lttng_fgraph
+    sudo insmod /home/abder/lttng/lttng-modules/probes/lttng-fgraph.ko
+    rm -rf $trace_dir
 
     start_host_tracing
 
@@ -92,11 +103,12 @@ hypergraph_tracing()
     stop_host_tracing
 
     cat /proc/lttng-fgraph
+    sudo rmmod lttng_fgraph
     dump_symbols
 }
 
-
-cmd="cat /proc/cpuinfo > /tmp/test.txt"
+# cmd="cat /proc/cpuinfo > /tmp/test.txt"
+cmd="dd if=/dev/zero of=/tmp/test bs=1K count=5 oflag=sync iflag=sync"
 hypergraph_tracing "${cmd}"
 
-./script/babeltrace_to_ctf.py /home/abder/lttng-traces/hypergraph
+./script/babeltrace_to_ctf.py $trace_dir

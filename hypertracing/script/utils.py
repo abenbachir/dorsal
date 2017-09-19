@@ -60,8 +60,10 @@ def get_fields(event):
         fields[k] = format_value(field_type, v)
     return fields
 
+
 def is_hypercall_event(name):
     return name == KVM_HYPERCALL or name == KVM_X86_HYPERCALL or name == HYPERGRAPH_HOST
+
 
 class Process:
     def __init__(self, filepath):
@@ -79,14 +81,14 @@ class Process:
                     pid = values[0]
                     pid = int(pid)
                     function_name = values[1] if len(values) <= 2 else values[2]
-                    self.mappings[pid] = function_name.rstrip()
+                    self.mappings[pid] = function_name.rstrip().replace('\t', ' ')
                 except Exception as ex:
                     print(ex)
 
-    def get_name(self, ip):
-        if ip in self.mappings:
-            return self.mappings[ip]
-        return ""
+    def get_name(self, id):
+        if id in self.mappings:
+            return self.mappings[id]
+        return None
 
 
 class Symbols:
@@ -251,17 +253,21 @@ def handle_l1_event(event):
 
     if is_sched_switch:
         prev_pid = fields['a0']
-        prev_tgid = fields['a1']
+        prev_tid = fields['a1']
         next_pid = fields['a2']
-        next_tgid = fields['a3']
+        next_tid = fields['a3']
 
         l1_pr_cpu[cpu_id]['prev_pid'] = prev_pid
         l1_pr_cpu[cpu_id]['pid'] = next_pid
-        l1_pr_cpu[cpu_id]['prev_tid'] = prev_tgid
-        l1_pr_cpu[cpu_id]['tid'] = next_tgid
-        sched_fields = {timestamp, cpu_id, prev_pid, next_pid, prev_tgid, next_tgid}
-        return None
-        # return {"type": "sched_switch", "fields": sched_fields}
+        l1_pr_cpu[cpu_id]['prev_tid'] = prev_tid
+        l1_pr_cpu[cpu_id]['tid'] = next_tid
+        sched_fields = {'timestamp':timestamp,'cpu_id': cpu_id,
+                        'prev_tid': prev_tid,'prev_pid': prev_pid,'prev_prio': 0,'prev_state': 0,
+                        'next_tid': next_tid,'next_pid': next_pid,'next_prio': 0,
+                        'prev_comm': 'Unknown %s' % prev_pid,
+                        'next_comm': 'Unknown %s' % next_pid
+        }
+        return {"type": 'sched_switch', "fields": sched_fields}
 
     if is_kernelspace:
         addr = fields['a0']
@@ -269,9 +275,7 @@ def handle_l1_event(event):
         hash_code = fields["a2"]
         depth = fields["a3"]
         function_name = addr
-        pid = fields['pid']
-        tid = fields['tid']
-        procname = "KVM Guest CPU%s" % (cpu_id) #"".join(fields['procname'])
+        procname = "Guest: Unknown"
 
         if is_entry:
             if addr not in l1_hash_dict:
