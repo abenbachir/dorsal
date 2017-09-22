@@ -39,8 +39,6 @@ uint64_type = btw.IntegerFieldDeclaration(64)
 uint64_type.signed = 0
 uint64_type.alignment = 8
 
-
-syscall_list_filepath = "/home/abder/utils/hypertracing/script/syscall_64.tbl"
 cpu_count = multiprocessing.cpu_count()
 per_cpu_streams = {}
 
@@ -169,7 +167,7 @@ def create_writer(stream_name, path):
 
 
 def main(argv):
-    path = "/home/abder/lttng-traces/full-bootup-tracing-20170920-172556"
+    path = "/home/abder/ciena/oneos-bootup"
     output = None
     try:
         if len(argv) > 0:
@@ -218,122 +216,96 @@ def main(argv):
     # temporary directory holding the CTF trace
     trace_path = "%s-converted" % (path)
     print(trace_path)
-    os.system('mkdir -p ' + trace_path+'/mapping')
-    os.system('cp ' + os.path.join(path, "mapping/kallsyms*") + ' ' + trace_path+'/mapping')
-    # our writers
+    # os.system('mkdir -p ' + trace_path+'/mapping')
+    # os.system('cp ' + os.path.join(path, "mapping/kallsyms*") + ' ' + trace_path+'/mapping')
 
     kernel_event_classes = {}
     ust_event_classes = {}
 
     kernel_event_classes['guest'] = create_writer("guest-kernel", trace_path)
+    # ust_event_classes['guest'] = create_writer("guest-ust", trace_path)
     # kernel_event_classes['host'] = create_writer("host-kernel", trace_path)
     # ust_event_classes['host'] = create_writer("host-ust", trace_path)
-    # ust_event_classes['guest'] = create_writer("guest-ust", trace_path)
 
     count = 0
     for event in traces.events:
+        events = []
         cpu_id = event['cpu_id']
         is_guest_event = is_hypercall_event(event.name)
         layer = "guest" if is_guest_event else "host"
-        event_obj = None
-        if is_guest_event:
-            event_obj = handle_l1_event(event)
-            if isinstance(event_obj, EventFunction):
-                if process_symbols_l1.get_name(event_obj.tid) is not None:
-                    event_obj.procname = "Guest: " + process_symbols_l1.get_name(event_obj.tid)
-                name = hash_table.get_name(event_obj.hash_code)
-                if name is None:
-                    name = kernel_symbols_l1.get_name(event_obj.address)
-                event_obj.function_name = kernel_symbols_l1.get_name(event_obj.address)
-                # quick hack to use only one kallsyms file : Convert guest addr to host addr
-                # if kernel_symbols.get_addr(event_obj.function_name) :
-                #     event_obj.address = kernel_symbols.get_addr(event_obj.function_name)
 
-        else:
-            event_obj = handle_l0_event(event)
-            if isinstance(event_obj, EventFunction):
-                # print(event_obj.virt_level, kernel_symbols.get_name(event_obj.address), hash_table.get_name(event_obj.hash_code))
-                event_obj.function_name = kernel_symbols.get_name(event_obj.address)
-
-        if event_obj is None:
+        if not is_guest_event:
             continue
 
-        is_ust = isinstance(event_obj, EventFunction)
-        mode = "ust" if is_ust else "kernel"
-        stream_name = layer + '-' + mode
+        events = handle_l1_event(event)
 
-        # if isinstance(event_obj, FunctionEntryExit) and event_obj.cpu_id != 0:
-        #     continue
-        if is_ust:
-            sys_event_class = syscalls_event_class[layer]
-            func_entry_class = function_event_class[layer][0]
-            func_exit_class = function_event_class[layer][1]
-            if isinstance(event_obj, FunctionEntry):
-                entry_event = btw.Event(func_entry_class)
-                entry_event.clock().time = event_obj.timestamp
-                entry_event.payload(ADDR_FIELD_NAME).value = event_obj.address
-                entry_event.payload(VTID_FIELD_NAME).value = event_obj.tid
-                entry_event.payload(VPID_FIELD_NAME).value = event_obj.pid
-                entry_event.payload(PROCNAME_FIELD_NAME).value = event_obj.procname
-                per_cpu_streams[stream_name][event_obj.cpu_id].append_event(entry_event)
-                # handle syscall entry
-                if event_obj.function_name.lower().startswith("sys_"):
-                    # print("cpu=%s, %s" % (event_obj.cpu_id,event_obj.function_name))
-                    if event_obj.function_name.lower() in sys_event_class:
-                        event_class = sys_event_class[event_obj.function_name.lower()]['syscall_entry']
-                        syscall_event_entry = btw.Event(event_class)
-                        syscall_event_entry.clock().time = event_obj.timestamp
-                        name = "guest-kernel" if is_guest_event else "host-kernel"
-                        per_cpu_streams[name][event_obj.cpu_id].append_event(syscall_event_entry)
+        for myevent in events:
+            is_ust = isinstance(myevent, EventFunction)
+            mode = "ust" if is_ust else "kernel"
+            stream_name = layer + '-' + mode
+            # UST Events
+            if is_ust:
+                if process_symbols_l1.get_name(myevent.tid) is not None:
+                    myevent.procname = "Guest: " + process_symbols_l1.get_name(myevent.tid)
+                name = hash_table.get_name(myevent.hash_code)
+                if name is None:
+                    name = kernel_symbols_l1.get_name(myevent.address)
+                myevent.function_name = kernel_symbols_l1.get_name(myevent.address)
+                # quick hack to use only one kallsyms file : Convert guest addr to host addr
+                # if kernel_symbols.get_addr(myevent.function_name) :
+                #     myevent.address = kernel_symbols.get_addr(myevent.function_name)
 
-            if isinstance(event_obj, FunctionExit):
-                if event_obj.depth == 0:
-                    count += 1
-                    print(count)
-                exit_event = btw.Event(func_exit_class)
-                exit_event.clock().time = event_obj.timestamp
-                exit_event.payload(ADDR_FIELD_NAME).value = event_obj.address
-                exit_event.payload(VTID_FIELD_NAME).value = event_obj.tid
-                exit_event.payload(VPID_FIELD_NAME).value = event_obj.pid
-                exit_event.payload(PROCNAME_FIELD_NAME).value = event_obj.procname
-                per_cpu_streams[stream_name][event_obj.cpu_id].append_event(exit_event)
-                # handle syscall exit
-                if event_obj.function_name.lower().startswith("sys_"):
-                    if event_obj.function_name.lower() in sys_event_class:
-                        event_class = sys_event_class[event_obj.function_name.lower()]['syscall_exit']
-                        syscall_event_exit = btw.Event(event_class)
-                        syscall_event_exit.clock().time = event_obj.timestamp
-                        name = "guest-kernel" if is_guest_event else "host-kernel"
-                        per_cpu_streams[name][event_obj.cpu_id].append_event(syscall_event_exit)
-
-        elif isinstance(event_obj, dict):
-            event_classes = kernel_event_classes[layer]
-            event_class = event_classes[event_obj['type']]
-            payload = event_obj["payload"]
-            new_event = btw.Event(event_class)
-            new_event.clock().time = event.timestamp
-
-            for name, value in payload.items():
+                if isinstance(myevent, FunctionEntry):
+                    func_entry_class = ust_event_classes[layer][FUNC_ENTRY_EVENT_NAME]
+                    entry_event = btw.Event(func_entry_class)
+                    entry_event.clock().time = myevent.timestamp
+                    entry_event.payload(ADDR_FIELD_NAME).value = myevent.address
+                    entry_event.payload(VTID_FIELD_NAME).value = myevent.tid
+                    entry_event.payload(VPID_FIELD_NAME).value = myevent.pid
+                    entry_event.payload(PROCNAME_FIELD_NAME).value = myevent.procname
+                    per_cpu_streams[stream_name][myevent.cpu_id].append_event(entry_event)
+                elif isinstance(myevent, FunctionExit):
+                    func_exit_class = ust_event_classes[layer][FUNC_EXIT_EVENT_NAME]
+                    exit_event = btw.Event(func_exit_class)
+                    exit_event.clock().time = event.timestamp
+                    exit_event.payload(ADDR_FIELD_NAME).value = myevent.address
+                    exit_event.payload(VTID_FIELD_NAME).value = myevent.tid
+                    exit_event.payload(VPID_FIELD_NAME).value = myevent.pid
+                    exit_event.payload(PROCNAME_FIELD_NAME).value = myevent.procname
+                    per_cpu_streams[stream_name][myevent.cpu_id].append_event(exit_event)
+            # Kernel Events
+            elif isinstance(myevent, dict):
                 try:
-                    if "comm" in name:
-                        event_field = new_event.payload(name)
-                        for j in range(COMM_LENGTH):
-                            if j < len(value):
-                                event_field.field(j).value = ord(value[j])
-                            else:
-                                event_field.field(j).value = 0
-                    else:
-                        new_event.payload(name).value = value
-                except Exception as ex:
-                    print(ex)
-            per_cpu_streams[stream_name][cpu_id].append_event(new_event)
-        count += 1
-        if count > 10000:
-            break
-    # flush the streams
+                    event_classes = kernel_event_classes[layer]
+                    event_class = event_classes[myevent['type']]
+                    payload = myevent["payload"]
+                    new_event = btw.Event(event_class)
+                    new_event.clock().time = event.timestamp
 
+                    for name, value in payload.items():
+                        try:
+                            if "comm" in name:
+                                event_field = new_event.payload(name)
+                                for j in range(COMM_LENGTH):
+                                    if j < len(value):
+                                        event_field.field(j).value = ord(value[j])
+                                    else:
+                                        event_field.field(j).value = 0
+                            else:
+                                new_event.payload(name).value = value
+                        except Exception as ex:
+                            print(ex)
+                    per_cpu_streams[stream_name][cpu_id].append_event(new_event)
+                    count += 1
+                except Exception as ex:
+                    print(event.timestamp, myevent, ex)
+
+        # if count > 10000:
+        #     break
+
+    # flush the streams
     for domain, streams in per_cpu_streams.items():
-        print("%s flushing streams" % domain)
+        print("%s flushing streams ..." % domain)
         for i in range(0, len(streams)):
             streams[i].flush()
 
