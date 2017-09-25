@@ -31,12 +31,12 @@ echo alloc_set_pte >> /sys/kernel/debug/tracing/set_ftrace_notrace"
 start_host_tracing() {
     output=$1
     lttng create hypergraph --output=$trace_dir
-    lttng enable-channel -k --subbuf-size=128K --num-subbuf=4048 vm_channel
-    lttng enable-event -k "sched_switch" -c vm_channel
-   # lttng enable-event -k --syscall -a -c vm_channel
-    lttng enable-event -k "kvm_x86_hypercall" -c vm_channel
-    lttng enable-event -k "func_entry,func_exit,func_entry_exit" --filter '$ctx.cpu_id == 0' -c vm_channel
-    # lttng enable-event -k "func_entry,func_exit,func_entry_exit" -c vm_channel
+    lttng enable-channel -k --subbuf-size=128K --num-subbuf=4048 channel
+    lttng enable-event -k "sched_switch" -c channel
+   # lttng enable-event -k --syscall -a -c channel
+    lttng enable-event -k "kvm_x86_hypercall" -c channel
+    lttng enable-event -k "func_entry,func_exit,func_entry_exit" --filter '$ctx.cpu_id == 0' -c channel
+    # lttng enable-event -k "func_entry,func_exit,func_entry_exit" -c channel
     lttng add-context -k -t pid -t tid -t procname
 #    sudo insmod /home/abder/lttng/lttng-modules/probes/lttng-fgraph.ko
     lttng start
