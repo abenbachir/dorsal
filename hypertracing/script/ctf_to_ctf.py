@@ -167,7 +167,7 @@ def create_writer(stream_name, path):
 
 
 def main(argv):
-    path = "/home/abder/ciena/oneos-bootup"
+    path = "/home/abder/lttng-traces/oneos-bootup"
     output = None
     try:
         if len(argv) > 0:

@@ -10,6 +10,7 @@ syscall_list_filepath = "/home/abder/utils/hypertracing/script/syscall_32.tbl"
 HELP = "Usage: python babeltrace_json.py path/to/directory -o <outputfile>"
 COMM_LENGTH = 16
 CATEGORY = "LTTng"
+CONFIG_ARCH_HYPERCALL_NR = 0
 BOOTLEVEL_HYPERCALL_NR = 3000
 USERSPACE_HYPERCALL_NR = 2000
 FUNCTION_TRACING_HYPERCALL_NR = 1000
@@ -43,7 +44,6 @@ SOFTIRQ_EXIT_EVENT_NAME = 'irq_softirq_exit'
 
 IRQ_HANDLER_ENTRY_EVENT_NAME = 'irq_handler_entry'
 IRQ_HANDLER_EXIT_EVENT_NAME = 'irq_handler_exit'
-
 
 
 KVM_X86_HYPERCALL_EVENT_NAME = "kvm_x86_hypercall"
@@ -80,6 +80,10 @@ irqs_event_type = {
 
 process_list = {}
 previous_bootlevel = ""
+arch = 64
+
+def is_32b():
+    return arch == 32
 
 def ns_to_us(timestamp):
     return timestamp/float(1000)
@@ -317,11 +321,11 @@ def get_comm(comms):
         hexs = re.findall('..', hex(comm).replace('0x', ''))
         values = []
         for hex_val in hexs:
-            values.append(chr(int(hex_val, 16)))
-        values.reverse()
-        thread_name.append("".join(values))
+            thread_name.append(chr(int(hex_val, 16)))
+        # values
+        # thread_name.append("".join(values))
+    thread_name.reverse()
     return "".join(thread_name)
-
 
 
 def handle_l1_event(event):
@@ -335,6 +339,7 @@ def handle_l1_event(event):
             'prev_pid': -1, 'pid': -1,'prev_tid': -1, 'tid': -1, 'prev_comm': '-', 'task': '-', 'func_entry_timestamp': 0,
             'func_entry_function_name': "", "stack_head": ""
         }
+    is_bootlevel = (nr == CONFIG_ARCH_HYPERCALL_NR)
     is_bootlevel = (nr == BOOTLEVEL_HYPERCALL_NR)
     is_function_tracing = (nr == FUNCTION_TRACING_HYPERCALL_NR)
     is_sched_switch = (nr == SCHED_SWITCH_HYPERCALL_NR)
@@ -345,8 +350,10 @@ def handle_l1_event(event):
     is_irq_handler_entry = (nr == IRQ_HANDLER_ENTRY_HYPERCALL_NR )
     is_irq_handler_exit = (nr == IRQ_HANDLER_EXIT_HYPERCALL_NR)
 
-    # if is_bootlevel:
-    #     nr_level, is_sync = fields['a0'], fields['a1']
+    if nr == CONFIG_ARCH_HYPERCALL_NR:
+        arch = fields['a0']*8
+    if is_bootlevel:
+        nr_level, is_sync = fields['a0'], fields['a1']
     #     name = "%s%s" % (initcall_types[nr_level], ('_sync' if is_sync else ''))
     #     previous_bootlevel = name
     #     events.append({"type": BOOKMARK_START_EVENT_NAME, "payload": {'name': name, 'color': nr_level}})
@@ -354,8 +361,13 @@ def handle_l1_event(event):
     #         events.append({"type": SCHED_SWITCH_EVENT_NAME, "payload": {'name': name, 'color': nr_level}})
     #         previous_bootlevel = name
     if is_sched_switch:
-        prev_tid, next_tid = fields['a0'], fields['a1']
-        next_comm = get_comm([fields['a2'], fields['a3']])
+        prev_state, prev_prio, next_prio = 0, 0, 0
+        if is_32b:
+            prev_tid, next_tid = fields['a0'] >> 16, fields['a0'] & 0xffff
+            next_comm = get_comm([fields['a1'], fields['a2'], fields['a3']])
+        else:
+            prev_tid, next_tid = fields['a0'] >> 16, fields['a0'] & 0xffff
+            next_comm = get_comm([fields['a2'], fields['a3']])
         # prev_comm = l1_pr_cpu[cpu_id]['next_comm'] if 'next_comm' in l1_pr_cpu[cpu_id] else 'Unknown %s' % prev_tid
         process_list[next_tid] = next_comm
         prev_comm = process_list[prev_tid] if prev_tid in process_list else 'Unknown %s' % prev_tid
@@ -364,8 +376,8 @@ def handle_l1_event(event):
         l1_pr_cpu[cpu_id]['tid'] = next_tid
         l1_pr_cpu[cpu_id]['next_comm'] = next_comm
         l1_pr_cpu[cpu_id]['prev_comm'] = prev_comm
-        payload = {'prev_tid': prev_tid, 'prev_prio': 0, 'prev_state': 0, 'next_tid': next_tid, 'next_prio': 0,
-                   'prev_comm': list(prev_comm), 'next_comm': list(next_comm)
+        payload = {'prev_tid': prev_tid, 'prev_prio': prev_prio, 'prev_state': prev_state, 'next_tid': next_tid,
+                   'next_prio': next_prio, 'prev_comm': list(prev_comm), 'next_comm': list(next_comm)
         }
         events.append({"type": SCHED_SWITCH_EVENT_NAME, "payload": payload})
     if is_sched_process_fork:

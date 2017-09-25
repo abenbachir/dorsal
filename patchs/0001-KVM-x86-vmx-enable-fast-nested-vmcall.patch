@@ -23,7 +23,7 @@ index 3ea624452f93..cb0d6dff5bdd 100644
 +	bool "Fast Nested Hypercall"
 +	depends on KVM
 +	---help---
-+	 Optimization to make a vmcall coming from nested layer exit faster, 
++	 Optimization to make a vmcall coming from nested layer exit faster,
 +	 and reduce frequency of exits to one single exit.
 +
  # OK, it's a little counter-intuitive to do this, but it puts it neatly under
@@ -38,7 +38,7 @@ index 6970249c09fc..0ff2d4fb46bb 100644
  	case EXIT_REASON_RDTSC: case EXIT_REASON_RDTSCP:
  		return nested_cpu_has(vmcs12, CPU_BASED_RDTSC_EXITING);
 -	case EXIT_REASON_VMCALL: case EXIT_REASON_VMCLEAR:
-+	case EXIT_REASON_VMCALL: 
++	case EXIT_REASON_VMCALL:
 +#ifdef KVM_INTEL_FAST_NESTED_VMCALL
 +		/*
 +		 * Disable exit multiplication : This prevent VMCALL from being
