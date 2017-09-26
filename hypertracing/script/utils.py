@@ -15,9 +15,12 @@ BOOTLEVEL_HYPERCALL_NR = 3000
 USERSPACE_HYPERCALL_NR = 2000
 FUNCTION_TRACING_HYPERCALL_NR = 1000
 SCHED_SWITCH_HYPERCALL_NR = 1001
-SCHED_PROCESS_FORK_HYPERCALL_NR = 1002
-SCHED_PROCESS_FREE_HYPERCALL_NR = 1003
-SCHED_PROCESS_EXIT_HYPERCALL_NR = 1004
+SCHED_WAKING_HYPERCALL_NR = 1002
+SCHED_WAKEUP_HYPERCALL_NR = 1003
+SCHED_WAKEUP_NEW_HYPERCALL_NR = 1004
+SCHED_PROCESS_FORK_HYPERCALL_NR = 1005
+SCHED_PROCESS_FREE_HYPERCALL_NR = 1006
+SCHED_PROCESS_EXIT_HYPERCALL_NR = 1007
 
 SYS_ENTRY_HYPERCALL_NR = 1100
 SYS_EXIT_HYPERCALL_NR = 1101
@@ -35,6 +38,9 @@ PROCNAME_FIELD_NAME = "procname"
 FUNC_ENTRY_EVENT_NAME = "func_entry"
 FUNC_EXIT_EVENT_NAME = "func_exit"
 SCHED_SWITCH_EVENT_NAME = "sched_switch"
+SCHED_WAKING_EVENT_NAME = "sched_waking"
+SCHED_WAKEUP_EVENT_NAME = "sched_wakeup"
+SCHED_WAKEUP_NEW_EVENT_NAME = "sched_wakeup_new"
 SCHED_PROCESS_FORK_EVENT_NAME = "sched_process_fork"
 SCHED_PROCESS_EXIT_EVENT_NAME = "sched_process_exit"
 SCHED_PROCESS_FREE_EVENT_NAME = "sched_process_free"
@@ -51,9 +57,7 @@ KVM_HYPERCALL_EVENT_NAME = "kvm_hypercall"
 HYPERGRAPH_HOST_EVENT_NAME = "hypergraph_host"
 KVM_ENTRY_EVENT_NAME = "kvm_x86_entry"
 KVM_EXIT_EVENT_NAME = "kvm_x86_exit"
-INSTANT_BOOKMARK_EVENT_NAME = "bookmark"
-BOOKMARK_START_EVENT_NAME = "bookmark_start"
-BOOKMARK_END_EVENT_NAME = "bookmark_end"
+MARKER_EVENT_NAME = "marker"
 
 initcall_types = {
     0: 'early',
@@ -69,8 +73,17 @@ initcall_types = {
     10: 'console',
     11: 'security'
 }
+event_types_map = {
+    BOOTLEVEL_HYPERCALL_NR : MARKER_EVENT_NAME,
+    SCHED_SWITCH_HYPERCALL_NR : SCHED_SWITCH_EVENT_NAME,
+    SCHED_WAKING_HYPERCALL_NR : SCHED_WAKING_EVENT_NAME,
+    SCHED_WAKEUP_HYPERCALL_NR : SCHED_WAKING_EVENT_NAME,
+    SCHED_WAKEUP_NEW_HYPERCALL_NR : SCHED_WAKEUP_NEW_EVENT_NAME,
 
-irqs_event_type = {
+    SCHED_PROCESS_FORK_HYPERCALL_NR : SCHED_PROCESS_FORK_EVENT_NAME,
+    SCHED_PROCESS_FREE_HYPERCALL_NR : SCHED_PROCESS_FREE_EVENT_NAME,
+    SCHED_PROCESS_EXIT_HYPERCALL_NR : SCHED_PROCESS_EXIT_EVENT_NAME,
+
     SOFTIRQ_RAISE_HYPERCALL_NR: SOFTIRQ_RAISE_EVENT_NAME,
     SOFTIRQ_ENTRY_HYPERCALL_NR: SOFTIRQ_ENTRY_EVENT_NAME,
     SOFTIRQ_EXIT_HYPERCALL_NR: SOFTIRQ_EXIT_EVENT_NAME,
@@ -79,11 +92,14 @@ irqs_event_type = {
 }
 
 process_list = {}
-previous_bootlevel = ""
+previous_bootlevel = None
 arch = 64
 
 def is_32b():
     return arch == 32
+
+def get_previous_bootlevel():
+    return previous_bootlevel
 
 def ns_to_us(timestamp):
     return timestamp/float(1000)
@@ -327,7 +343,6 @@ def get_comm(comms):
     thread_name.reverse()
     return "".join(thread_name)
 
-
 def handle_l1_event(event):
     fields = get_fields(event)
     timestamp = event.timestamp
@@ -339,10 +354,10 @@ def handle_l1_event(event):
             'prev_pid': -1, 'pid': -1,'prev_tid': -1, 'tid': -1, 'prev_comm': '-', 'task': '-', 'func_entry_timestamp': 0,
             'func_entry_function_name': "", "stack_head": ""
         }
-    is_bootlevel = (nr == CONFIG_ARCH_HYPERCALL_NR)
     is_bootlevel = (nr == BOOTLEVEL_HYPERCALL_NR)
     is_function_tracing = (nr == FUNCTION_TRACING_HYPERCALL_NR)
     is_sched_switch = (nr == SCHED_SWITCH_HYPERCALL_NR)
+    is_sched_wakeup = (nr == SCHED_WAKING_HYPERCALL_NR or nr == SCHED_WAKEUP_HYPERCALL_NR or nr == SCHED_WAKEUP_NEW_HYPERCALL_NR)
     is_sched_process_free_or_exit = (nr == SCHED_PROCESS_EXIT_HYPERCALL_NR or nr == SCHED_PROCESS_FREE_HYPERCALL_NR)
     is_sched_process_fork = (nr == SCHED_PROCESS_FORK_HYPERCALL_NR)
     is_softirq = (nr == SOFTIRQ_ENTRY_HYPERCALL_NR or nr == SOFTIRQ_EXIT_HYPERCALL_NR or nr == SOFTIRQ_RAISE_HYPERCALL_NR)
@@ -351,18 +366,35 @@ def handle_l1_event(event):
     is_irq_handler_exit = (nr == IRQ_HANDLER_EXIT_HYPERCALL_NR)
 
     if nr == CONFIG_ARCH_HYPERCALL_NR:
-        arch = fields['a0']*8
+        arch = fields['a0']*8  # 64 bits or 32 bits
+        print('arch %bits'%arch)
+
     if is_bootlevel:
+        global previous_bootlevel
         nr_level, is_sync = fields['a0'], fields['a1']
-    #     name = "%s%s" % (initcall_types[nr_level], ('_sync' if is_sync else ''))
-    #     previous_bootlevel = name
-    #     events.append({"type": BOOKMARK_START_EVENT_NAME, "payload": {'name': name, 'color': nr_level}})
-    #     if previous_bootlevel != "":
-    #         events.append({"type": SCHED_SWITCH_EVENT_NAME, "payload": {'name': name, 'color': nr_level}})
-    #         previous_bootlevel = name
+        label = "%s%s" % (initcall_types[nr_level], ('_sync' if is_sync else ''))
+
+        print(label)
+        if previous_bootlevel is not None:
+            events.append({"type": event_types_map[nr], "payload": {
+                'label': previous_bootlevel['label'],
+                'category': previous_bootlevel['label'].replace('_sync',''),
+                'start': previous_bootlevel['timestamp'],
+                'end': timestamp-500
+            }})
+
+        if label == 'late_sync':
+            events.append({"type": event_types_map[nr], "payload": {
+                'label': label,
+                'category': label.replace('_sync', ''),
+                'start': timestamp,
+                'end': timestamp + 1000
+            }})
+        previous_bootlevel = {'label':label, 'timestamp':timestamp}
+
     if is_sched_switch:
         prev_state, prev_prio, next_prio = 0, 0, 0
-        if is_32b:
+        if is_32b():
             prev_tid, next_tid = fields['a0'] >> 16, fields['a0'] & 0xffff
             next_comm = get_comm([fields['a1'], fields['a2'], fields['a3']])
         else:
@@ -379,11 +411,17 @@ def handle_l1_event(event):
         payload = {'prev_tid': prev_tid, 'prev_prio': prev_prio, 'prev_state': prev_state, 'next_tid': next_tid,
                    'next_prio': next_prio, 'prev_comm': list(prev_comm), 'next_comm': list(next_comm)
         }
-        events.append({"type": SCHED_SWITCH_EVENT_NAME, "payload": payload})
+        events.append({"type": event_types_map[nr], "payload": payload})
+    if is_sched_wakeup:
+        comm = get_comm([fields['a3']])
+        payload = {'tid': fields['a0'], 'prio': fields['a1'], 'target_cpu': fields['a2'], 'comm': list(comm)}
+        events.append({"type": event_types_map[nr], "payload": payload})
     if is_sched_process_fork:
+
+        comm = process_list[fields['a0']] if fields['a0'] in process_list else ''
         payload = {
-                'parent_tid': fields['a0'], 'parent_pid': fields['a1'], 'parent_comm': list(process_list[fields['a0']]),
-                'child_tid': fields['a2'], 'child_pid': fields['a3'], 'child_comm': list(process_list[fields['a0']])
+                'parent_tid': fields['a0'], 'parent_pid': fields['a1'], 'parent_comm': list(comm),
+                'child_tid': fields['a2'], 'child_pid': fields['a3'], 'child_comm': list(comm)
         }
         events.append({"type": SCHED_PROCESS_FORK_EVENT_NAME, "payload": payload})
     if is_sched_process_free_or_exit:
@@ -393,11 +431,11 @@ def handle_l1_event(event):
         # prio = fields['a1']
         events.append({"type": event_type, "payload": {'tid': fields['a0'], 'prio': 0, 'comm': comm}})
     if is_softirq:
-        events.append({"type": irqs_event_type[nr], "payload": {'vec': fields['a0']}})
+        events.append({"type": event_types_map[nr], "payload": {'vec': fields['a0']}})
     if is_irq_handler_entry:
-        events.append({"type": irqs_event_type[nr], "payload": {'irq': fields['a0'], 'name': ''}})
+        events.append({"type": event_types_map[nr], "payload": {'irq': fields['a0'], 'name': ''}})
     if is_irq_handler_exit:
-        events.append({"type": irqs_event_type[nr], "payload": {'irq': fields['a0'], 'ret': fields['a1']}})
+        events.append({"type": event_types_map[nr], "payload": {'irq': fields['a0'], 'ret': fields['a1']}})
     if is_syscall:
         payload = {}
         syscall_nr = fields['a0']

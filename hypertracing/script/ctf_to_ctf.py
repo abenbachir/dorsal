@@ -75,6 +75,30 @@ def create_writer(stream_name, path):
         sched_switch_event_class.add_field(int32_type, "next_prio")
         stream_class.add_event_class(sched_switch_event_class)
         event_classes[SCHED_SWITCH_EVENT_NAME] = sched_switch_event_class
+        # sched waking
+        sched_waking_event_class = btw.EventClass(SCHED_WAKING_EVENT_NAME)
+        sched_waking_event_class.add_field(int32_type, "tid")
+        sched_waking_event_class.add_field(int32_type, "prio")
+        sched_waking_event_class.add_field(int32_type, "target_cpu")
+        sched_waking_event_class.add_field(array_type, "comm")
+        stream_class.add_event_class(sched_waking_event_class)
+        event_classes[SCHED_WAKING_EVENT_NAME] = sched_waking_event_class
+        # sched wakeup
+        sched_wakeup_event_class = btw.EventClass(SCHED_WAKEUP_EVENT_NAME)
+        sched_wakeup_event_class.add_field(int32_type, "tid")
+        sched_wakeup_event_class.add_field(int32_type, "prio")
+        sched_wakeup_event_class.add_field(int32_type, "target_cpu")
+        sched_wakeup_event_class.add_field(array_type, "comm")
+        stream_class.add_event_class(sched_wakeup_event_class)
+        event_classes[SCHED_WAKEUP_EVENT_NAME] = sched_wakeup_event_class
+        # sched wakeup_new
+        sched_wakeup_new_event_class = btw.EventClass(SCHED_WAKEUP_NEW_EVENT_NAME)
+        sched_wakeup_new_event_class.add_field(int32_type, "tid")
+        sched_wakeup_new_event_class.add_field(int32_type, "prio")
+        sched_wakeup_new_event_class.add_field(int32_type, "target_cpu")
+        sched_wakeup_new_event_class.add_field(array_type, "comm")
+        stream_class.add_event_class(sched_wakeup_new_event_class)
+        event_classes[SCHED_WAKEUP_NEW_EVENT_NAME] = sched_wakeup_new_event_class
         # sched process fork
         sched_process_fork_event_class = btw.EventClass(SCHED_PROCESS_FORK_EVENT_NAME)
         sched_process_fork_event_class.add_field(array_type, "parent_comm")
@@ -137,6 +161,15 @@ def create_writer(stream_name, path):
             stream_class.add_event_class(sys_exit_event_class)
             event_classes["syscall_entry_%s" % name] = sys_entry_event_class
             event_classes["syscall_exit_%s" % name] = sys_exit_event_class
+
+        # marker events
+        marker_event_class = btw.EventClass(MARKER_EVENT_NAME)
+        marker_event_class.add_field(int64_type, "start")
+        marker_event_class.add_field(int64_type, "end")
+        marker_event_class.add_field(string_type, "category")
+        marker_event_class.add_field(string_type, "label")
+        stream_class.add_event_class(marker_event_class)
+        event_classes[MARKER_EVENT_NAME] = marker_event_class
     else:
         # add this field declaration to event class
         func_entry_event_class = btw.EventClass(FUNC_ENTRY_EVENT_NAME)
@@ -167,7 +200,7 @@ def create_writer(stream_name, path):
 
 
 def main(argv):
-    path = "/home/abder/lttng-traces/oneos-bootup"
+    path = "/home/abder/lttng-traces/guest-20170926-190544"
     output = None
     try:
         if len(argv) > 0:
@@ -280,7 +313,12 @@ def main(argv):
                     event_class = event_classes[myevent['type']]
                     payload = myevent["payload"]
                     new_event = btw.Event(event_class)
-                    new_event.clock().time = event.timestamp
+
+                    # override clock if timestamp been found in myevent
+                    if 'timestamp' in myevent:
+                        new_event.clock().time = myevent['timestamp']
+                    else:
+                        new_event.clock().time = event.timestamp
 
                     for name, value in payload.items():
                         try:
@@ -300,8 +338,8 @@ def main(argv):
                 except Exception as ex:
                     print(event.timestamp, myevent, ex)
 
-        # if count > 10000:
-        #     break
+        if count > 90000:
+            break
 
     # flush the streams
     for domain, streams in per_cpu_streams.items():

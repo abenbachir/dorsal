@@ -1,4 +1,4 @@
-From 061c37ed7fd1faae15b184e13d7e8eb8bd7ec436 Mon Sep 17 00:00:00 2001
+From c483c0531ac4ff8f1b18eaeac4ab38104ce0e912 Mon Sep 17 00:00:00 2001
 From: Abderrahmane Benbachir <abderrahmane.benbachir@polymtl.ca>
 Date: Mon, 25 Sep 2017 00:35:53 -0400
 Subject: [PATCH] KVM: x86: vmx: enable fast nested vmcall
@@ -12,7 +12,7 @@ Signed-off-by: Abderrahmane Benbachir <abderrahmane.benbachir@polymtl.ca>
  2 files changed, 18 insertions(+), 1 deletion(-)
 
 diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-index 3ea624452f93..cb0d6dff5bdd 100644
+index 3ea624452f93..808d12777aea 100644
 --- a/arch/x86/kvm/Kconfig
 +++ b/arch/x86/kvm/Kconfig
 @@ -86,6 +86,13 @@ config KVM_MMU_AUDIT
@@ -23,14 +23,14 @@ index 3ea624452f93..cb0d6dff5bdd 100644
 +	bool "Fast Nested Hypercall"
 +	depends on KVM
 +	---help---
-+	 Optimization to make a vmcall coming from nested layer exit faster,
-+	 and reduce frequency of exits to one single exit.
++	 Optimization to make a vmcall coming from nested layer exit
++	 faster, and reduce frequency of exits to one single exit.
 +
  # OK, it's a little counter-intuitive to do this, but it puts it neatly under
  # the virtualization menu.
  source drivers/vhost/Kconfig
 diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-index 6970249c09fc..0ff2d4fb46bb 100644
+index 6970249c09fc..b425b873430e 100644
 --- a/arch/x86/kvm/vmx.c
 +++ b/arch/x86/kvm/vmx.c
 @@ -8425,7 +8425,17 @@ static bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason)
@@ -39,7 +39,7 @@ index 6970249c09fc..0ff2d4fb46bb 100644
  		return nested_cpu_has(vmcs12, CPU_BASED_RDTSC_EXITING);
 -	case EXIT_REASON_VMCALL: case EXIT_REASON_VMCLEAR:
 +	case EXIT_REASON_VMCALL:
-+#ifdef KVM_INTEL_FAST_NESTED_VMCALL
++#ifdef CONFIG_KVM_FAST_NESTED_VMCALL
 +		/*
 +		 * Disable exit multiplication : This prevent VMCALL from being
 +		 * forwarded to L1, because a single L2 exit can cause many

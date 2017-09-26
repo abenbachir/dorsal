@@ -13,13 +13,13 @@ target="ubuntu2"
 scp ~/$linuxsource/kernel/trace/Makefile $target:~/linux/kernel/trace/
 scp ~/$linuxsource/kernel/trace/trace.c $target:~/linux/kernel/trace/
 scp ~/$linuxsource/kernel/trace/trace.h $target:~/linux/kernel/trace/
-#scp ~/$linuxsource/kernel/trace/trace_functions.c $target:~/linux/kernel/trace/
+
 scp ~/$linuxsource/kernel/trace/trace_hypergraph.c $target:~/linux/kernel/trace/
 scp ~/$linuxsource/kernel/trace/trace_hyperbootlevel.c $target:~/linux/kernel/trace/
 scp ~/$linuxsource/kernel/trace/trace_hypertrace.c $target:~/linux/kernel/trace/
-# scp ~/$linuxsource/init/main.c $target:~/linux/init/
-scp ~/$linuxsource/init/Makefile $target:~/linux/init/
 
+scp ~/$linuxsource/init/main.c $target:~/linux/init/
+scp ~/$linuxsource/init/Makefile $target:~/linux/init/
 
 
 ssh $target 'cd linux; make -j$(nproc) && sudo make modules_install && sudo make install;'
