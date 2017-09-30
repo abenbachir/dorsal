@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmfxml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../org.eclipse.tracecompass.tmf.analysis.xml.core/src/org/eclipse/tracecompass/tmf/analysis/xml/core/module/xmlDefinition.xsd">
+
+	<timeGraphView id="org.eclipse.tracecompass.analysis.os.linux.kernel.resources.bythread">
+		<head>
+	    	<analysis id="org.eclipse.tracecompass.analysis.os.linux.kernel" />
+			<label value="Resources By Thread" />
+		</head>
+
+		<entry path="CPUs/*">
+	    	<display type="constant" value="Current_thread" />
+		</entry>
+	</timeGraphView>
+
+</tmfxml>

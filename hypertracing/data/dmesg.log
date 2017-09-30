@@ -1,0 +1,876 @@
+[    0.000000] Linux version 4.1.32 (abenbach@664bc223f161) (gcc version 5.3.0 (GCC) ) #20 SMP Thu Sep 28 11:19:38 EDT 2017
+[    0.000000] e820: BIOS-provided physical RAM map:
+[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
+[    0.000000] BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000000100000-0x000000007fffdfff] usable
+[    0.000000] BIOS-e820: [mem 0x000000007fffe000-0x000000007fffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff] reserved
+[    0.000000] Notice: NX (Execute Disable) protection cannot be enabled: non-PAE kernel!
+[    0.000000] SMBIOS 2.4 present.
+[    0.000000] DMI: Red Hat KVM, BIOS 0.5.1 01/01/2011
+[    0.000000] e820: update [mem 0x00000000-0x00000fff] usable ==> reserved
+[    0.000000] e820: remove [mem 0x000a0000-0x000fffff] usable
+[    0.000000] e820: last_pfn = 0x7fffe max_arch_pfn = 0x100000
+[    0.000000] MTRR default type: write-back
+[    0.000000] MTRR fixed ranges enabled:
+[    0.000000]   00000-9FFFF write-back
+[    0.000000]   A0000-BFFFF uncachable
+[    0.000000]   C0000-FFFFF write-protect
+[    0.000000] MTRR variable ranges enabled:
+[    0.000000]   0 base 000080000000 mask 3FFF80000000 uncachable
+[    0.000000]   1 disabled
+[    0.000000]   2 disabled
+[    0.000000]   3 disabled
+[    0.000000]   4 disabled
+[    0.000000]   5 disabled
+[    0.000000]   6 disabled
+[    0.000000]   7 disabled
+[    0.000000] PAT configuration [0-7]: WB  WC  UC- UC  WB  WC  UC- UC  
+[    0.000000] found SMP MP-table at [mem 0x000f2000-0x000f200f] mapped at [c00f2000]
+[    0.000000] initial memory mapped: [mem 0x00000000-0x00ffffff]
+[    0.000000] Base memory trampoline at [c009b000] 9b000 size 16384
+[    0.000000] init_memory_mapping: [mem 0x00000000-0x000fffff]
+[    0.000000]  [mem 0x00000000-0x000fffff] page 4k
+[    0.000000] init_memory_mapping: [mem 0x37000000-0x373fffff]
+[    0.000000]  [mem 0x37000000-0x373fffff] page 4M
+[    0.000000] init_memory_mapping: [mem 0x00100000-0x36ffffff]
+[    0.000000]  [mem 0x00100000-0x003fffff] page 4k
+[    0.000000]  [mem 0x00400000-0x36ffffff] page 4M
+[    0.000000] init_memory_mapping: [mem 0x37400000-0x377fdfff]
+[    0.000000]  [mem 0x37400000-0x377fdfff] page 4k
+[    0.000000] BRK [0x00c97000, 0x00c97fff] PGTABLE
+[    0.000000] RAMDISK: [mem 0x7dc44000-0x7fffcfff]
+[    0.000000] Allocated new RAMDISK: [mem 0x35445000-0x377fd3ab]
+[    0.000000] Move RAMDISK from [mem 0x7dc44000-0x7fffc3ab] to [mem 0x35445000-0x377fd3ab]
+[    0.000000] ACPI: Early table checksum verification disabled
+[    0.000000] ACPI: RSDP 0x00000000000F1E30 000014 (v00 BOCHS )
+[    0.000000] ACPI: RSDT 0x000000007FFFFB04 000030 (v01 BOCHS  BXPCRSDT 00000001 BXPC 00000001)
+[    0.000000] ACPI: FACP 0x000000007FFFF177 000074 (v01 BOCHS  BXPCFACP 00000001 BXPC 00000001)
+[    0.000000] ACPI: DSDT 0x000000007FFFE040 001137 (v01 BXPC   BXDSDT   00000001 INTL 20150619)
+[    0.000000] ACPI: FACS 0x000000007FFFE000 000040
+[    0.000000] ACPI: SSDT 0x000000007FFFF1EB 000899 (v01 BOCHS  BXPCSSDT 00000001 BXPC 00000001)
+[    0.000000] ACPI: APIC 0x000000007FFFFA84 000080 (v01 BOCHS  BXPCAPIC 00000001 BXPC 00000001)
+[    0.000000] ACPI: Local APIC address 0xfee00000
+[    0.000000] 1160MB HIGHMEM available.
+[    0.000000] 887MB LOWMEM available.
+[    0.000000]   mapped low ram: 0 - 377fe000
+[    0.000000]   low ram: 0 - 377fe000
+[    0.000000] BRK [0x00c98000, 0x00c98fff] PGTABLE
+[    0.000000] Zone ranges:
+[    0.000000]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+[    0.000000]   Normal   [mem 0x0000000001000000-0x00000000377fdfff]
+[    0.000000]   HighMem  [mem 0x00000000377fe000-0x000000007fffdfff]
+[    0.000000] Movable zone start for each node
+[    0.000000] Early memory node ranges
+[    0.000000]   node   0: [mem 0x0000000000001000-0x000000000009efff]
+[    0.000000]   node   0: [mem 0x0000000000100000-0x000000007fffdfff]
+[    0.000000] Initmem setup node 0 [mem 0x0000000000001000-0x000000007fffdfff]
+[    0.000000] On node 0 totalpages: 524188
+[    0.000000] free_area_init_node: node 0, pgdat c0b345c0, node_mem_map f4445020
+[    0.000000]   DMA zone: 32 pages used for memmap
+[    0.000000]   DMA zone: 0 pages reserved
+[    0.000000]   DMA zone: 3998 pages, LIFO batch:0
+[    0.000000]   Normal zone: 1744 pages used for memmap
+[    0.000000]   Normal zone: 223230 pages, LIFO batch:31
+[    0.000000]   HighMem zone: 296960 pages, LIFO batch:31
+[    0.000000] Using APIC driver default
+[    0.000000] ACPI: PM-Timer IO Port: 0x608
+[    0.000000] ACPI: Local APIC address 0xfee00000
+[    0.000000] ACPI: LAPIC_NMI (acpi_id[0xff] dfl dfl lint[0x1])
+[    0.000000] IOAPIC[0]: apic_id 0, version 17, address 0xfec00000, GSI 0-23
+[    0.000000] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+[    0.000000] ACPI: INT_SRC_OVR (bus 0 bus_irq 5 global_irq 5 high level)
+[    0.000000] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 high level)
+[    0.000000] ACPI: INT_SRC_OVR (bus 0 bus_irq 10 global_irq 10 high level)
+[    0.000000] ACPI: INT_SRC_OVR (bus 0 bus_irq 11 global_irq 11 high level)
+[    0.000000] ACPI: IRQ0 used by override.
+[    0.000000] ACPI: IRQ5 used by override.
+[    0.000000] ACPI: IRQ9 used by override.
+[    0.000000] ACPI: IRQ10 used by override.
+[    0.000000] ACPI: IRQ11 used by override.
+[    0.000000] Using ACPI (MADT) for SMP configuration information
+[    0.000000] smpboot: Allowing 2 CPUs, 0 hotplug CPUs
+[    0.000000] e820: [mem 0x80000000-0xfeffbfff] available for PCI devices
+[    0.000000] clocksource refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1910969940391419 ns
+[    0.000000] setup_percpu: NR_CPUS:8 nr_cpumask_bits:8 nr_cpu_ids:2 nr_node_ids:1
+[    0.000000] PERCPU: Embedded 19 pages/cpu @f440a000 s46424 r0 d31400 u77824
+[    0.000000] pcpu-alloc: s46424 r0 d31400 u77824 alloc=19*4096
+[    0.000000] pcpu-alloc: [0] 0 [0] 1 
+[    0.000000] Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 522412
+[    0.000000] Kernel command line: root=/dev/hdd rw console=ttyS0,115200 panic=10 ftrace=hypertrace hyperbootlevel=1 initrd=/initramfs-pts14-i486-sim.cpio.gz BOOT_IMAGE=/bzImage 
+[    0.000000] PID hash table entries: 4096 (order: 2, 16384 bytes)
+[    0.000000] Dentry cache hash table entries: 131072 (order: 7, 524288 bytes)
+[    0.000000] Inode-cache hash table entries: 65536 (order: 6, 262144 bytes)
+[    0.000000] Initializing CPU#0
+[    0.000000] xsave: enabled xstate_bv 0x7, cntxt size 0x340 using standard form
+[    0.000000] Initializing HighMem for node 0 (000377fe:0007fffe)
+[    0.000000] Initializing Movable for node 0 (00000000:00000000)
+[    0.000000] Memory: 2030804K/2096752K available (7138K kernel code, 625K rwdata, 2744K rodata, 668K init, 632K bss, 65948K reserved, 0K cma-reserved, 1187840K highmem)
+[    0.000000] virtual kernel memory layout:
+[    0.000000]     fixmap  : 0xfff17000 - 0xfffff000   ( 928 kB)
+[    0.000000]     pkmap   : 0xff800000 - 0xffc00000   (4096 kB)
+[    0.000000]     vmalloc : 0xf7ffe000 - 0xff7fe000   ( 120 MB)
+[    0.000000]     lowmem  : 0xc0000000 - 0xf77fe000   ( 887 MB)
+[    0.000000]       .init : 0xc0b46000 - 0xc0bed000   ( 668 kB)
+[    0.000000]       .data : 0xc07f8c72 - 0xc0b44780   (3374 kB)
+[    0.000000]       .text : 0xc0100000 - 0xc07f8c72   (7139 kB)
+[    0.000000] Checking if this processor honours the WP bit even in supervisor mode...Ok.
+[    0.000000] Hierarchical RCU implementation.
+[    0.000000] 	Additional per-CPU info printed with stalls.
+[    0.000000] 	RCU restricting CPUs from NR_CPUS=8 to nr_cpu_ids=2.
+[    0.000000] RCU: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=2
+[    0.000000] NR_IRQS:2304 nr_irqs:440 16
+[    0.000000] CPU 0 irqstacks, hard=f3dc6000 soft=f3dc8000
+[    0.000000] Console: colour VGA+ 80x25
+[    0.000000] console [ttyS0] enabled
+[    0.000000] tsc: Fast TSC calibration using PIT
+[    0.000000] tsc: Detected 3691.570 MHz processor
+[    0.002001] Calibrating delay loop (skipped), value calculated using timer frequency.. 7383.14 BogoMIPS (lpj=3691570)
+[    0.002459] pid_max: default: 32768 minimum: 301
+[    0.003019] ACPI: Core revision 20150410
+[    0.004914] ACPI: All ACPI Tables successfully acquired
+[    0.005350] Mount-cache hash table entries: 2048 (order: 1, 8192 bytes)
+[    0.005641] Mountpoint-cache hash table entries: 2048 (order: 1, 8192 bytes)
+[    0.006180] mce: CPU supports 10 MCE banks
+[    0.006386] Last level iTLB entries: 4KB 0, 2MB 0, 4MB 0
+[    0.006643] Last level dTLB entries: 4KB 0, 2MB 0, 4MB 0, 1GB 0
+[    0.007548] Freeing SMP alternatives memory: 28K (c0bed000 - c0bf4000)
+[    0.007909] ftrace: allocating 28382 entries in 56 pages
+[    0.012047] Enabling APIC mode:  Flat.  Using 1 I/O APICs
+[    0.012954] ..TIMER: vector=0x30 apic1=0 pin1=2 apic2=-1 pin2=-1
+[    0.023384] TSC deadline timer enabled
+[    0.023387] smpboot: CPU0: Intel Core Processor (Haswell) (fam: 06, model: 3c, stepping: 01)
+[    0.023876] Performance Events: unsupported p6 CPU model 60 no PMU driver, software events only.
+[    0.024113] Starting tracer 'hypertrace'
+[    0.024586] CPU 1 irqstacks, hard=f3418000 soft=f341a000
+[    0.024587] x86: Booting SMP configuration:
+[    0.024818] .... node  #0, CPUs:      #1
+[    0.003000] Initializing CPU#1
+[    0.097052] x86: Booted up 1 node, 2 CPUs
+[    0.097315] smpboot: Total of 2 processors activated (14787.47 BogoMIPS)
+[    0.098091] devtmpfs: initialized
+[    0.099051] clocksource jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1911260446275000 ns
+[    0.099624] NET: Registered protocol family 16
+[    0.106010] cpuidle: using governor ladder
+[    0.112017] cpuidle: using governor menu
+[    0.112358] ACPI: bus type PCI registered
+[    0.112705] PCI: PCI BIOS revision 2.10 entry at 0xfd482, last bus=0
+[    0.112982] PCI: Using configuration type 1 for base access
+[    0.128112] ACPI: Added _OSI(Module Device)
+[    0.128325] ACPI: Added _OSI(Processor Device)
+[    0.128514] ACPI: Added _OSI(3.0 _SCP Extensions)
+[    0.129004] ACPI: Added _OSI(Processor Aggregator Device)
+[    0.131364] ACPI: Interpreter enabled
+[    0.131538] ACPI Exception: AE_NOT_FOUND, While evaluating Sleep State [\_S1_] (20150410/hwxface-580)
+[    0.131938] ACPI Exception: AE_NOT_FOUND, While evaluating Sleep State [\_S2_] (20150410/hwxface-580)
+[    0.132235] ACPI Exception: AE_NOT_FOUND, While evaluating Sleep State [\_S3_] (20150410/hwxface-580)
+[    0.132639] ACPI: (supports S0 S5)
+[    0.132787] ACPI: Using IOAPIC for interrupt routing
+[    0.133040] PCI: Using host bridge windows from ACPI; if necessary, use "pci=nocrs" and report a bug
+[    0.137446] ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+[    0.137718] acpi PNP0A03:00: _OSC: OS supports [Segments MSI]
+[    0.137976] acpi PNP0A03:00: _OSC failed (AE_NOT_FOUND); disabling ASPM
+[    0.138060] acpi PNP0A03:00: fail to add MMCONFIG information, can't access extended PCI configuration space under this bridge.
+[    0.138630] PCI host bridge to bus 0000:00
+[    0.138826] pci_bus 0000:00: root bus resource [bus 00-ff]
+[    0.139004] pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+[    0.139293] pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+[    0.139582] pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
+[    0.139901] pci_bus 0000:00: root bus resource [mem 0x80000000-0xfebfffff window]
+[    0.140025] pci 0000:00:00.0: [8086:1237] type 00 class 0x060000
+[    0.140255] pci 0000:00:01.0: [8086:7000] type 00 class 0x060100
+[    0.140526] pci 0000:00:01.1: [8086:7010] type 00 class 0x010180
+[    0.145528] pci 0000:00:01.1: reg 0x20: [io  0xc3c0-0xc3cf]
+[    0.147553] pci 0000:00:01.1: legacy IDE quirk: reg 0x10: [io  0x01f0-0x01f7]
+[    0.147875] pci 0000:00:01.1: legacy IDE quirk: reg 0x14: [io  0x03f6]
+[    0.148003] pci 0000:00:01.1: legacy IDE quirk: reg 0x18: [io  0x0170-0x0177]
+[    0.148307] pci 0000:00:01.1: legacy IDE quirk: reg 0x1c: [io  0x0376]
+[    0.148756] pci 0000:00:01.3: [8086:7113] type 00 class 0x068000
+[    0.148894] pci 0000:00:01.3: quirk: [io  0x0600-0x063f] claimed by PIIX4 ACPI
+[    0.149008] pci 0000:00:01.3: quirk: [io  0x0700-0x070f] claimed by PIIX4 SMB
+[    0.149474] pci 0000:00:02.0: [1b36:0100] type 00 class 0x030000
+[    0.151012] pci 0000:00:02.0: reg 0x10: [mem 0xf4000000-0xf7ffffff]
+[    0.153008] pci 0000:00:02.0: reg 0x14: [mem 0xf8000000-0xfbffffff]
+[    0.155007] pci 0000:00:02.0: reg 0x18: [mem 0xfc0d4000-0xfc0d5fff]
+[    0.157006] pci 0000:00:02.0: reg 0x1c: [io  0xc300-0xc31f]
+[    0.163007] pci 0000:00:02.0: reg 0x30: [mem 0xfc0c0000-0xfc0cffff pref]
+[    0.163219] pci 0000:00:03.0: [10ec:8139] type 00 class 0x020000
+[    0.165004] pci 0000:00:03.0: reg 0x10: [io  0xc000-0xc0ff]
+[    0.167005] pci 0000:00:03.0: reg 0x14: [mem 0xfc0d6000-0xfc0d60ff]
+[    0.177003] pci 0000:00:03.0: reg 0x30: [mem 0xfc000000-0xfc03ffff pref]
+[    0.177166] pci 0000:00:04.0: [10ec:8139] type 00 class 0x020000
+[    0.179005] pci 0000:00:04.0: reg 0x10: [io  0xc100-0xc1ff]
+[    0.181003] pci 0000:00:04.0: reg 0x14: [mem 0xfc0d7000-0xfc0d70ff]
+[    0.191005] pci 0000:00:04.0: reg 0x30: [mem 0xfc040000-0xfc07ffff pref]
+[    0.191172] pci 0000:00:05.0: [10ec:8139] type 00 class 0x020000
+[    0.193003] pci 0000:00:05.0: reg 0x10: [io  0xc200-0xc2ff]
+[    0.195004] pci 0000:00:05.0: reg 0x14: [mem 0xfc0d8000-0xfc0d80ff]
+[    0.205004] pci 0000:00:05.0: reg 0x30: [mem 0xfc080000-0xfc0bffff pref]
+[    0.205172] pci 0000:00:06.0: [8086:2668] type 00 class 0x040300
+[    0.206006] pci 0000:00:06.0: reg 0x10: [mem 0xfc0d0000-0xfc0d3fff]
+[    0.212201] pci 0000:00:07.0: [1af4:1003] type 00 class 0x078000
+[    0.214003] pci 0000:00:07.0: reg 0x10: [io  0xc320-0xc33f]
+[    0.216003] pci 0000:00:07.0: reg 0x14: [mem 0xfc0d9000-0xfc0d9fff]
+[    0.226216] pci 0000:00:08.0: [8086:2934] type 00 class 0x0c0300
+[    0.231004] pci 0000:00:08.0: reg 0x20: [io  0xc340-0xc35f]
+[    0.233161] pci 0000:00:08.1: [8086:2935] type 00 class 0x0c0300
+[    0.238006] pci 0000:00:08.1: reg 0x20: [io  0xc360-0xc37f]
+[    0.240178] pci 0000:00:08.2: [8086:2936] type 00 class 0x0c0300
+[    0.245004] pci 0000:00:08.2: reg 0x20: [io  0xc380-0xc39f]
+[    0.247168] pci 0000:00:08.7: [8086:293a] type 00 class 0x0c0320
+[    0.248006] pci 0000:00:08.7: reg 0x10: [mem 0xfc0da000-0xfc0dafff]
+[    0.254149] pci 0000:00:09.0: [1af4:1002] type 00 class 0x00ff00
+[    0.255005] pci 0000:00:09.0: reg 0x10: [io  0xc3a0-0xc3bf]
+[    0.261204] pci_bus 0000:00: on NUMA node 0
+[    0.261473] ACPI: PCI Interrupt Link [LNKA] (IRQs 5 *10 11)
+[    0.261828] ACPI: PCI Interrupt Link [LNKB] (IRQs 5 *10 11)
+[    0.262152] ACPI: PCI Interrupt Link [LNKC] (IRQs 5 10 *11)
+[    0.262506] ACPI: PCI Interrupt Link [LNKD] (IRQs 5 10 *11)
+[    0.262902] ACPI: PCI Interrupt Link [LNKS] (IRQs *9)
+[    0.263344] ACPI: Enabled 16 GPEs in block 00 to 0F
+[    0.263689] vgaarb: setting as boot device: PCI:0000:00:02.0
+[    0.263689] vgaarb: device added: PCI:0000:00:02.0,decodes=io+mem,owns=io+mem,locks=none
+[    0.264008] vgaarb: loaded
+[    0.264126] vgaarb: bridge control possible 0000:00:02.0
+[    0.264544] SCSI subsystem initialized
+[    0.264755] libata version 3.00 loaded.
+[    0.264755] ACPI: bus type USB registered
+[    0.265075] usbcore: registered new interface driver usbfs
+[    0.265342] usbcore: registered new interface driver hub
+[    0.265595] usbcore: registered new device driver usb
+[    0.265903] pps_core: LinuxPPS API ver. 1 registered
+[    0.266003] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+[    0.266409] PTP clock support registered
+[    0.266638] PCI: Using ACPI for IRQ routing
+[    0.266820] PCI: pci_cache_line_size set to 64 bytes
+[    0.266907] e820: reserve RAM buffer [mem 0x0009fc00-0x0009ffff]
+[    0.266909] e820: reserve RAM buffer [mem 0x7fffe000-0x7fffffff]
+[    0.267223] amd_nb: Cannot enumerate AMD northbridges
+[    0.267461] Switched to clocksource refined-jiffies
+[    0.273736] pnp: PnP ACPI init
+[    0.273985] pnp 00:00: Plug and Play ACPI device, IDs PNP0b00 (active)
+[    0.274066] pnp 00:01: Plug and Play ACPI device, IDs PNP0303 (active)
+[    0.274135] pnp 00:02: Plug and Play ACPI device, IDs PNP0f13 (active)
+[    0.274175] pnp 00:03: [dma 2]
+[    0.274218] pnp 00:03: Plug and Play ACPI device, IDs PNP0700 (active)
+[    0.274322] pnp 00:04: Plug and Play ACPI device, IDs PNP0501 (active)
+[    0.274522] pnp: PnP ACPI: found 5 devices
+[    0.313582] clocksource acpi_pm: mask: 0xffffff max_cycles: 0xffffff, max_idle_ns: 2085701024 ns
+[    0.313993] Switched to clocksource acpi_pm
+[    0.313993] pci_bus 0000:00: resource 4 [io  0x0000-0x0cf7 window]
+[    0.313993] pci_bus 0000:00: resource 5 [io  0x0d00-0xffff window]
+[    0.313993] pci_bus 0000:00: resource 6 [mem 0x000a0000-0x000bffff window]
+[    0.313993] pci_bus 0000:00: resource 7 [mem 0x80000000-0xfebfffff window]
+[    0.313993] NET: Registered protocol family 2
+[    0.313993] TCP established hash table entries: 8192 (order: 3, 32768 bytes)
+[    0.314008] TCP bind hash table entries: 8192 (order: 5, 163840 bytes)
+[    0.314008] TCP: Hash tables configured (established 8192 bind 8192)
+[    0.314008] UDP hash table entries: 512 (order: 2, 24576 bytes)
+[    0.315036] UDP-Lite hash table entries: 512 (order: 2, 24576 bytes)
+[    0.315396] NET: Registered protocol family 1
+[    0.315715] RPC: Registered named UNIX socket transport module.
+[    0.315970] RPC: Registered udp transport module.
+[    0.316198] RPC: Registered tcp transport module.
+[    0.316398] RPC: Registered tcp NFSv4.1 backchannel transport module.
+[    0.316677] pci 0000:00:00.0: Limiting direct PCI/PCI transfers
+[    0.316932] pci 0000:00:01.0: PIIX3: Enabling Passive Release
+[    0.317206] pci 0000:00:01.0: Activating ISA DMA hang workarounds
+[    0.317477] pci 0000:00:02.0: Video device with shadowed ROM
+[    0.317765] ACPI: PCI Interrupt Link [LNKD] enabled at IRQ 11
+[    0.318946] ACPI: PCI Interrupt Link [LNKA] enabled at IRQ 10
+[    0.320161] ACPI: PCI Interrupt Link [LNKB] enabled at IRQ 10
+[    0.321210] ACPI: PCI Interrupt Link [LNKC] enabled at IRQ 11
+[    0.321828] PCI: CLS 0 bytes, default 64
+[    0.322022] Trying to unpack rootfs image as initramfs...
+[    0.796776] Freeing initrd memory: 36580K (f5445000 - f77fe000)
+[    0.797373] microcode: CPU0 sig=0x306c1, pf=0x1, revision=0x1
+[    0.797630] microcode: CPU1 sig=0x306c1, pf=0x1, revision=0x1
+[    0.797964] microcode: Microcode Update Driver: v2.00 <tigran@aivazian.fsnet.co.uk>, Peter Oruba
+[    0.798882] futex hash table entries: 512 (order: 3, 32768 bytes)
+[    0.799429] HugeTLB registered 4 MB page size, pre-allocated 0 pages
+[    0.799993] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[    0.800597] NFS: Registering the id_resolver key type
+[    0.800824] Key type id_resolver registered
+[    0.801042] Key type id_legacy registered
+[    0.801233] Installing knfsd (copyright (C) 1996 okir@monad.swb.de).
+[    0.801803] SGI XFS with security attributes, no debug enabled
+[    0.803256] bounce: pool size: 64 pages
+[    0.803451] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 252)
+[    0.803769] io scheduler noop registered
+[    0.803940] io scheduler deadline registered
+[    0.804178] io scheduler cfq registered (default)
+[    0.804381] start plist test
+[    0.805976] end plist test
+[    0.806031] pci_hotplug: PCI Hot Plug PCI Core version: 0.5
+[    0.823624] Serial: 8250/16550 driver, 4 ports, IRQ sharing disabled
+[    0.844761] 00:04: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
+[    0.845781] Linux agpgart interface v0.103
+[    0.849127] brd: module loaded
+[    0.850868] loop: module loaded
+[    0.851032] Uniform Multi-Platform E-IDE driver
+[    0.851297] piix 0000:00:01.1: IDE controller (0x8086:0x7010 rev 0x00)
+[    0.851642] piix 0000:00:01.1: not 100% native mode: will probe irqs later
+[    0.852295]     ide0: BM-DMA at 0xc3c0-0xc3c7
+[    0.852489]     ide1: BM-DMA at 0xc3c8-0xc3cf
+[    0.852676] Probing IDE interface ide0...
+[    0.859891] FDC 0 is a S82078B
+[    1.116068] hda: QEMU HARDDISK, ATA DISK drive
+[    1.422178] hdb: QEMU HARDDISK, ATA DISK drive
+[    1.422489] hda: host max PIO4 wanted PIO255(auto-tune) selected PIO4
+[    1.422569] hda: MWDMA2 mode selected
+[    1.422855] hdb: host max PIO4 wanted PIO255(auto-tune) selected PIO4
+[    1.422898] hdb: MWDMA2 mode selected
+[    1.423142] Probing IDE interface ide1...
+[    1.799063] tsc: Refined TSC clocksource calibration: 3691.470 MHz
+[    1.799345] clocksource tsc: mask: 0xffffffffffffffff max_cycles: 0x6a6bb83b8dd, max_idle_ns: 881590639874 ns
+[    2.559116] hdd: QEMU HARDDISK, ATA DISK drive
+[    2.559393] hdd: host max PIO4 wanted PIO255(auto-tune) selected PIO4
+[    2.559445] hdd: MWDMA2 mode selected
+[    2.559689] ide0 at 0x1f0-0x1f7,0x3f6 on irq 14
+[    2.559940] ide1 at 0x170-0x177,0x376 on irq 15
+[    2.560390] ide_generic: please use "probe_mask=0x3f" module parameter for probing all legacy ISA IDE ports
+[    2.560804] ide-gd driver 1.18
+[    2.560965] hda: max request size: 1024KiB
+[    2.561180] hda: 131072 sectors (67 MB) w/256KiB Cache, CHS=130/255/63
+[    2.567083] hda: cache flushes supported
+[    2.567542]  hda: hda1
+[    2.572411] hdb: max request size: 1024KiB
+[    2.572595] hdb: 32768 sectors (16 MB) w/256KiB Cache, CHS=32/255/63
+[    2.579097] hdb: cache flushes supported
+[    2.583079] hdd: max request size: 1024KiB
+[    2.583268] hdd: 8388608 sectors (4294 MB) w/256KiB Cache, CHS=8322/255/63
+[    2.593128] hdd: cache flushes supported
+[    2.597269] ide-cd driver 5.00
+[    2.597480] Loading iSCSI transport class v2.0-870.
+[    2.597888] 3ware Storage Controller device driver for Linux v1.26.02.003.
+[    2.598624] e100: Intel(R) PRO/100 Network Driver, 3.5.24-k2-NAPI
+[    2.598888] e100: Copyright(c) 1999-2006 Intel Corporation
+[    2.599167] e1000: Intel(R) PRO/1000 Network Driver - version 7.3.21-k8-NAPI
+[    2.599467] e1000: Copyright (c) 1999-2006 Intel Corporation.
+[    2.599735] sky2: driver version 1.30
+[    2.599969] 8139cp: 8139cp: 10/100 PCI Ethernet driver v1.3 (Mar 22, 2004)
+[    2.601520] 8139cp 0000:00:03.0 eth0: RTL-8139C+ at 0xf80c0000, 00:16:3e:07:01:01, IRQ 11
+[    2.603585] 8139cp 0000:00:04.0 eth1: RTL-8139C+ at 0xf80c2000, 00:16:4e:07:01:01, IRQ 11
+[    2.605592] 8139cp 0000:00:05.0 eth2: RTL-8139C+ at 0xf80c4000, 0a:16:5e:07:aa:01, IRQ 10
+[    2.606581] PPP generic driver version 2.4.2
+[    2.606832] Fusion MPT base driver 3.04.20
+[    2.607033] Copyright (c) 1999-2008 LSI Corporation
+[    2.607252] Fusion MPT SPI Host driver 3.04.20
+[    2.607541] ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
+[    2.607829] ehci-pci: EHCI PCI platform driver
+[    2.608929] ehci-pci 0000:00:08.7: EHCI Host Controller
+[    2.609235] ehci-pci 0000:00:08.7: new USB bus registered, assigned bus number 1
+[    2.609632] ehci-pci 0000:00:08.7: irq 11, io mem 0xfc0da000
+[    2.615048] ehci-pci 0000:00:08.7: USB 2.0 started, EHCI 1.00
+[    2.615527] hub 1-0:1.0: USB hub found
+[    2.615707] hub 1-0:1.0: 6 ports detected
+[    2.616138] ohci_hcd: USB 1.1 'Open' Host Controller (OHCI) Driver
+[    2.616410] ohci-pci: OHCI PCI platform driver
+[    2.616622] uhci_hcd: USB Universal Host Controller Interface driver
+[    2.617861] uhci_hcd 0000:00:08.0: UHCI Host Controller
+[    2.618213] uhci_hcd 0000:00:08.0: new USB bus registered, assigned bus number 2
+[    2.618563] uhci_hcd 0000:00:08.0: irq 11, io base 0x0000c340
+[    2.619060] hub 2-0:1.0: USB hub found
+[    2.619240] hub 2-0:1.0: 2 ports detected
+[    2.620570] uhci_hcd 0000:00:08.1: UHCI Host Controller
+[    2.620850] uhci_hcd 0000:00:08.1: new USB bus registered, assigned bus number 3
+[    2.621292] uhci_hcd 0000:00:08.1: irq 10, io base 0x0000c360
+[    2.621786] hub 3-0:1.0: USB hub found
+[    2.621978] hub 3-0:1.0: 2 ports detected
+[    2.623425] uhci_hcd 0000:00:08.2: UHCI Host Controller
+[    2.623705] uhci_hcd 0000:00:08.2: new USB bus registered, assigned bus number 4
+[    2.624126] uhci_hcd 0000:00:08.2: irq 10, io base 0x0000c380
+[    2.624610] hub 4-0:1.0: USB hub found
+[    2.624789] hub 4-0:1.0: 2 ports detected
+[    2.625153] usbcore: registered new interface driver usb-storage
+[    2.625496] i8042: PNP: PS/2 Controller [PNP0303:KBD,PNP0f13:MOU] at 0x60,0x64 irq 1,12
+[    2.626301] serio: i8042 KBD port at 0x60,0x64 irq 1
+[    2.626545] serio: i8042 AUX port at 0x60,0x64 irq 12
+[    2.626995] mousedev: PS/2 mouse device common for all mice
+[    2.627572] input: AT Translated Set 2 keyboard as /devices/platform/i8042/serio0/input/input0
+[    2.628154] i2c /dev entries driver
+[    2.628391] Driver for 1-wire Dallas network protocol.
+[    2.628909] usbcore: registered new interface driver DS9490R
+[    2.629264] 1-Wire driver for the DS2760 battery monitor chip - (c) 2004-2005, Szabolcs Gyurko
+[    2.630041] device-mapper: ioctl: 4.31.0-ioctl (2015-3-12) initialised: dm-devel@redhat.com
+[    2.630988] usbcore: registered new interface driver usbhid
+[    2.631283] usbhid: USB HID core driver
+[    2.631465] oprofile: using timer interrupt.
+[    2.631671] nf_conntrack version 0.5.0 (16384 buckets, 65536 max)
+[    2.632096] ipip: IPv4 over IPv4 tunneling driver
+[    2.632487] gre: GRE over IPv4 demultiplexor driver
+[    2.632702] ip_gre: GRE over IPv4 tunneling driver
+[    2.633234] IPv4 over IPsec tunneling driver
+[    2.633613] ip_tables: (C) 2000-2006 Netfilter Core Team
+[    2.633858] Initializing XFRM netlink socket
+[    2.634151] NET: Registered protocol family 10
+[    2.634825] ip6_tables: (C) 2000-2006 Netfilter Core Team
+[    2.635141] sit: IPv6 over IPv4 tunneling driver
+[    2.635523] NET: Registered protocol family 17
+[    2.635723] NET: Registered protocol family 15
+[    2.635934] bridge: automatic filtering via arp/ip/ip6tables has been deprecated. Update your scripts to load br_netfilter if you need this.
+[    2.636552] 8021q: 802.1Q VLAN Support v1.8
+[    2.636744] Key type dns_resolver registered
+[    2.637211] Using IPI No-Shortcut mode
+[    2.637550] registered taskstats version 1
+[    2.637997] console [netcon0] enabled
+[    2.638187] netconsole: network logging started
+[    2.638720] Freeing unused kernel memory: 668K (c0b46000 - c0bed000)
+[    2.681551] udevd[1285]: starting version 182
+[    2.799086] Switched to clocksource tsc
+[    2.911707] 8139cp 0000:00:03.0 eth0: link up, 100Mbps, full-duplex, lpa 0x05E1
+[    2.950739] 8139cp 0000:00:05.0 eth2: link up, 100Mbps, full-duplex, lpa 0x05E1
+[    3.230870] input: ImExPS/2 Generic Explorer Mouse as /devices/platform/i8042/serio1/input/input2
+[    5.176937] driver_common: module license 'Proprietary' taints kernel.
+[    5.177251] Disabling lock debugging due to kernel taint
+[    5.177811] common_init():324 
+[    5.177815] common_init():328 /proc/ciena dir created: f23c2f80
+[    5.177817] common_init():331 /proc/ciena/sm dir created: f23c2f80
+[    5.177819] common_init():335 /proc/ciena/eeprom dir created: f23c2e80
+[    5.177821] common_init():339 /proc/ciena/common dir created: f23c2e00
+[    5.177822] __cnInitDebugLog():272 
+[    5.177824] drvcommon_kernel_register():416 
+[    5.177825] drvcommon_kernel_register():432 driver_common
+[    5.177826] drvcommon_kernel_register():441 major No 249, devNo 0f900000
+[    5.211343] w1com_module_init(): major=248, minor=0
+[    5.211346] w1com_module_init(): devno=0xf800000
+[    5.211347] w1com_module_init(): Module-Init Complete. Online for w1com.
+[    5.242576] safeIo:safeIo_FaultHandlerM_KLM installed!
+[    5.273201] <1>
+[    5.273201] hsiFlareAcc_init[hsiFlare]: Hello World.  I am alive !
+[    5.273555] Module Parameters: 
+[    5.273691] hsiFlareAcc_dbgFlags = 0x00000000
+[    5.274084] hsiFlareAcc_init: kmalloc
+[    5.274255] hsiFlareAcc_init: before platform_device_register !
+[    5.274857] [hsiFlare] was assigned major number 246. 
+[    5.275101] hsiFlareAcc_data.dev_size = 512
+[    5.275286] hsiFlareAcc_data.dev_base = 0xf145a800
+[    5.275493] __cnInitDebugLog():272 
+[    5.275495] Ciena hsiFlare procfs dir created: f23c2c00
+[    5.275720] /proc/ciena/hsiFlare/flags created: f23c2b00
+[    5.275947] /proc/ciena/hsiFlare/state created: f23c2a80
+[    5.276190] /proc/ciena/hsiFlare/handle created: f23c2a00
+[    5.276422] /proc/ciena/hsiFlare/event created: f23c2980
+[    5.276650] /proc/ciena/hsiFlare/registers created: f23c2900
+[    5.276891] /proc/ciena/hsiFlare/handleTbl created: f23c2880
+[    5.345016] moduleInit():3768 Registering Boot CPLD Open Firmware driver...
+[    5.345018] bootCpld_init():2356 Starting bootCpld_init
+[    5.345019] bootCpld_init():2357 bootCpld_init[bcpld]: Hello World.  I am alive !
+[    5.345020] bootCpld_init():2360 bootCpld_init[bcpld]: bootCpldInit.intNum[restarts] = 0
+[    5.345021] bootCpld_init():2360 bootCpld_init[bcpld]: bootCpldInit.intNum[devices] = 0
+[    5.345022] bootCpld_init():2360 bootCpld_init[bcpld]: bootCpldInit.intNum[reaper] = 0
+[    5.345022] bootCpld_init():2362 bootCpld_init[bcpld]: bootCpldInit.physAddr  = 0x0000000000000000
+[    5.345024] bootCpld_init():2363 bootCpld_init[bcpld]: module params boardfamily=P2, boottype=default, maxBootTime=2400000 (0x00249f00) model number=SIM-5674-P14
+[    5.345545] __cnInitDebugLog():272 
+[    5.345557] bootCpld_init():2858 bootCpld_init[bcpld]: I was assigned major number 245. 
+[    5.345558] bootCpld_init():2859 bootCpld_init[bcpld]: bootCpld_data.dev_size = 127
+[    5.345559] bootCpld_init():2860 bootCpld_init[bcpld]: bootCpld_data.dev_base = 0xf23c6800
+[    5.381242] __cnInitDebugLog():272 
+[    5.381250]  tatcpld.ko module loaded successfully!
+[    5.422264] i2c i2c-11: Not I2C compliant: can't read SCL
+[    5.422516] i2c i2c-11: Bus may be unreliable
+[    5.422992] _w1comAddBus(): Added 1W bus user (1), entry (0) hwAddr=0xf23e3e00.
+[    5.422993] w1com_busSvc_register(): registered 1-wire Bus User (1) id (1).
+[    5.423295] _w1comAddBus(): Added 1W bus user (1), entry (1) hwAddr=0xf23e3e04.
+[    5.423297] w1com_busSvc_register(): registered 1-wire Bus User (1) id (2).
+[    5.423298] cnLibIsrCb_create(): ENTRY. numUsers=3, numIntrs=4
+[    5.423569] /proc/ciena/iofpga/regs created: f0348800
+[    5.423572] /proc/ciena/iofpga/stats created: f235e780
+[    5.423574] /proc/ciena/iofpga/busLog created: f235e700
+[    5.423576] /proc/ciena/iofpga/flood_control created: f235e680
+[    5.423577] __cnInitDebugLog():272 
+[    5.458039] spock_module_init():1103 Entry Point for SPOCK
+[    5.458042] spock_module_primary_init():726 Entry Point for SPOCK
+[    5.458953] __cnInitDebugLog():272 
+[    5.458957] spock_module_primary_init():778 Primary Init done for SPOCK
+[    5.459287] spock_event_init_userspace():1520 Initialized SPOCK user space events.
+[    5.468172] spockInitXcRedundancy():1856 PRE-PIVOT
+[    5.468175] spockInitXcRedundancyPrePivot():1618 Redundancy Pre Pivot Init (COLD RESTART)
+[    5.468177] spock2kccmXcSetTxNiCardStatus():260 The NI Card Status is set to ResetEmpty
+[    5.468177] spock2kccmXcSetTxPrimeship():312 The Tx Primeship bit is set to CLEARED
+[    5.468178] spock2kccmXcSetTxPRR():606 The Peer Reset Request bit is CLEARED
+[    5.468180] spock2kccmXcSetTxWDTO():460 The Watchdog Timeout bit is CLEARED
+[    5.468181] spock2kccmXcSetTxWDTO():460 The Watchdog Timeout bit is SET
+[    5.468182] spockFsmConfig():1045 FSM CONFIG: fsm=0, ra=0x00030000, rv=0x00000020
+[    5.468183] spockFsmConfig():1045 FSM CONFIG: fsm=1, ra=0x00030100, rv=0x00040000
+[    5.468184] spockFsmConfig():1045 FSM CONFIG: fsm=2, ra=0x00030200, rv=0x00040000
+[    5.468185] spockInitXcRedundancyPrePivot():1679 The 2KCCM and FSMs initialized. Latched WDTO cleared (CLEARED -> CLEARED).
+[    5.468186] spockFsmForceFailAll():1591 FORCE_ALL_TO_IDLE_DEAD: , ra=0x00030400, rv=0x00000001
+[    5.468188] spockFsmReleaseFail():1537 RELEASE_IDLE_DEAD: fsm=0, config_reg=0x00030000 (0x00000021), ctrl_reg=0x00030004 (0x00000000)
+[    5.468189] spockFsmReleaseFail():1537 RELEASE_IDLE_DEAD: fsm=1, config_reg=0x00030100 (0x00040001), ctrl_reg=0x00030104 (0x00000000)
+[    5.468190] spockFsmReleaseFail():1537 RELEASE_IDLE_DEAD: fsm=2, config_reg=0x00030200 (0x00040001), ctrl_reg=0x00030204 (0x00000000)
+[    5.468191] spockFsmForceFailAll():1591 RELEASE_ALL_FROM_IDLE_DEAD: , ra=0x00030400, rv=0x00000000
+[    5.468192] spockInitXcRedundancyPrePivot():1711  ALL FSMs are moved out of Idle-Dead state.
+[    5.468222] spock_module_secondary_init():935 Secondary Init done for SPOCK
+[    5.474553] bcGetChassisTypeLll():992 bcGetChassisTypeLll: SP not available.
+[    5.539342] LINX: version 2.5.1
+[    5.539491] LINX: Compile-time configuration:
+[    5.539678] LINX: Max number of LINX sockets 4096
+[    5.539879] LINX: Max number of attach references 4096
+[    5.540117] LINX: Max number of remote links 128
+[    5.540315] LINX: Max number of communicating sockets over a link 1024
+[    5.540592] LINX: Max number of timeout references 8192
+[    5.541044] NET: Registered protocol family 29
+[    6.836381] linx init_ecm_connection tx_def_queue_max_size = 2048
+[    7.307315] LINX: Hunt path "1-A-SP1/" available (RLNH version:2)
+[   15.614271] random: simApp urandom read with 123 bits of entropy available
+[   15.622969] random: nonblocking pool is initialized
+[   39.350277] LINX: Hunt path "1-A-SP1/" unavailable
+[   39.350707] linx init_ecm_connection tx_def_queue_max_size = 2048
+[   39.837129] linx init_ecm_connection tx_def_queue_max_size = 2048
+[   40.727048] LINX: Hunt path "1-A-SP1/" available (RLNH version:2)
+[   50.712067] drvcommon_open():527 
+[   50.743528] drvcommon_open():527 
+[   50.745996] drvcommon_open():527 
+[   50.752331] drvcommon_open():527 
+[   50.753283] drvcommon_open():527 
+[   50.768766] drvcommon_open():527 
+[   50.797245] 8139cp 0000:00:04.0 eth1: link up, 100Mbps, full-duplex, lpa 0x05E1
+[   52.824027] 8139cp 0000:00:04.0 eth1: link up, 100Mbps, full-duplex, lpa 0x05E1
+[   66.409106] LINX: Hunt path "1-A-SP1/" unavailable
+[   66.409638] linx init_ecm_connection tx_def_queue_max_size = 2048
+[   66.836613] linx init_ecm_connection tx_def_queue_max_size = 2048
+[   67.506992] LINX: Hunt path "1-A-SP1/" available (RLNH version:2)
+[   95.462817] drvcommon_close():538 
+[   95.512349] drvcommon_close():538 
+[   95.525799] drvcommon_close():538 
+[   95.541539] drvcommon_close():538 
+[  102.349907] LINX: Hunt path "1-A-SP1/" unavailable
+[  102.350245] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  102.836634] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  103.615915] drvcommon_close():538 
+[  104.523757] LINX: Hunt path "1-A-SP1/" available (RLNH version:2)
+[  106.654171] drvcommon_close():538 
+[  113.758444] LINX: Hunt path "1-A-SP1/" unavailable
+[  115.873053] NET: Unregistered protocol family 29
+[  115.932547] spockRedundancy():2568 SPOCK KLM is being removed !
+[  115.932560] __cnRemoveDebugLog():305 
+[  116.032721] spock_module_exit():1175 Exit done for SPOCK.
+[  116.072361] Read Entry Removed: /proc/ciena/iofpga/regs
+[  116.072364] Read Entry Removed: /proc/ciena/iofpga/stats
+[  116.072365] Read Entry Removed: /proc/ciena/iofpga/busLog
+[  116.072366] Read Entry Removed: /proc/ciena/iofpga/flood_control
+[  116.072367] __cnRemoveDebugLog():305 
+[  116.172669] cnLibIsrCb_destroy(): ENTRY. address of cookie ptr=0xf81289f8
+[  116.186418] w1com_busSvc_deregister(): de-registered 1-wire Bus User (1) id (0).
+[  116.196457] w1com_busSvc_deregister(): de-registered 1-wire Bus User (1) id (1).
+[  116.236952] __cnRemoveDebugLog():305 
+[  116.236957]  tatcpld.ko module unloaded successfully!
+[  116.308623] moduleExit():3782 Shutting down Boot CPLD driver...
+[  116.308626] bootCpld_exit():2958 Removing Boot CPLD driver...
+[  116.308632] __cnRemoveDebugLog():305 
+[  116.308862] bootCpld_exit():3034 bcpld module unloaded successfully!
+[  116.347806] __cnRemoveDebugLog():305 
+[  116.348266] releaseHsiFlareHandle():177 Device is not accessible (state=1).
+[  116.348584] hsiFlare module unloaded successfully!
+[  116.388202] safeIo:safeIo_exit called!
+[  116.527067] w1com_module_exit(): Module-Exit Complete. Removed for w1com.
+[  116.566377] ABDER: stop_driver
+[  116.567161] common_exit():361 
+[  116.567164] drvcommon_kernel_unregister():400 
+[  116.567165] drvcommon_kernel_unregister():401 Freeing Kernel Resources
+[  116.567167] drvcommon_del_clients():699 
+[  116.567168] __cnRemoveDebugLog():305 
+[  116.862582] udevd[2365]: starting version 182
+[  117.536002] common_init():324 
+[  117.536016] common_init():328 /proc/ciena dir created: f23c2d80
+[  117.536019] common_init():331 /proc/ciena/sm dir created: f23c2d80
+[  117.536021] common_init():335 /proc/ciena/eeprom dir created: f23c2c00
+[  117.536023] common_init():339 /proc/ciena/common dir created: f23c2d00
+[  117.536023] __cnInitDebugLog():272 
+[  117.536026] drvcommon_kernel_register():416 
+[  117.536027] drvcommon_kernel_register():432 driver_common
+[  117.536028] drvcommon_kernel_register():441 major No 249, devNo 0f900000
+[  117.571116] w1com_module_init(): major=248, minor=0
+[  117.571118] w1com_module_init(): devno=0xf800000
+[  117.571119] w1com_module_init(): Module-Init Complete. Online for w1com.
+[  117.607527] tun: Universal TUN/TAP device driver, 1.6
+[  117.607755] tun: (C) 1999-2004 Max Krasnyansky <maxk@qualcomm.com>
+[  117.642492] safeIo:safeIo_FaultHandlerM_KLM installed!
+[  117.682450] <1>
+[  117.682450] hsiFlareAcc_init[hsiFlare]: Hello World.  I am alive !
+[  117.682798] Module Parameters: 
+[  117.682933] hsiFlareAcc_dbgFlags = 0x00000000
+[  117.683165] hsiFlareAcc_init: kmalloc
+[  117.683326] hsiFlareAcc_init: before platform_device_register !
+[  117.683710] [hsiFlare] was assigned major number 246. 
+[  117.683932] hsiFlareAcc_data.dev_size = 512
+[  117.684125] hsiFlareAcc_data.dev_base = 0xf03d0000
+[  117.684348] __cnInitDebugLog():272 
+[  117.684351] Ciena hsiFlare procfs dir created: f23c2e00
+[  117.684575] /proc/ciena/hsiFlare/flags created: f23c2080
+[  117.684802] /proc/ciena/hsiFlare/state created: f0348980
+[  117.685043] /proc/ciena/hsiFlare/handle created: f235e500
+[  117.685278] /proc/ciena/hsiFlare/event created: f235e480
+[  117.685513] /proc/ciena/hsiFlare/registers created: f235ef00
+[  117.685755] /proc/ciena/hsiFlare/handleTbl created: f235ef80
+[  117.766739] moduleInit():3768 Registering Boot CPLD Open Firmware driver...
+[  117.766741] bootCpld_init():2356 Starting bootCpld_init
+[  117.766742] bootCpld_init():2357 bootCpld_init[bcpld]: Hello World.  I am alive !
+[  117.766743] bootCpld_init():2360 bootCpld_init[bcpld]: bootCpldInit.intNum[restarts] = 0
+[  117.766744] bootCpld_init():2360 bootCpld_init[bcpld]: bootCpldInit.intNum[devices] = 0
+[  117.766745] bootCpld_init():2360 bootCpld_init[bcpld]: bootCpldInit.intNum[reaper] = 0
+[  117.766746] bootCpld_init():2362 bootCpld_init[bcpld]: bootCpldInit.physAddr  = 0x0000000000000000
+[  117.766747] bootCpld_init():2363 bootCpld_init[bcpld]: module params boardfamily=P2, boottype=default, maxBootTime=2400000 (0x00249f00) model number=SIM-5674-P14
+[  117.766838] __cnInitDebugLog():272 
+[  117.766849] bootCpld_init():2858 bootCpld_init[bcpld]: I was assigned major number 245. 
+[  117.766850] bootCpld_init():2859 bootCpld_init[bcpld]: bootCpld_data.dev_size = 127
+[  117.766851] bootCpld_init():2860 bootCpld_init[bcpld]: bootCpld_data.dev_base = 0xf143a800
+[  117.815487] Fail to use OME BCT file 'bct'.
+[  117.815674] No BCT file loaded for OME KDS BCT
+[  117.815869] __cnInitDebugLog():272 
+[  117.874951] __cnInitDebugLog():272 
+[  117.874960]  tatcpld.ko module loaded successfully!
+[  117.889441] IPv6: ADDRCONF(NETDEV_UP): ibc_vdp: link is not ready
+[  117.890510] IPv6: ADDRCONF(NETDEV_CHANGE): ibc_vdp: link becomes ready
+[  117.902461] device eth2.110 entered promiscuous mode
+[  117.903265] device eth2 entered promiscuous mode
+[  117.905509] device eth2.111 entered promiscuous mode
+[  117.908163] device eth2.112 entered promiscuous mode
+[  117.911437] device eth2.113 entered promiscuous mode
+[  117.913897] device eth2.114 entered promiscuous mode
+[  117.918952] device eth2.115 entered promiscuous mode
+[  117.921482] device eth2.116 entered promiscuous mode
+[  117.923752] device eth2.117 entered promiscuous mode
+[  117.926488] device eth2.118 entered promiscuous mode
+[  117.928919] device eth2.119 entered promiscuous mode
+[  117.931711] device eth2.120 entered promiscuous mode
+[  118.115141] i2c i2c-11: Not I2C compliant: can't read SCL
+[  118.115389] i2c i2c-11: Bus may be unreliable
+[  118.115993] _w1comAddBus(): Added 1W bus user (1), entry (0) hwAddr=0xf066fa00.
+[  118.115995] w1com_busSvc_register(): registered 1-wire Bus User (1) id (1).
+[  118.116081] _w1comAddBus(): Added 1W bus user (1), entry (1) hwAddr=0xf066fa04.
+[  118.116083] w1com_busSvc_register(): registered 1-wire Bus User (1) id (2).
+[  118.116084] cnLibIsrCb_create(): ENTRY. numUsers=3, numIntrs=4
+[  118.116935] /proc/ciena/iofpga/regs created: f3dd6100
+[  118.116937] /proc/ciena/iofpga/stats created: f3dd6080
+[  118.116939] /proc/ciena/iofpga/busLog created: f3dd6000
+[  118.116942] /proc/ciena/iofpga/flood_control created: f3dd6f80
+[  118.116943] __cnInitDebugLog():272 
+[  118.153824] <1>
+[  118.153824] virtualDev_init[vd]: Hello World.  I am alive !
+[  118.154237] Module Parameters: 
+[  118.154374] virtualDev_dbgFlags = 0x00000000
+[  118.154753] virtualDev_init: vmalloc
+[  118.154914] virtualDev_init: before platform_device_register !
+[  118.155633] I was assigned major number 241. 
+[  118.155828] virtualDev_data.dev_size = 16384
+[  118.156021] virtualDev_data.dev_base = 0xf88cb000
+[  118.156230] __cnInitDebugLog():272 
+[  118.199962] spock_module_init():1103 Entry Point for SPOCK
+[  118.199965] spock_module_primary_init():726 Entry Point for SPOCK
+[  118.200654] __cnInitDebugLog():272 
+[  118.200658] spock_module_primary_init():778 Primary Init done for SPOCK
+[  118.200803] spock_event_init_userspace():1520 Initialized SPOCK user space events.
+[  118.206084] spockInitXcRedundancy():1856 POST-PIVOT
+[  118.206115] spock_module_secondary_init():935 Secondary Init done for SPOCK
+[  118.243914] /proc/ciena/topsync/devdump created: f18b3280
+[  118.243918] /proc/ciena/topsync/spiRd created: f18b3200
+[  118.243920] /proc/ciena/topsync/spiWr created: f18b3180
+[  118.243922] /proc/ciena/topsync/setsRd created: f18b3100
+[  118.243924] /proc/ciena/topsync/setsWr created: f18b3080
+[  118.243926] /proc/ciena/topsync/mmrRd created: f18b3000
+[  118.243928] /proc/ciena/topsync/mmrWr created: f18b3f80
+[  118.243930] /proc/ciena/topsync/stats created: f18b3f00
+[  118.243932] /proc/ciena/topsync/poolerThread created: f18b3e80
+[  118.243934] /proc/ciena/topsync/dbgTimers created: f18b3e00
+[  118.243936] /proc/ciena/topsync/switchover created: f18b3d80
+[  118.243938] /proc/ciena/topsync/txSM created: f18b3d00
+[  118.243940] /proc/ciena/topsync/rxSM created: f18b3c80
+[  118.243942] /proc/ciena/topsync/accessLog created: f18b3c00
+[  118.243944] /proc/ciena/topsync/autodetect created: f18b3b80
+[  118.243946] /proc/ciena/topsync/firmware created: f18b3b00
+[  118.243948] /proc/ciena/topsync/tool created: f18b3a80
+[  118.243949] __cnInitDebugLog():272 
+[  118.244013] spockTopsyncRegisterCallbacks():78 RDND_S:spockTopsyncRegisterCallbacks : called 
+[  118.244014] topsync_isr_init():96 TOPSYNC:FPGA Callbacks registered
+[  118.244014] topsync_isr_enable():107 TOPSYNC:Interrupts enabled
+[  118.244015] spockTopsyncEnableInterrupts():165 RDND_S:spockTopsyncEnableInterrupts: Interrupts ENABLED
+[  118.244016] topsync_registerAccessTargets():232 TOPSYNC:Release 2 access target registerd
+[  118.280244] /proc/ciena/ds26522/devdump created: f18b3800
+[  118.280249] /proc/ciena/ds26522/dbgLog created: f2190780
+[  118.280250] __cnInitDebugLog():272 
+[  118.371082] pluggableqsfp3: vdmm memory created successfully
+[  118.371386] pluggable_drv_register_procfs creating directory for 3 plugs
+[  118.464153] LINX: version 2.5.1
+[  118.464386] LINX: Compile-time configuration:
+[  118.464683] LINX: Max number of LINX sockets 4096
+[  118.464988] LINX: Max number of attach references 4096
+[  118.465355] LINX: Max number of remote links 128
+[  118.465658] LINX: Max number of communicating sockets over a link 1024
+[  118.466093] LINX: Max number of timeout references 8192
+[  118.466780] NET: Registered protocol family 29
+[  120.836577] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  121.357321] LINX: Hunt path "1-A-SP1/" available (RLNH version:2)
+[  128.553173] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  129.679606] LINX: Hunt path "1-A-SP1/" unavailable
+[  129.680052] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  129.836703] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  131.608099] LINX: Hunt path "1-A-SP1/" available (RLNH version:2)
+[  165.350273] LINX: Hunt path "1-A-SP1/" unavailable
+[  165.350676] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  165.838217] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  166.667449] LINX: Hunt path "1-A-SP1/" available (RLNH version:2)
+[  168.614825] drvcommon_open():527 
+[  171.695568] drvcommon_open():527 
+[  171.759922] drvcommon_open():527 
+[  171.764613] drvcommon_open():527 
+[  171.851039] drvcommon_open():527 
+[  171.852280] drvcommon_ioctl():488 
+[  171.852281] drvcommon_to_primary():470 
+[  171.852282] drvcommon_notify_clients():669 
+[  171.853680] drvcommon_open():527 
+[  171.879469] 8139cp 0000:00:04.0 eth1: link up, 100Mbps, full-duplex, lpa 0x05E1
+[  171.949391] VDP: config esmc edev for port 4 
+[  171.949606] VDP: configured IBC edev_ibc table & veth interfaces on this card
+[  171.950351] NET: Registered protocol family 27
+[  171.950553] NET: Registered protocol family 28
+[  171.950742] NET: Registered protocol family 30
+[  171.950931] NET: Registered protocol family 25
+[  171.951133] NET: Registered protocol family 31
+[  171.951494] </localdisk/data-abder/abenbach_pts_main/build/pots-simpts/linux/chassis/i486-sim/ciena_sim6500/modules/VDP/klm/af_vdp_ome.c:2804> enableOSRPonComms_unittest_SIM(): 
+[  171.951495] Failed to find MAC via neigh_lookup !
+[  171.951806] VDP: packet type added on on IBC Virtual Device: ibc_vdp
+[  172.353646] drvcommon_open():527 
+[  172.818736] sh (2987): drop_caches: 3
+[  172.897297] drvcommon_open():527 
+[  173.941154] 8139cp 0000:00:04.0 eth1: link up, 100Mbps, full-duplex, lpa 0x05E1
+[  174.041982] sh (3000): drop_caches: 3
+[  174.357662] drvcommon_open():527 
+[  174.358279] drvcommon_close():538 
+[  174.361025] drvcommon_open():527 
+[  174.361605] drvcommon_close():538 
+[  174.401207] drvcommon_open():527 
+[  174.402177] drvcommon_close():538 
+[  176.225577] drvcommon_open():527 
+[  177.453682] drvcommon_open():527 
+[  178.516433] drvcommon_open():527 
+[  180.108851] drvcommon_open():527 
+[  180.119036] drvcommon_close():538 
+[  180.595250] drvcommon_open():527 
+[  180.861467] ts_writeMMRegisterAndWaitResponse():268 TOPSYNC:Set System State to 1!
+[  184.882101] ts_writeMMRegisterAndWaitResponse():268 TOPSYNC:Set System State to 2!
+[  186.952274] ts_writeMMRegisterAndWaitResponse():268 TOPSYNC:Set System State to 3!
+[  189.805046] topsync_mastershipUpdate():60 TOPSYNC:RDND_S:Mastership 0
+[  189.815066] topsync_mastershipUpdate():73 TOPSYNC:RDND_S: Read  Addr:0x4B, data 0x00
+[  189.825048] topsync_mastershipUpdate():86 TOPSYNC:RDND_S: Write Addr:0x4B, data 0x00
+[  189.835048] topsync_mastershipUpdate():97 TOPSYNC:RDND_S: Read  Addr:0x48, data 0x00
+[  189.835050] topsync_mastershipUpdate():114 TOPSYNC:RDND_S: Slave Delay:0
+[  189.845043] topsync_mastershipUpdate():127 TOPSYNC:RDND_S: Read  Addr:0x31, data 0x00
+[  189.857051] topsync_mastershipUpdate():138 TOPSYNC:RDND_S: Write Addr:0x30, data 0x00
+[  189.867470] topsync_mastershipUpdate():151 TOPSYNC:RDND_S: Write Addr:0x31, data 0x00
+[  189.877082] topsync_mastershipUpdate():163 TOPSYNC:RDND_S: Write Addr:0x48, data 0x00
+[  189.887044] topsync_mastershipUpdate():174 TOPSYNC:RDND_S: Write Addr:0x67, data 0x11
+[  189.899098] topsync_mastershipUpdate():189 TOPSYNC:RDND_S: Write Addr:0x1D, data 0x01
+[  189.909017] topsync_mastershipUpdate():210 TOPSYNC:RDND_S: Write Addr:0x31, data 0x00
+[  189.919045] topsync_mastershipUpdate():221 TOPSYNC:RDND_S: Write Addr:0x4B, data 0x00
+[  189.919050] semtech_drv_ctrl_sets_init_done():274 TOPSYNC:SETS Init DONE. Cold restart
+[  192.674251] LINX: Hunt path "1-A-SP1/" unavailable
+[  192.674353] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  192.830607] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  192.902140] drvcommon_open():527 
+[  192.902146] drvcommon_ioctl():488 
+[  192.902412] drvcommon_ioctl():488 
+[  192.902661] drvcommon_ioctl():488 
+[  192.902917] drvcommon_ioctl():488 
+[  192.903262] drvcommon_ioctl():488 
+[  192.903496] drvcommon_ioctl():488 
+[  192.903727] drvcommon_ioctl():488 
+[  192.903768] drvcommon_ioctl():488 
+[  192.903834] drvcommon_ioctl():488 
+[  192.903888] drvcommon_ioctl():488 
+[  192.903943] drvcommon_ioctl():488 
+[  192.903996] drvcommon_ioctl():488 
+[  192.904057] drvcommon_ioctl():488 
+[  192.904121] drvcommon_ioctl():488 
+[  192.904178] drvcommon_ioctl():488 
+[  192.904236] drvcommon_ioctl():488 
+[  192.904288] drvcommon_ioctl():488 
+[  192.904355] drvcommon_ioctl():488 
+[  192.904439] drvcommon_ioctl():488 
+[  192.904526] drvcommon_ioctl():488 
+[  192.904614] drvcommon_ioctl():488 
+[  192.904705] drvcommon_ioctl():488 
+[  192.904807] drvcommon_ioctl():488 
+[  192.904877] drvcommon_ioctl():488 
+[  192.904932] drvcommon_ioctl():488 
+[  192.904987] drvcommon_ioctl():488 
+[  192.905079] drvcommon_ioctl():488 
+[  192.905156] drvcommon_ioctl():488 
+[  192.905213] drvcommon_ioctl():488 
+[  192.905270] drvcommon_ioctl():488 
+[  192.905333] drvcommon_ioctl():488 
+[  192.905390] drvcommon_ioctl():488 
+[  192.905447] drvcommon_ioctl():488 
+[  192.905504] drvcommon_ioctl():488 
+[  192.905561] drvcommon_ioctl():488 
+[  192.905618] drvcommon_ioctl():488 
+[  192.905676] drvcommon_ioctl():488 
+[  192.905732] drvcommon_ioctl():488 
+[  192.905749] drvcommon_ioctl():488 
+[  192.906076] drvcommon_ioctl():488 
+[  192.906105] drvcommon_ioctl():488 
+[  192.909915] drvcommon_ioctl():488 
+[  192.909952] drvcommon_ioctl():488 
+[  192.909980] drvcommon_ioctl():488 
+[  192.909997] drvcommon_ioctl():488 
+[  192.910032] drvcommon_ioctl():488 
+[  192.918255] drvcommon_ioctl():488 
+[  192.924674] spockFsmForceFailAll():1591 RELEASE_ALL_FROM_IDLE_DEAD: , ra=0x00030400, rv=0x00000000
+[  193.440903] LINX: Hunt path "1-A-SP1/" available (RLNH version:2)
+[  193.520385] drvcommon_ioctl():488 
+[  193.520484] drvcommon_ioctl():488 
+[  193.556367] drvcommon_ioctl():488 
+[  193.556472] drvcommon_ioctl():488 
+[  194.496659] </localdisk/data-abder/abenbach_pts_main/build/pots-simpts/linux/chassis/i486-sim/ciena_sim6500/modules/VDP/klm/af_vdp_ome.c:327> vdp_bind_hal(): 
+[  194.496661] Binding socket PROTO: 0x88a9, APP: 0x3, VER: 0x1 successfully
+[  195.445971] drvcommon_open():527 
+[  195.446792] drvcommon_close():538 
+[  195.450682] drvcommon_open():527 
+[  195.451450] drvcommon_close():538 
+[  195.454597] drvcommon_open():527 
+[  195.455273] drvcommon_close():538 
+[  195.463813] drvcommon_open():527 
+[  195.464223] drvcommon_close():538 
+[  197.001128] </localdisk/data-abder/abenbach_pts_main/build/pots-simpts/linux/chassis/i486-sim/ciena_sim6500/modules/VDP/klm/af_vdp_ome.c:327> vdp_bind_hal(): 
+[  197.001130] Binding socket PROTO: 0x88a9, APP: 0x2, VER: 0x1 successfully
+[  206.303206] </localdisk/data-abder/abenbach_pts_main/build/pots-simpts/linux/chassis/i486-sim/ciena_sim6500/modules/VDP/klm/af_vdp_ome.c:327> vdp_bind_hal(): 
+[  206.303208] Binding socket PROTO: 0x88b0, APP: 0x0, VER: 0x1 successfully
+[  215.176924] drvcommon_open():527 
+[  221.911041] spockFsmRequestToBecomeMaster():1133 REQUEST_TO_BECOME_MASTER: fsm=0, ra=0x00030004, rv=0x00000002
+[  221.913382] spockFsmRequestToBecomeMaster():1133 REQUEST_TO_BECOME_MASTER: fsm=0, ra=0x00030004, rv=0x00000002
+[  222.944061] drvcommon_ioctl():488 
+[  222.944086] drvcommon_ioctl():488 
+[  228.348155] LINX: Hunt path "1-A-SP1/" unavailable
+[  228.348367] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  228.833534] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  230.492894] LINX: Hunt path "1-A-SP1/" available (RLNH version:2)
+[  253.023799] drvcommon_ioctl():488 
+[  253.023817] drvcommon_ioctl():488 
+[  255.682179] LINX: Hunt path "1-A-SP1/" unavailable
+[  255.682462] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  255.838530] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  257.118769] LINX: Hunt path "1-A-SP1/" available (RLNH version:2)
+[  283.104242] drvcommon_ioctl():488 
+[  283.104502] drvcommon_ioctl():488 
+[  283.104520] drvcommon_ioctl():488 
+[  284.104029] spockEvaluatePrimeship():2133 Evaluation of Primeship requested
+[  284.484554] drvcommon_ioctl():488 
+[  284.484575] drvcommon_ioctl():488 
+[  284.484589] drvcommon_ioctl():488 
+[  284.484603] drvcommon_ioctl():488 
+[  284.484617] drvcommon_ioctl():488 
+[  284.484630] drvcommon_ioctl():488 
+[  284.484643] drvcommon_ioctl():488 
+[  284.484656] drvcommon_ioctl():488 
+[  284.484670] drvcommon_ioctl():488 
+[  284.484683] drvcommon_ioctl():488 
+[  284.484696] drvcommon_ioctl():488 
+[  284.484709] drvcommon_ioctl():488 
+[  284.484723] drvcommon_ioctl():488 
+[  291.352679] LINX: Hunt path "1-A-SP1/" unavailable
+[  291.352829] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  291.838449] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  292.218897] LINX: Hunt path "1-A-SP1/" available (RLNH version:2)

@@ -3,7 +3,7 @@ set -x
 
 
 lttng create guest
- lttng enable-channel -k --subbuf-size=128K --num-subbuf=128 chann
+lttng enable-channel -k --subbuf-size=128K --num-subbuf=128 chann
 # lttng enable-channel -k --subbuf-size=16K --num-subbuf=128 --session=guest chan
 
 
@@ -17,7 +17,7 @@ virsh vcpuinfo ubuntu2
 lttng start
 
 
-sleep 5;
+sleep 12;
 #sleep 20;
 
 #lttng stop guest

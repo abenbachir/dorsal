@@ -5,202 +5,20 @@ import json
 import os
 import getopt
 import sys
-import babeltrace.reader
 import babeltrace.writer as btw
-import multiprocessing
+import babeltrace.reader
+
 try:
     from .utils import *
 except Exception as ex:
     from utils import *
 
 
-
-KERNEL_MODE = "kernel"
-USER_MODE = "ust"
-
-# create global fields
-int8_type = btw.IntegerFieldDeclaration(8)
-int8_type.signed = 1
-int8_type.encoding = babeltrace.common.CTFStringEncoding.UTF8
-int8_type.alignment = 8
-array_type = btw.ArrayFieldDeclaration(int8_type, COMM_LENGTH)
-
-string_type = btw.StringFieldDeclaration()
-string_type.encoding = babeltrace.common.CTFStringEncoding.UTF8
-
-int32_type = btw.IntegerFieldDeclaration(32)
-int32_type.signed = 1
-int64_type = btw.IntegerFieldDeclaration(64)
-int64_type.signed = 1
-uint32_type = btw.IntegerFieldDeclaration(32)
-uint32_type.signed = 0
-uint32_type.alignment = 8
-uint64_type = btw.IntegerFieldDeclaration(64)
-uint64_type.signed = 0
-uint64_type.alignment = 8
-
-cpu_count = multiprocessing.cpu_count()
 per_cpu_streams = {}
 
 
-def create_writer(stream_name, path):
-    writer = btw.Writer(os.path.join(path, stream_name))
-    clock = btw.Clock('monotonic')
-    writer.add_clock(clock)
-    writer.add_environment_field("domain", stream_name.split('-')[1])
-    if KERNEL_MODE in stream_name:
-        writer.add_environment_field("tracer_name", "lttng-modules")
-        writer.add_environment_field("tracer_major", 2)
-        writer.add_environment_field("tracer_minor", 10)
-    else:
-        writer.add_environment_field("tracer_name", "lttng-ust")
-
-    stream_class = btw.StreamClass('channel')
-    stream_class.clock = clock
-
-    packet_context_type = stream_class.packet_context_type
-    packet_context_type.add_field(uint32_type, "cpu_id")
-    stream_class.packet_context_type = packet_context_type
-
-    event_classes = {}
-    if KERNEL_MODE in stream_name:
-        # Sched switch
-        sched_switch_event_class = btw.EventClass(SCHED_SWITCH_EVENT_NAME)
-        sched_switch_event_class.add_field(array_type, "prev_comm")
-        sched_switch_event_class.add_field(int32_type, "prev_tid")
-        sched_switch_event_class.add_field(int32_type, "prev_prio")
-        sched_switch_event_class.add_field(int64_type, "prev_state")
-        sched_switch_event_class.add_field(array_type, "next_comm")
-        sched_switch_event_class.add_field(int32_type, "next_tid")
-        sched_switch_event_class.add_field(int32_type, "next_prio")
-        stream_class.add_event_class(sched_switch_event_class)
-        event_classes[SCHED_SWITCH_EVENT_NAME] = sched_switch_event_class
-        # sched waking
-        sched_waking_event_class = btw.EventClass(SCHED_WAKING_EVENT_NAME)
-        sched_waking_event_class.add_field(int32_type, "tid")
-        sched_waking_event_class.add_field(int32_type, "prio")
-        sched_waking_event_class.add_field(int32_type, "target_cpu")
-        sched_waking_event_class.add_field(array_type, "comm")
-        stream_class.add_event_class(sched_waking_event_class)
-        event_classes[SCHED_WAKING_EVENT_NAME] = sched_waking_event_class
-        # sched wakeup
-        sched_wakeup_event_class = btw.EventClass(SCHED_WAKEUP_EVENT_NAME)
-        sched_wakeup_event_class.add_field(int32_type, "tid")
-        sched_wakeup_event_class.add_field(int32_type, "prio")
-        sched_wakeup_event_class.add_field(int32_type, "target_cpu")
-        sched_wakeup_event_class.add_field(array_type, "comm")
-        stream_class.add_event_class(sched_wakeup_event_class)
-        event_classes[SCHED_WAKEUP_EVENT_NAME] = sched_wakeup_event_class
-        # sched wakeup_new
-        sched_wakeup_new_event_class = btw.EventClass(SCHED_WAKEUP_NEW_EVENT_NAME)
-        sched_wakeup_new_event_class.add_field(int32_type, "tid")
-        sched_wakeup_new_event_class.add_field(int32_type, "prio")
-        sched_wakeup_new_event_class.add_field(int32_type, "target_cpu")
-        sched_wakeup_new_event_class.add_field(array_type, "comm")
-        stream_class.add_event_class(sched_wakeup_new_event_class)
-        event_classes[SCHED_WAKEUP_NEW_EVENT_NAME] = sched_wakeup_new_event_class
-        # sched process fork
-        sched_process_fork_event_class = btw.EventClass(SCHED_PROCESS_FORK_EVENT_NAME)
-        sched_process_fork_event_class.add_field(array_type, "parent_comm")
-        sched_process_fork_event_class.add_field(int32_type, "parent_tid")
-        sched_process_fork_event_class.add_field(int32_type, "parent_pid")
-        sched_process_fork_event_class.add_field(array_type, "child_comm")
-        sched_process_fork_event_class.add_field(int32_type, "child_tid")
-        sched_process_fork_event_class.add_field(int32_type, "child_pid")
-        stream_class.add_event_class(sched_process_fork_event_class)
-        event_classes[SCHED_PROCESS_FORK_EVENT_NAME] = sched_process_fork_event_class
-        # sched process exit
-        sched_process_exit_event_class = btw.EventClass(SCHED_PROCESS_EXIT_EVENT_NAME)
-        sched_process_exit_event_class.add_field(int32_type, "tid")
-        sched_process_exit_event_class.add_field(int32_type, "prio")
-        sched_process_exit_event_class.add_field(array_type, "comm")
-        stream_class.add_event_class(sched_process_exit_event_class)
-        event_classes[SCHED_PROCESS_EXIT_EVENT_NAME] = sched_process_exit_event_class
-        # sched process free
-        sched_process_free_event_class = btw.EventClass(SCHED_PROCESS_FREE_EVENT_NAME)
-        sched_process_free_event_class.add_field(int32_type, "tid")
-        sched_process_free_event_class.add_field(int32_type, "prio")
-        sched_process_free_event_class.add_field(array_type, "comm")
-        stream_class.add_event_class(sched_process_free_event_class)
-        event_classes[SCHED_PROCESS_FREE_EVENT_NAME] = sched_process_free_event_class
-        # softirq raise
-        softirq_raise_event_class = btw.EventClass(SOFTIRQ_RAISE_EVENT_NAME)
-        softirq_raise_event_class.add_field(uint32_type, "vec")
-        stream_class.add_event_class(softirq_raise_event_class)
-        event_classes[SOFTIRQ_RAISE_EVENT_NAME] = softirq_raise_event_class
-        # softirq entry
-        softirq_entry_event_class = btw.EventClass(SOFTIRQ_ENTRY_EVENT_NAME)
-        softirq_entry_event_class.add_field(uint32_type, "vec")
-        stream_class.add_event_class(softirq_entry_event_class)
-        event_classes[SOFTIRQ_ENTRY_EVENT_NAME] = softirq_entry_event_class
-        # softirq exit
-        softirq_exit_event_class = btw.EventClass(SOFTIRQ_EXIT_EVENT_NAME)
-        softirq_exit_event_class.add_field(uint32_type, "vec")
-        stream_class.add_event_class(softirq_exit_event_class)
-        event_classes[SOFTIRQ_EXIT_EVENT_NAME] = softirq_exit_event_class
-        # irq handler entry
-        irq_handler_entry_event_class = btw.EventClass(IRQ_HANDLER_ENTRY_EVENT_NAME)
-        irq_handler_entry_event_class.add_field(int32_type, "irq")
-        irq_handler_entry_event_class.add_field(string_type, "name")
-        stream_class.add_event_class(irq_handler_entry_event_class)
-        event_classes[IRQ_HANDLER_ENTRY_EVENT_NAME] = irq_handler_entry_event_class
-        # irq handler exit
-        irq_handler_exit_event_class = btw.EventClass(IRQ_HANDLER_EXIT_EVENT_NAME)
-        irq_handler_exit_event_class.add_field(int32_type, "irq")
-        irq_handler_exit_event_class.add_field(int32_type, "ret")
-        stream_class.add_event_class(irq_handler_exit_event_class)
-        event_classes[IRQ_HANDLER_EXIT_EVENT_NAME] = irq_handler_exit_event_class
-
-        # syscall event class
-        syscalls = set([x['name'] for x in load_syscalls(syscall_list_filepath).values()])
-        for name in syscalls:
-            sys_entry_event_class = btw.EventClass("syscall_entry_%s" % name)
-            sys_exit_event_class = btw.EventClass("syscall_exit_%s" % name)
-            sys_exit_event_class.add_field(uint64_type, "ret")
-            stream_class.add_event_class(sys_entry_event_class)
-            stream_class.add_event_class(sys_exit_event_class)
-            event_classes["syscall_entry_%s" % name] = sys_entry_event_class
-            event_classes["syscall_exit_%s" % name] = sys_exit_event_class
-
-        # marker events
-        marker_event_class = btw.EventClass(MARKER_EVENT_NAME)
-        marker_event_class.add_field(int64_type, "start")
-        marker_event_class.add_field(int64_type, "end")
-        marker_event_class.add_field(string_type, "category")
-        marker_event_class.add_field(string_type, "label")
-        stream_class.add_event_class(marker_event_class)
-        event_classes[MARKER_EVENT_NAME] = marker_event_class
-    else:
-        # add this field declaration to event class
-        func_entry_event_class = btw.EventClass(FUNC_ENTRY_EVENT_NAME)
-        func_entry_event_class.add_field(uint64_type, ADDR_FIELD_NAME)
-        func_entry_event_class.add_field(uint32_type, VTID_FIELD_NAME)
-        func_entry_event_class.add_field(uint32_type, VPID_FIELD_NAME)
-        func_entry_event_class.add_field(string_type, PROCNAME_FIELD_NAME)
-        stream_class.add_event_class(func_entry_event_class)
-        event_classes[FUNC_ENTRY_EVENT_NAME] = func_entry_event_class
-
-        func_exit_event_class = btw.EventClass(FUNC_EXIT_EVENT_NAME)
-        func_exit_event_class.add_field(uint64_type, ADDR_FIELD_NAME)
-        func_exit_event_class.add_field(int32_type, VTID_FIELD_NAME)
-        func_exit_event_class.add_field(int32_type, VPID_FIELD_NAME)
-        func_exit_event_class.add_field(string_type, PROCNAME_FIELD_NAME)
-        stream_class.add_event_class(func_exit_event_class)
-        event_classes[FUNC_EXIT_EVENT_NAME] = func_exit_event_class
-
-    if stream_name not in per_cpu_streams:
-        per_cpu_streams[stream_name] = []
-
-    for i in range(0, cpu_count):
-        stream = writer.create_stream(stream_class)
-        stream.packet_context.field("cpu_id").value = i
-        per_cpu_streams[stream_name].append(stream)
-
-    return event_classes
-
-
 def main(argv):
-    path = "/home/abder/lttng-traces/guest-20170926-190544"
+    path = "/home/abder/lttng-traces/oneos-boot-vm7_ps1/"
     output = None
     try:
         if len(argv) > 0:
@@ -228,6 +46,7 @@ def main(argv):
     if not output:
         output = "traces.json"
 
+    path = path.rstrip('/')
     kernel_symbols_path = os.path.join(path, "mapping/kallsyms.map")
     kernel_symbols_l1_path = os.path.join(path, "mapping/kallsyms-l1.map")
     process_symbols_l1_path = os.path.join(path, "mapping/process-l1.map")
@@ -255,7 +74,7 @@ def main(argv):
     kernel_event_classes = {}
     ust_event_classes = {}
 
-    kernel_event_classes['guest'] = create_writer("guest-kernel", trace_path)
+    kernel_event_classes['guest'] = create_writer("guest-kernel", trace_path, per_cpu_streams)
     # ust_event_classes['guest'] = create_writer("guest-ust", trace_path)
     # kernel_event_classes['host'] = create_writer("host-kernel", trace_path)
     # ust_event_classes['host'] = create_writer("host-ust", trace_path)
@@ -270,12 +89,15 @@ def main(argv):
         if not is_guest_event:
             continue
 
-        events = handle_l1_event(event)
+        vcpu_id, events = handle_l1_event(event)
+        cpu_id = vcpu_id
 
         for myevent in events:
             is_ust = isinstance(myevent, EventFunction)
             mode = "ust" if is_ust else "kernel"
             stream_name = layer + '-' + mode
+            timestamp = myevent['timestamp'] if 'timestamp' in myevent else event.timestamp
+
             # UST Events
             if is_ust:
                 if process_symbols_l1.get_name(myevent.tid) is not None:
@@ -338,7 +160,7 @@ def main(argv):
                 except Exception as ex:
                     print(event.timestamp, myevent, ex)
 
-        if count > 90000:
+        if count > 100000:
             break
 
     # flush the streams
