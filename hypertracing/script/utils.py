@@ -31,6 +31,12 @@ SOFTIRQ_EXIT_HYPERCALL_NR = 1104
 IRQ_HANDLER_ENTRY_HYPERCALL_NR = 1105
 IRQ_HANDLER_EXIT_HYPERCALL_NR = 1106
 
+HRTIMER_INIT_HYPERCALL_NR = 1107
+HRTIMER_START_HYPERCALL_NR = 1108
+HRTIMER_EXPIRE_ENTRY_HYPERCALL_NR = 1109
+HRTIMER_EXPIRE_EXIT_HYPERCALL_NR = 1110
+HRTIMER_CANCEL_HYPERCALL_NR = 1111
+
 VTID_FIELD_NAME = "vtid"
 VPID_FIELD_NAME = "vpid"
 ADDR_FIELD_NAME = "addr"
@@ -59,6 +65,12 @@ HYPERGRAPH_HOST_EVENT_NAME = "hypergraph_host"
 KVM_ENTRY_EVENT_NAME = "kvm_x86_entry"
 KVM_EXIT_EVENT_NAME = "kvm_x86_exit"
 MARKER_EVENT_NAME = "marker"
+
+HRTIMER_INIT_EVENT_NAME = "timer_hrtimer_init"
+HRTIMER_START_EVENT_NAME = "timer_hrtimer_start"
+HRTIMER_CANCEL_EVENT_NAME = "timer_hrtimer_cancel"
+HRTIMER_EXPIRE_ENTRY_EVENT_NAME = "timer_hrtimer_expire_entry"
+HRTIMER_EXPIRE_EXIT_EVENT_NAME = "timer_hrtimer_expire_exit"
 
 initcall_types = {
     0: 'early',
@@ -113,6 +125,10 @@ uint32_type.alignment = 8
 uint64_type = btw.IntegerFieldDeclaration(64)
 uint64_type.signed = 0
 uint64_type.alignment = 8
+uint64_hex_type = btw.IntegerFieldDeclaration(64)
+uint64_hex_type.signed = 0
+uint64_hex_type.alignment = 8
+uint64_hex_type.base = 16
 
 cpu_count = multiprocessing.cpu_count()
 process_list = {}
@@ -391,6 +407,7 @@ def handle_l1_event(event):
     is_syscall = (nr == SYS_ENTRY_HYPERCALL_NR or nr == SYS_EXIT_HYPERCALL_NR)
     is_irq_handler_entry = (nr == IRQ_HANDLER_ENTRY_HYPERCALL_NR )
     is_irq_handler_exit = (nr == IRQ_HANDLER_EXIT_HYPERCALL_NR)
+    is_hrtimer = (nr >= HRTIMER_INIT_HYPERCALL_NR and nr <= HRTIMER_EXPIRE_EXIT_HYPERCALL_NR)
 
     if nr == CONFIG_ARCH_HYPERCALL_NR:
         global arch
@@ -424,13 +441,13 @@ def handle_l1_event(event):
         prev_state, prev_prio, next_prio = 0, 0, 0
         if is_32b():
             prev_tid, next_tid = fields['a0'] >> 16, fields['a0'] & 0xffff
-            next_comm = get_comm([fields['a1'], fields['a2'], fields['a3']])
+            prev_state = fields['a1'] >> 24
+            next_comm = get_comm([fields['a1'] & 0xffffff, fields['a2'], fields['a3']])
         else:
             # prev_state | prev_prio | prev_tid
             prev_state, prev_prio, prev_tid = fields['a0'] >> 32 + 16, ((fields['a0'] >> 32) & 0xffff), fields['a0'] & 0xffffffff
             # next_state | next_prio | next_tid
             next_state, next_prio, next_tid = fields['a1'] >> 32 + 16, ((fields['a1'] >> 32) & 0xffff), fields['a1'] & 0xffffffff
-
             next_comm = get_comm([fields['a2'], fields['a3']])
         # prev_comm = l1_pr_cpu[cpu_id]['next_comm'] if 'next_comm' in l1_pr_cpu[cpu_id] else 'Unknown %s' % prev_tid
         process_list[next_tid] = next_comm
@@ -468,6 +485,16 @@ def handle_l1_event(event):
         events.append({"type": event_types_map[nr], "payload": {'irq': fields['a0'], 'name': ''}})
     if is_irq_handler_exit:
         events.append({"type": event_types_map[nr], "payload": {'irq': fields['a0'], 'ret': fields['a1']}})
+    if is_hrtimer:
+        payload = { 'hrtimer': fields['a0'] }
+        if nr == HRTIMER_START_HYPERCALL_NR:
+            payload['function'] = fields['a1']
+            payload['expires'] = fields['a2']
+            payload['softexpires'] = fields['a3']
+        if nr == HRTIMER_EXPIRE_ENTRY_HYPERCALL_NR:
+            payload['now'] = fields['a1']
+            payload['function'] = fields['a2']
+        events.append({"type": event_types_map[nr], "payload": payload})
     if is_syscall:
         payload = {}
         syscall_nr = fields['a0']
@@ -600,10 +627,13 @@ def handle_l0_event(event):
         return None
 
 
-def create_writer(stream_name, path, per_cpu_streams):
+def babeltrace_create_event_class(event_name, fields):
+    event_class = btw.EventClass(event_name)
+    for name, type in fields.items():
+        event_class.add_field(type, name)
+    return event_class
 
-
-
+def babeltrace_create_writer(stream_name, path, per_cpu_streams):
     writer = btw.Writer(os.path.join(path, stream_name))
     clock = btw.Clock('monotonic')
     writer.add_clock(clock)
@@ -710,6 +740,19 @@ def create_writer(stream_name, path, per_cpu_streams):
         irq_handler_exit_event_class.add_field(int32_type, "ret")
         stream_class.add_event_class(irq_handler_exit_event_class)
         event_classes[IRQ_HANDLER_EXIT_EVENT_NAME] = irq_handler_exit_event_class
+
+        events_fields = {
+            # timer
+            HRTIMER_INIT_EVENT_NAME: {'hrtimer': uint64_hex_type, 'clockid': int32_type, 'mode': int32_type},
+            HRTIMER_START_EVENT_NAME: {'hrtimer': uint64_hex_type, 'function': uint64_hex_type, 'expires': int64_type, 'softexpires': int64_type},
+            HRTIMER_CANCEL_EVENT_NAME: {'hrtimer': uint64_hex_type},
+            HRTIMER_EXPIRE_ENTRY_EVENT_NAME: {'hrtimer': uint64_hex_type, 'function': uint64_hex_type, 'now': int64_type},
+            HRTIMER_EXPIRE_EXIT_EVENT_NAME: {'hrtimer': uint64_hex_type},
+        }
+        for event_name, fields in events_fields.items():
+            event_class = babeltrace_create_event_class(event_name, fields)
+            stream_class.add_event_class(event_class)
+            event_classes[event_name] = event_class
 
         # syscall event class
         print(os.path.basename(syscall_list_filepath))

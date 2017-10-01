@@ -1,0 +1,52 @@
+[1506799268724646368]-echo: Instrumenting echo command^M
+[1506799268766071465]-init: populating device nodes^M
+  * Mounting /proc                           [1506799268771787555]-echo: [OK]^M
+  * Mounting /sys                            [1506799268776904685]-echo: [OK]^M
+  * Mounting /dev                            [1506799268781980191]-echo: [OK]^M
+  * Mounting /run                            [1506799268798444015]-echo: [OK]^M
+  * Running udevd                            [    2.812698] udevd[1317]: starting version 182^M
+[1506799268815178544]-echo: [OK]^M
+  * Running udevadm add subsystem            [    2.833885] Switched to clocksource tsc^M
+[1506799268857253781]-echo: [OK]^M
+  * Running udevadm add device               [1506799268909873224]-echo: [OK]^M
+  * Running udevadm settle                   [1506799269057457492]-echo: [OK]^M
+[1506799269064072431]-init: boot initialization^M
+  * Setting up simulation environment        [1506799269176283824]-echo: mount sim device: [1506799269173035743]-echo: /dev/hdb^M
+BusyBox v1.19.4 (2016-12-14 21:50:29 IST) multi-call binary.^M
+^M
+Usage: mount [OPTIONS] [-o OPTS] DEVICE NODE^M
+^M
+Mount a filesystem. Filesystem autodetection requires /proc.^M
+^M
+        -a              Mount all filesystems in fstab^M
+        -f              Dry run^M
+        -r              Read-only mount^M
+        -w              Read-write mount (default)^M
+        -t FSTYPE       Filesystem type^M
+        -O OPT          Mount only filesystems with option OPT (-a only)^M
+-o OPT:^M
+        loop            Ignored (loop devices are autodetected)^M
+        [a]sync         Writes are [a]synchronous^M
+        [no]atime       Disable/enable updates to inode access times^M
+        [no]diratime    Disable/enable atime updates to directories^M
+        [no]relatime    Disable/enable atime updates relative to modification time^M
+        [no]dev         (Dis)allow use of special device files^M
+        [no]exec        (Dis)allow use of executable files^M
+        [no]suid        (Dis)allow set-user-id-root programs^M
+        [r]shared       Convert [recursively] to a shared subtree^M
+        [r]slave        Convert [recursively] to a slave subtree^M
+        [r]private      Convert [recursively] to a private subtree^M
+        [un]bindable    Make mount point [un]able to be bind mounted^M
+        [r]bind         Bind a file or directory [recursively] to another location^M
+        move            Relocate an existing mount point^M
+        remount         Remount a mounted filesystem, changing flags^M
+        ro/rw           Same as -r/-w^M
+^M
+There are filesystem-specific -o flags.^M
+^M
+[1506799269187802907]-echo: Did not find /sim/context.txt, invalid simulation^M
+[    3.195708] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000ff00^M
+[    3.195708] ^M
+[    3.196347] CPU: 1 PID: 1 Comm: init Not tainted 4.1.32 #21^M
+[    3.196347] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011^M
+[    3.196347]  00000086 00000086 f3e3ff28 c07f1175 c0ac3
