@@ -6,11 +6,10 @@ import babeltrace.reader
 import multiprocessing
 
 syscall_list_filepath = "/home/abder/utils/hypertracing/script/syscall_32.tbl"
-HELP = "Usage: python babeltrace_json.py path/to/directory -o <outputfile>"
+HELP = "Usage: python FILE.py path/to/directory -o <outputfile>"
 COMM_LENGTH = 16
 KERNEL_MODE = "kernel"
 USER_MODE = "ust"
-CATEGORY = "LTTng"
 CONFIG_ARCH_HYPERCALL_NR = 0
 BOOTLEVEL_HYPERCALL_NR = 3000
 USERSPACE_HYPERCALL_NR = 2000
@@ -102,6 +101,12 @@ event_types_map = {
     SOFTIRQ_EXIT_HYPERCALL_NR: SOFTIRQ_EXIT_EVENT_NAME,
     IRQ_HANDLER_ENTRY_HYPERCALL_NR: IRQ_HANDLER_ENTRY_EVENT_NAME,
     IRQ_HANDLER_EXIT_HYPERCALL_NR: IRQ_HANDLER_EXIT_EVENT_NAME,
+    HRTIMER_INIT_HYPERCALL_NR: HRTIMER_INIT_EVENT_NAME,
+    HRTIMER_START_HYPERCALL_NR: HRTIMER_START_EVENT_NAME,
+    HRTIMER_CANCEL_HYPERCALL_NR: HRTIMER_CANCEL_EVENT_NAME,
+    HRTIMER_EXPIRE_ENTRY_HYPERCALL_NR: HRTIMER_EXPIRE_ENTRY_EVENT_NAME,
+    HRTIMER_EXPIRE_EXIT_HYPERCALL_NR: HRTIMER_EXPIRE_EXIT_EVENT_NAME,
+
 }
 
 
@@ -425,7 +430,8 @@ def handle_l1_event(event):
                 'label': previous_bootlevel['label'],
                 'category': previous_bootlevel['label'].replace('_sync',''),
                 'start': previous_bootlevel['timestamp'],
-                'end': timestamp-500
+                'end': timestamp-500,
+                'color': 0
             }})
 
         if label == 'late_sync':
@@ -433,7 +439,8 @@ def handle_l1_event(event):
                 'label': label,
                 'category': label.replace('_sync', ''),
                 'start': timestamp,
-                'end': timestamp + 100000
+                'end': timestamp + 100000,
+                'color': 0
             }})
         previous_bootlevel = {'label':label, 'timestamp':timestamp}
 
@@ -486,7 +493,10 @@ def handle_l1_event(event):
     if is_irq_handler_exit:
         events.append({"type": event_types_map[nr], "payload": {'irq': fields['a0'], 'ret': fields['a1']}})
     if is_hrtimer:
-        payload = { 'hrtimer': fields['a0'] }
+        payload = {'hrtimer': fields['a0']}
+        if nr == HRTIMER_INIT_HYPERCALL_NR:
+            payload['clockid'] = fields['a1']
+            payload['mode'] = fields['a2']
         if nr == HRTIMER_START_HYPERCALL_NR:
             payload['function'] = fields['a1']
             payload['expires'] = fields['a2']
@@ -654,105 +664,43 @@ def babeltrace_create_writer(stream_name, path, per_cpu_streams):
 
     event_classes = {}
     if KERNEL_MODE in stream_name:
-        # Sched switch
-        sched_switch_event_class = btw.EventClass(SCHED_SWITCH_EVENT_NAME)
-        sched_switch_event_class.add_field(array_type, "prev_comm")
-        sched_switch_event_class.add_field(int32_type, "prev_tid")
-        sched_switch_event_class.add_field(int32_type, "prev_prio")
-        sched_switch_event_class.add_field(int64_type, "prev_state")
-        sched_switch_event_class.add_field(array_type, "next_comm")
-        sched_switch_event_class.add_field(int32_type, "next_tid")
-        sched_switch_event_class.add_field(int32_type, "next_prio")
-        stream_class.add_event_class(sched_switch_event_class)
-        event_classes[SCHED_SWITCH_EVENT_NAME] = sched_switch_event_class
-        # sched waking
-        sched_waking_event_class = btw.EventClass(SCHED_WAKING_EVENT_NAME)
-        sched_waking_event_class.add_field(int32_type, "tid")
-        sched_waking_event_class.add_field(int32_type, "prio")
-        sched_waking_event_class.add_field(int32_type, "target_cpu")
-        sched_waking_event_class.add_field(array_type, "comm")
-        stream_class.add_event_class(sched_waking_event_class)
-        event_classes[SCHED_WAKING_EVENT_NAME] = sched_waking_event_class
-        # sched wakeup
-        sched_wakeup_event_class = btw.EventClass(SCHED_WAKEUP_EVENT_NAME)
-        sched_wakeup_event_class.add_field(int32_type, "tid")
-        sched_wakeup_event_class.add_field(int32_type, "prio")
-        sched_wakeup_event_class.add_field(int32_type, "target_cpu")
-        sched_wakeup_event_class.add_field(array_type, "comm")
-        stream_class.add_event_class(sched_wakeup_event_class)
-        event_classes[SCHED_WAKEUP_EVENT_NAME] = sched_wakeup_event_class
-        # sched wakeup_new
-        sched_wakeup_new_event_class = btw.EventClass(SCHED_WAKEUP_NEW_EVENT_NAME)
-        sched_wakeup_new_event_class.add_field(int32_type, "tid")
-        sched_wakeup_new_event_class.add_field(int32_type, "prio")
-        sched_wakeup_new_event_class.add_field(int32_type, "target_cpu")
-        sched_wakeup_new_event_class.add_field(array_type, "comm")
-        stream_class.add_event_class(sched_wakeup_new_event_class)
-        event_classes[SCHED_WAKEUP_NEW_EVENT_NAME] = sched_wakeup_new_event_class
-        # sched process fork
-        sched_process_fork_event_class = btw.EventClass(SCHED_PROCESS_FORK_EVENT_NAME)
-        sched_process_fork_event_class.add_field(array_type, "parent_comm")
-        sched_process_fork_event_class.add_field(int32_type, "parent_tid")
-        sched_process_fork_event_class.add_field(int32_type, "parent_pid")
-        sched_process_fork_event_class.add_field(array_type, "child_comm")
-        sched_process_fork_event_class.add_field(int32_type, "child_tid")
-        sched_process_fork_event_class.add_field(int32_type, "child_pid")
-        stream_class.add_event_class(sched_process_fork_event_class)
-        event_classes[SCHED_PROCESS_FORK_EVENT_NAME] = sched_process_fork_event_class
-        # sched process exit
-        sched_process_exit_event_class = btw.EventClass(SCHED_PROCESS_EXIT_EVENT_NAME)
-        sched_process_exit_event_class.add_field(int32_type, "tid")
-        sched_process_exit_event_class.add_field(int32_type, "prio")
-        sched_process_exit_event_class.add_field(array_type, "comm")
-        stream_class.add_event_class(sched_process_exit_event_class)
-        event_classes[SCHED_PROCESS_EXIT_EVENT_NAME] = sched_process_exit_event_class
-        # sched process free
-        sched_process_free_event_class = btw.EventClass(SCHED_PROCESS_FREE_EVENT_NAME)
-        sched_process_free_event_class.add_field(int32_type, "tid")
-        sched_process_free_event_class.add_field(int32_type, "prio")
-        sched_process_free_event_class.add_field(array_type, "comm")
-        stream_class.add_event_class(sched_process_free_event_class)
-        event_classes[SCHED_PROCESS_FREE_EVENT_NAME] = sched_process_free_event_class
-        # softirq raise
-        softirq_raise_event_class = btw.EventClass(SOFTIRQ_RAISE_EVENT_NAME)
-        softirq_raise_event_class.add_field(uint32_type, "vec")
-        stream_class.add_event_class(softirq_raise_event_class)
-        event_classes[SOFTIRQ_RAISE_EVENT_NAME] = softirq_raise_event_class
-        # softirq entry
-        softirq_entry_event_class = btw.EventClass(SOFTIRQ_ENTRY_EVENT_NAME)
-        softirq_entry_event_class.add_field(uint32_type, "vec")
-        stream_class.add_event_class(softirq_entry_event_class)
-        event_classes[SOFTIRQ_ENTRY_EVENT_NAME] = softirq_entry_event_class
-        # softirq exit
-        softirq_exit_event_class = btw.EventClass(SOFTIRQ_EXIT_EVENT_NAME)
-        softirq_exit_event_class.add_field(uint32_type, "vec")
-        stream_class.add_event_class(softirq_exit_event_class)
-        event_classes[SOFTIRQ_EXIT_EVENT_NAME] = softirq_exit_event_class
-        # irq handler entry
-        irq_handler_entry_event_class = btw.EventClass(IRQ_HANDLER_ENTRY_EVENT_NAME)
-        irq_handler_entry_event_class.add_field(int32_type, "irq")
-        irq_handler_entry_event_class.add_field(string_type, "name")
-        stream_class.add_event_class(irq_handler_entry_event_class)
-        event_classes[IRQ_HANDLER_ENTRY_EVENT_NAME] = irq_handler_entry_event_class
-        # irq handler exit
-        irq_handler_exit_event_class = btw.EventClass(IRQ_HANDLER_EXIT_EVENT_NAME)
-        irq_handler_exit_event_class.add_field(int32_type, "irq")
-        irq_handler_exit_event_class.add_field(int32_type, "ret")
-        stream_class.add_event_class(irq_handler_exit_event_class)
-        event_classes[IRQ_HANDLER_EXIT_EVENT_NAME] = irq_handler_exit_event_class
 
         events_fields = {
+            # marker
+            MARKER_EVENT_NAME: {'start':int64_type, 'end':int64_type, 'category':string_type, 'label':string_type, 'color':uint32_type},
+            # sched
+            SCHED_SWITCH_EVENT_NAME: {'prev_tid':int32_type, 'prev_prio':int32_type, 'prev_state':int32_type,
+                                      'prev_comm':array_type, 'next_tid': int32_type, 'next_prio': int32_type,
+                                      'next_comm':array_type},
+            SCHED_WAKEUP_EVENT_NAME: {'tid':int32_type, 'prio':int32_type, 'comm':array_type, 'target_cpu':int32_type},
+            SCHED_WAKEUP_NEW_EVENT_NAME: {'tid':int32_type, 'prio':int32_type, 'comm':array_type, 'target_cpu':int32_type},
+            SCHED_WAKING_EVENT_NAME: {'tid':int32_type, 'prio':int32_type, 'comm':array_type, 'target_cpu':int32_type},
+            SCHED_PROCESS_EXIT_EVENT_NAME: {'tid':int32_type, 'prio':int32_type, 'comm':array_type},
+            SCHED_PROCESS_FREE_EVENT_NAME: {'tid':int32_type, 'prio':int32_type, 'comm':array_type},
+            SCHED_PROCESS_FORK_EVENT_NAME: {'parent_tid': int32_type, 'parent_pid': int32_type, 'parent_comm':array_type,
+                                            'child_tid': int32_type, 'child_pid': int32_type, 'child_comm': array_type},
+            # irqs
+            SOFTIRQ_RAISE_EVENT_NAME: {'vec':uint32_type},
+            SOFTIRQ_ENTRY_EVENT_NAME: {'vec':uint32_type},
+            SOFTIRQ_EXIT_EVENT_NAME: {'vec':uint32_type},
+            IRQ_HANDLER_ENTRY_EVENT_NAME: {'irq':int32_type, 'name':string_type},
+            IRQ_HANDLER_EXIT_EVENT_NAME: {'irq':int32_type, 'ret':int32_type},
             # timer
             HRTIMER_INIT_EVENT_NAME: {'hrtimer': uint64_hex_type, 'clockid': int32_type, 'mode': int32_type},
-            HRTIMER_START_EVENT_NAME: {'hrtimer': uint64_hex_type, 'function': uint64_hex_type, 'expires': int64_type, 'softexpires': int64_type},
+            HRTIMER_START_EVENT_NAME: {'hrtimer': uint64_hex_type, 'function': uint64_hex_type, 'expires': int64_type,'softexpires': int64_type},
             HRTIMER_CANCEL_EVENT_NAME: {'hrtimer': uint64_hex_type},
             HRTIMER_EXPIRE_ENTRY_EVENT_NAME: {'hrtimer': uint64_hex_type, 'function': uint64_hex_type, 'now': int64_type},
             HRTIMER_EXPIRE_EXIT_EVENT_NAME: {'hrtimer': uint64_hex_type},
         }
         for event_name, fields in events_fields.items():
-            event_class = babeltrace_create_event_class(event_name, fields)
-            stream_class.add_event_class(event_class)
-            event_classes[event_name] = event_class
+            try:
+                if event_name in event_classes:
+                    raise Exception("%s already exist in event_classes" % event_name)
+                event_class = babeltrace_create_event_class(event_name, fields)
+                stream_class.add_event_class(event_class)
+                event_classes[event_name] = event_class
+            except Exception as ex:
+                print(event_name, ex)
 
         # syscall event class
         print(os.path.basename(syscall_list_filepath))
@@ -766,14 +714,6 @@ def babeltrace_create_writer(stream_name, path, per_cpu_streams):
             event_classes["syscall_entry_%s" % name] = sys_entry_event_class
             event_classes["syscall_exit_%s" % name] = sys_exit_event_class
 
-        # marker events
-        marker_event_class = btw.EventClass(MARKER_EVENT_NAME)
-        marker_event_class.add_field(int64_type, "start")
-        marker_event_class.add_field(int64_type, "end")
-        marker_event_class.add_field(string_type, "category")
-        marker_event_class.add_field(string_type, "label")
-        stream_class.add_event_class(marker_event_class)
-        event_classes[MARKER_EVENT_NAME] = marker_event_class
     else:
         # add this field declaration to event class
         func_entry_event_class = btw.EventClass(FUNC_ENTRY_EVENT_NAME)

@@ -18,7 +18,7 @@ per_cpu_streams = {}
 
 
 def main(argv):
-    path = "/home/abder/lttng-traces/oneos-boot-vm7_ps1/"
+    path = "/home/abder/lttng-traces/oneos-bootup"
     output = None
     try:
         if len(argv) > 0:
@@ -56,14 +56,11 @@ def main(argv):
     kernel_symbols_l1 = Symbols(kernel_symbols_l1_path)
     process_symbols_l1 = Process(process_symbols_l1_path)
     hash_table = HashTable(kernel_symbols_path)
-    process_list = Process("./script/process.txt")
 
     traces = babeltrace.reader.TraceCollection()
     trace_handle = traces.add_traces_recursive(path, "ctf")
     if trace_handle is None:
         raise IOError("Error adding trace")
-
-    print("--- Converting traces ---")
 
     # temporary directory holding the CTF trace
     trace_path = "%s-converted" % (path)
@@ -73,11 +70,8 @@ def main(argv):
 
     kernel_event_classes = {}
     ust_event_classes = {}
-
-    kernel_event_classes['guest'] = create_writer("guest-kernel", trace_path, per_cpu_streams)
+    kernel_event_classes['guest'] = babeltrace_create_writer("guest-kernel", trace_path, per_cpu_streams)
     # ust_event_classes['guest'] = create_writer("guest-ust", trace_path)
-    # kernel_event_classes['host'] = create_writer("host-kernel", trace_path)
-    # ust_event_classes['host'] = create_writer("host-ust", trace_path)
 
     count = 0
     for event in traces.events:
@@ -160,8 +154,8 @@ def main(argv):
                 except Exception as ex:
                     print(event.timestamp, myevent, ex)
 
-        if count > 100000:
-            break
+#        if count > 100000:
+#            break
 
     # flush the streams
     for domain, streams in per_cpu_streams.items():
