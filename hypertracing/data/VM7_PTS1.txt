@@ -1,0 +1,1441 @@
+Connected to domain VM7_PTS1
+Escape character is ^]
+[    0.000000] Linux version 4.1.32 (abenbach@664bc223f161) (gcc version 5.3.0 (GCC) ) #21 SMP Fri Sep 29 17:55:05 EDT 2017
+[    0.000000] e820: BIOS-provided physical RAM map:
+[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
+[    0.000000] BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000000100000-0x000000007fffdfff] usable
+[    0.000000] BIOS-e820: [mem 0x000000007fffe000-0x000000007fffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff] reserved
+[    0.000000] Notice: NX (Execute Disable) protection cannot be enabled: non-PAE kernel!
+[    0.000000] SMBIOS 2.4 present.
+[    0.000000] e820: last_pfn = 0x7fffe max_arch_pfn = 0x100000
+[    0.000000] PAT configuration [0-7]: WB  WC  UC- UC  WB  WC  UC- UC
+[    0.000000] found SMP MP-table at [mem 0x000f2000-0x000f200f] mapped at [c00f2000]
+[    0.000000] init_memory_mapping: [mem 0x00000000-0x000fffff]
+[    0.000000] init_memory_mapping: [mem 0x37000000-0x373fffff]
+[    0.000000] init_memory_mapping: [mem 0x00100000-0x36ffffff]
+[    0.000000] init_memory_mapping: [mem 0x37400000-0x377fdfff]
+[    0.000000] RAMDISK: [mem 0x7dc45000-0x7fffcfff]
+[    0.000000] Allocated new RAMDISK: [mem 0x35446000-0x377fd7d8]
+[    0.000000] Move RAMDISK from [mem 0x7dc45000-0x7fffc7d8] to [mem 0x35446000-0x377fd7d8]
+[    0.000000] ACPI: Early table checksum verification disabled
+[    0.000000] ACPI: RSDP 0x00000000000F1E30 000014 (v00 BOCHS )
+[    0.000000] ACPI: RSDT 0x000000007FFFFB04 000030 (v01 BOCHS  BXPCRSDT 00000001 BXPC 00000001)
+[    0.000000] ACPI: FACP 0x000000007FFFF177 000074 (v01 BOCHS  BXPCFACP 00000001 BXPC 00000001)
+[    0.000000] ACPI: DSDT 0x000000007FFFE040 001137 (v01 BXPC   BXDSDT   00000001 INTL 20150619)
+[    0.000000] ACPI: FACS 0x000000007FFFE000 000040
+[    0.000000] ACPI: SSDT 0x000000007FFFF1EB 000899 (v01 BOCHS  BXPCSSDT 00000001 BXPC 00000001)
+[    0.000000] ACPI: APIC 0x000000007FFFFA84 000080 (v01 BOCHS  BXPCAPIC 00000001 BXPC 00000001)
+[    0.000000] 1160MB HIGHMEM available.
+[    0.000000] 887MB LOWMEM available.
+[    0.000000]   mapped low ram: 0 - 377fe000
+[    0.000000]   low ram: 0 - 377fe000
+[    0.000000] Zone ranges:
+[    0.000000]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+[    0.000000]   Normal   [mem 0x0000000001000000-0x00000000377fdfff]
+[    0.000000]   HighMem  [mem 0x00000000377fe000-0x000000007fffdfff]
+[    0.000000] Movable zone start for each node
+[    0.000000] Early memory node ranges
+[    0.000000]   node   0: [mem 0x0000000000001000-0x000000000009efff]
+[    0.000000]   node   0: [mem 0x0000000000100000-0x000000007fffdfff]
+[    0.000000] Initmem setup node 0 [mem 0x0000000000001000-0x000000007fffdfff]
+[    0.000000] Using APIC driver default
+[    0.000000] ACPI: PM-Timer IO Port: 0x608
+[    0.000000] ACPI: LAPIC_NMI (acpi_id[0xff] dfl dfl lint[0x1])
+[    0.000000] IOAPIC[0]: apic_id 0, version 17, address 0xfec00000, GSI 0-23
+[    0.000000] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+[    0.000000] ACPI: INT_SRC_OVR (bus 0 bus_irq 5 global_irq 5 high level)
+[    0.000000] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 high level)
+[    0.000000] ACPI: INT_SRC_OVR (bus 0 bus_irq 10 global_irq 10 high level)
+[    0.000000] ACPI: INT_SRC_OVR (bus 0 bus_irq 11 global_irq 11 high level)
+[    0.000000] Using ACPI (MADT) for SMP configuration information
+[    0.000000] smpboot: Allowing 2 CPUs, 0 hotplug CPUs
+[    0.000000] e820: [mem 0x80000000-0xfeffbfff] available for PCI devices
+[    0.000000] clocksource refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1910969940391419 ns
+[    0.000000] setup_percpu: NR_CPUS:8 nr_cpumask_bits:8 nr_cpu_ids:2 nr_node_ids:1
+[    0.000000] PERCPU: Embedded 19 pages/cpu @f440b000 s46424 r0 d31400 u77824
+[    0.000000] Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 522412
+[    0.000000] Kernel command line: root=/dev/hdd rw console=ttyS0,115200 panic=10 ftrace=hypertrace hyperbootlevel=1 initrd=/initramfs-pts14-i486-sim.cpio.gz BOOT_IMAGE=/bzImage
+[    0.000000] PID hash table entries: 4096 (order: 2, 16384 bytes)
+[    0.000000] Dentry cache hash table entries: 131072 (order: 7, 524288 bytes)
+[    0.000000] Inode-cache hash table entries: 65536 (order: 6, 262144 bytes)
+[    0.000000] Initializing CPU#0
+[    0.000000] xsave: enabled xstate_bv 0x7, cntxt size 0x340 using standard form
+[    0.000000] Initializing HighMem for node 0 (000377fe:0007fffe)
+[    0.000000] Initializing Movable for node 0 (00000000:00000000)
+[    0.000000] Memory: 2030800K/2096752K available (7138K kernel code, 629K rwdata, 2744K rodata, 668K init, 632K bss, 65952K reserved, 0K cma-reserved, 1187840K highmem)
+[    0.000000] virtual kernel memory layout:
+[    0.000000]     fixmap  : 0xfff17000 - 0xfffff000   ( 928 kB)
+[    0.000000]     pkmap   : 0xff800000 - 0xffc00000   (4096 kB)
+[    0.000000]     vmalloc : 0xf7ffe000 - 0xff7fe000   ( 120 MB)
+[    0.000000]     lowmem  : 0xc0000000 - 0xf77fe000   ( 887 MB)
+[    0.000000]       .init : 0xc0b48000 - 0xc0bef000   ( 668 kB)
+[    0.000000]       .data : 0xc07f8eb2 - 0xc0b46780   (3382 kB)
+[    0.000000]       .text : 0xc0100000 - 0xc07f8eb2   (7139 kB)
+[    0.000000] Checking if this processor honours the WP bit even in supervisor mode...Ok.
+[    0.000000] Hierarchical RCU implementation.
+[    0.000000] 	Additional per-CPU info printed with stalls.
+[    0.000000] 	RCU restricting CPUs from NR_CPUS=8 to nr_cpu_ids=2.
+[    0.000000] RCU: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=2
+[    0.000000] NR_IRQS:2304 nr_irqs:440 16
+[    0.000000] Console: colour VGA+ 80x25
+[    0.000000] console [ttyS0] enabled
+[    0.000000] tsc: Fast TSC calibration using PIT
+[    0.000000] tsc: Detected 3691.727 MHz processor
+[    0.002001] Calibrating delay loop (skipped), value calculated using timer frequency.. 7383.45 BogoMIPS (lpj=3691727)
+[    0.002458] pid_max: default: 32768 minimum: 301
+[    0.003037] ACPI: Core revision 20150410
+[    0.004965] ACPI: All ACPI Tables successfully acquired
+[    0.005228] Mount-cache hash table entries: 2048 (order: 1, 8192 bytes)
+[    0.005516] Mountpoint-cache hash table entries: 2048 (order: 1, 8192 bytes)
+[    0.006184] mce: CPU supports 10 MCE banks
+[    0.006437] Last level iTLB entries: 4KB 0, 2MB 0, 4MB 0
+[    0.006665] Last level dTLB entries: 4KB 0, 2MB 0, 4MB 0, 1GB 0
+[    0.007510] Freeing SMP alternatives memory: 28K (c0bef000 - c0bf6000)
+[    0.007802] ftrace: allocating 28382 entries in 56 pages
+[    0.012088] Enabling APIC mode:  Flat.  Using 1 I/O APICs
+[    0.013731] ..TIMER: vector=0x30 apic1=0 pin1=2 apic2=-1 pin2=-1
+[    0.024196] smpboot: CPU0: Intel Core Processor (Haswell) (fam: 06, model: 3c, stepping: 01)
+[    0.024703] Performance Events: unsupported p6 CPU model 60 no PMU driver, software events only.
+[    0.025206] Starting tracer 'hypertrace'
+[    0.026193] x86: Booting SMP configuration:
+[    0.026425] .... node  #0, CPUs:      #1
+[    0.003000] Initializing CPU#1
+[    0.098040] x86: Booted up 1 node, 2 CPUs
+[    0.098257] smpboot: Total of 2 processors activated (14795.12 BogoMIPS)
+[    0.099013] devtmpfs: initialized
+[    0.099793] clocksource jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1911260446275000 ns
+[    0.100273] NET: Registered protocol family 16
+[    0.106015] cpuidle: using governor ladder
+[    0.112023] cpuidle: using governor menu
+[    0.112410] ACPI: bus type PCI registered
+[    0.112745] PCI: PCI BIOS revision 2.10 entry at 0xfd482, last bus=0
+[    0.113004] PCI: Using configuration type 1 for base access
+[    0.127394] ACPI: Added _OSI(Module Device)
+[    0.127603] ACPI: Added _OSI(Processor Device)
+[    0.127791] ACPI: Added _OSI(3.0 _SCP Extensions)
+[    0.127989] ACPI: Added _OSI(Processor Aggregator Device)
+[    0.130146] ACPI: Interpreter enabled
+[    0.130318] ACPI Exception: AE_NOT_FOUND, While evaluating Sleep State [\_S1_] (20150410/hwxface-580)
+[    0.130714] ACPI Exception: AE_NOT_FOUND, While evaluating Sleep State [\_S2_] (20150410/hwxface-580)
+[    0.131101] ACPI Exception: AE_NOT_FOUND, While evaluating Sleep State [\_S3_] (20150410/hwxface-580)
+[    0.131504] ACPI: (supports S0 S5)
+[    0.131649] ACPI: Using IOAPIC for interrupt routing
+[    0.131898] PCI: Using host bridge windows from ACPI; if necessary, use "pci=nocrs" and report a bug
+[    0.136714] ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+[    0.137010] acpi PNP0A03:00: _OSC: OS supports [Segments MSI]
+[    0.137305] acpi PNP0A03:00: _OSC failed (AE_NOT_FOUND); disabling ASPM
+[    0.137693] acpi PNP0A03:00: fail to add MMCONFIG information, can't access extended PCI configuration space under this bridge.
+[    0.138079] PCI host bridge to bus 0000:00
+[    0.138258] pci_bus 0000:00: root bus resource [bus 00-ff]
+[    0.138487] pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+[    0.138775] pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+[    0.139008] pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
+[    0.139318] pci_bus 0000:00: root bus resource [mem 0x80000000-0xfebfffff window]
+[    0.147019] pci 0000:00:01.1: legacy IDE quirk: reg 0x10: [io  0x01f0-0x01f7]
+[    0.147393] pci 0000:00:01.1: legacy IDE quirk: reg 0x14: [io  0x03f6]
+[    0.147746] pci 0000:00:01.1: legacy IDE quirk: reg 0x18: [io  0x0170-0x0177]
+[    0.148004] pci 0000:00:01.1: legacy IDE quirk: reg 0x1c: [io  0x0376]
+[    0.148674] pci 0000:00:01.3: quirk: [io  0x0600-0x063f] claimed by PIIX4 ACPI
+[    0.149014] pci 0000:00:01.3: quirk: [io  0x0700-0x070f] claimed by PIIX4 SMB
+[    0.261513] ACPI: PCI Interrupt Link [LNKA] (IRQs 5 *10 11)
+[    0.261875] ACPI: PCI Interrupt Link [LNKB] (IRQs 5 *10 11)
+[    0.262166] ACPI: PCI Interrupt Link [LNKC] (IRQs 5 10 *11)
+[    0.262508] ACPI: PCI Interrupt Link [LNKD] (IRQs 5 10 *11)
+[    0.262809] ACPI: PCI Interrupt Link [LNKS] (IRQs *9)
+[    0.263357] ACPI: Enabled 16 GPEs in block 00 to 0F
+[    0.263914] vgaarb: setting as boot device: PCI:0000:00:02.0
+[    0.263914] vgaarb: device added: PCI:0000:00:02.0,decodes=io+mem,owns=io+mem,locks=none
+[    0.264008] vgaarb: loaded
+[    0.264125] vgaarb: bridge control possible 0000:00:02.0
+[    0.264608] SCSI subsystem initialized
+[    0.265149] ACPI: bus type USB registered
+[    0.265411] usbcore: registered new interface driver usbfs
+[    0.265761] usbcore: registered new interface driver hub
+[    0.266019] usbcore: registered new device driver usb
+[    0.266337] pps_core: LinuxPPS API ver. 1 registered
+[    0.266552] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+[    0.266955] PTP clock support registered
+[    0.267086] PCI: Using ACPI for IRQ routing
+[    0.267765] amd_nb: Cannot enumerate AMD northbridges
+[    0.268026] Switched to clocksource refined-jiffies
+[    0.275703] pnp: PnP ACPI init
+[    0.276596] pnp: PnP ACPI: found 5 devices
+[    0.316043] clocksource acpi_pm: mask: 0xffffff max_cycles: 0xffffff, max_idle_ns: 2085701024 ns
+[    0.316494] Switched to clocksource acpi_pm
+[    0.316928] NET: Registered protocol family 2
+[    0.317029] TCP established hash table entries: 8192 (order: 3, 32768 bytes)
+[    0.317351] TCP bind hash table entries: 8192 (order: 5, 163840 bytes)
+[    0.317729] TCP: Hash tables configured (established 8192 bind 8192)
+[    0.318136] UDP hash table entries: 512 (order: 2, 24576 bytes)
+[    0.318424] UDP-Lite hash table entries: 512 (order: 2, 24576 bytes)
+[    0.318834] NET: Registered protocol family 1
+[    0.319258] RPC: Registered named UNIX socket transport module.
+[    0.319539] RPC: Registered udp transport module.
+[    0.319748] RPC: Registered tcp transport module.
+[    0.319966] RPC: Registered tcp NFSv4.1 backchannel transport module.
+[    0.320294] pci 0000:00:00.0: Limiting direct PCI/PCI transfers
+[    0.320576] pci 0000:00:01.0: PIIX3: Enabling Passive Release
+[    0.320837] pci 0000:00:01.0: Activating ISA DMA hang workarounds
+[    0.321493] ACPI: PCI Interrupt Link [LNKD] enabled at IRQ 11
+[    0.322775] ACPI: PCI Interrupt Link [LNKA] enabled at IRQ 10
+[    0.323901] ACPI: PCI Interrupt Link [LNKB] enabled at IRQ 10
+[    0.324929] ACPI: PCI Interrupt Link [LNKC] enabled at IRQ 11
+[    0.325972] Trying to unpack rootfs image as initramfs...
+[    0.887530] Freeing initrd memory: 36576K (f5446000 - f77fe000)
+[    0.888111] microcode: CPU0 sig=0x306c1, pf=0x1, revision=0x1
+[    0.888427] microcode: CPU1 sig=0x306c1, pf=0x1, revision=0x1
+[    0.888778] microcode: Microcode Update Driver: v2.00 <tigran@aivazian.fsnet.co.uk>, Peter Oruba
+[    0.889753] futex hash table entries: 512 (order: 3, 32768 bytes)
+[    0.890276] HugeTLB registered 4 MB page size, pre-allocated 0 pages
+[    0.890977] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[    0.891547] NFS: Registering the id_resolver key type
+[    0.891774] Key type id_resolver registered
+[    0.891974] Key type id_legacy registered
+[    0.892184] Installing knfsd (copyright (C) 1996 okir@monad.swb.de).
+[    0.892844] SGI XFS with security attributes, no debug enabled
+[    0.894111] bounce: pool size: 64 pages
+[    0.894310] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 252)
+[    0.894635] io scheduler noop registered
+[    0.894804] io scheduler deadline registered
+[    0.895035] io scheduler cfq registered (default)
+[    0.896865] pci_hotplug: PCI Hot Plug PCI Core version: 0.5
+[    0.923411] Serial: 8250/16550 driver, 4 ports, IRQ sharing disabled
+[    0.944654] 00:04: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
+[    0.946116] Linux agpgart interface v0.103
+[    0.949402] brd: module loaded
+[    0.950984] loop: module loaded
+[    0.951159] Uniform Multi-Platform E-IDE driver
+[    0.951402] piix 0000:00:01.1: IDE controller (0x8086:0x7010 rev 0x00)
+[    0.951716] piix 0000:00:01.1: not 100% native mode: will probe irqs later
+[    0.952400]     ide0: BM-DMA at 0xc3c0-0xc3c7
+[    0.952596]     ide1: BM-DMA at 0xc3c8-0xc3cf
+[    0.957859] FDC 0 is a S82078B
+[    1.216108] hda: QEMU HARDDISK, ATA DISK drive
+[    1.522123] hdb: QEMU HARDDISK, ATA DISK drive
+[    1.522637] hda: MWDMA2 mode selected
+[    1.523044] hdb: MWDMA2 mode selected
+[    1.889538] tsc: Refined TSC clocksource calibration: 3691.471 MHz
+[    1.889865] clocksource tsc: mask: 0xffffffffffffffff max_cycles: 0x6a6bb83b8dd, max_idle_ns: 881590639874 ns
+[    2.655090] hdd: QEMU HARDDISK, ATA DISK drive
+[    2.655444] hdd: MWDMA2 mode selected
+[    2.655735] ide0 at 0x1f0-0x1f7,0x3f6 on irq 14
+[    2.655997] ide1 at 0x170-0x177,0x376 on irq 15
+[    2.656505] ide_generic: please use "probe_mask=0x3f" module parameter for probing all legacy ISA IDE ports
+[    2.656974] ide-gd driver 1.18
+[    2.657169] hda: max request size: 1024KiB
+[    2.657347] hda: 131072 sectors (67 MB) w/256KiB Cache, CHS=130/255/63
+[    2.663113] hda: cache flushes supported
+[    2.663713]  hda: hda1
+[    2.664826] hdb: max request size: 1024KiB
+[    2.665037] hdb: 32768 sectors (16 MB) w/256KiB Cache, CHS=32/255/63
+[    2.672098] hdb: cache flushes supported
+[    2.672851] hdd: max request size: 1024KiB
+[    2.673059] hdd: 8388608 sectors (4294 MB) w/256KiB Cache, CHS=8322/255/63
+[    2.686125] hdd: cache flushes supported
+[    2.686938] ide-cd driver 5.00
+[    2.687245] Loading iSCSI transport class v2.0-870.
+[    2.687793] 3ware Storage Controller device driver for Linux v1.26.02.003.
+[    2.688615] e100: Intel(R) PRO/100 Network Driver, 3.5.24-k2-NAPI
+[    2.688899] e100: Copyright(c) 1999-2006 Intel Corporation
+[    2.689188] e1000: Intel(R) PRO/1000 Network Driver - version 7.3.21-k8-NAPI
+[    2.689489] e1000: Copyright (c) 1999-2006 Intel Corporation.
+[    2.689770] sky2: driver version 1.30
+[    2.690025] 8139cp: 8139cp: 10/100 PCI Ethernet driver v1.3 (Mar 22, 2004)
+[    2.691613] 8139cp 0000:00:03.0 eth0: RTL-8139C+ at 0xf80c0000, 00:16:3e:07:01:01, IRQ 11
+[    2.693598] 8139cp 0000:00:04.0 eth1: RTL-8139C+ at 0xf80c2000, 00:16:4e:07:01:01, IRQ 11
+[    2.695639] 8139cp 0000:00:05.0 eth2: RTL-8139C+ at 0xf80c4000, 0a:16:5e:07:aa:01, IRQ 10
+[    2.696737] PPP generic driver version 2.4.2
+[    2.697057] Fusion MPT base driver 3.04.20
+[    2.697236] Copyright (c) 1999-2008 LSI Corporation
+[    2.697458] Fusion MPT SPI Host driver 3.04.20
+[    2.697755] ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
+[    2.698075] ehci-pci: EHCI PCI platform driver
+[    2.699109] ehci-pci 0000:00:08.7: EHCI Host Controller
+[    2.699392] ehci-pci 0000:00:08.7: new USB bus registered, assigned bus number 1
+[    2.699801] ehci-pci 0000:00:08.7: irq 11, io mem 0xfc0da000
+[    2.706064] ehci-pci 0000:00:08.7: USB 2.0 started, EHCI 1.00
+[    2.706555] hub 1-0:1.0: USB hub found
+[    2.706762] hub 1-0:1.0: 6 ports detected
+[    2.707194] ohci_hcd: USB 1.1 'Open' Host Controller (OHCI) Driver
+[    2.707468] ohci-pci: OHCI PCI platform driver
+[    2.707678] uhci_hcd: USB Universal Host Controller Interface driver
+[    2.711444] uhci_hcd 0000:00:08.0: UHCI Host Controller
+[    2.711740] uhci_hcd 0000:00:08.0: new USB bus registered, assigned bus number 2
+[    2.712124] uhci_hcd 0000:00:08.0: irq 11, io base 0x0000c340
+[    2.712624] hub 2-0:1.0: USB hub found
+[    2.712804] hub 2-0:1.0: 2 ports detected
+[    2.714175] uhci_hcd 0000:00:08.1: UHCI Host Controller
+[    2.714544] uhci_hcd 0000:00:08.1: new USB bus registered, assigned bus number 3
+[    2.714952] uhci_hcd 0000:00:08.1: irq 10, io base 0x0000c360
+[    2.715489] hub 3-0:1.0: USB hub found
+[    2.715711] hub 3-0:1.0: 2 ports detected
+[    2.717323] uhci_hcd 0000:00:08.2: UHCI Host Controller
+[    2.717625] uhci_hcd 0000:00:08.2: new USB bus registered, assigned bus number 4
+[    2.717982] uhci_hcd 0000:00:08.2: irq 10, io base 0x0000c380
+[    2.718536] hub 4-0:1.0: USB hub found
+[    2.718774] hub 4-0:1.0: 2 ports detected
+[    2.719187] usbcore: registered new interface driver usb-storage
+[    2.719554] i8042: PNP: PS/2 Controller [PNP0303:KBD,PNP0f13:MOU] at 0x60,0x64 irq 1,12
+[    2.720398] serio: i8042 KBD port at 0x60,0x64 irq 1
+[    2.720615] serio: i8042 AUX port at 0x60,0x64 irq 12
+[    2.721065] mousedev: PS/2 mouse device common for all mice
+[    2.724880] input: AT Translated Set 2 keyboard as /devices/platform/i8042/serio0/input/input0
+[    2.725436] i2c /dev entries driver
+[    2.725702] Driver for 1-wire Dallas network protocol.
+[    2.726225] usbcore: registered new interface driver DS9490R
+[    2.726567] 1-Wire driver for the DS2760 battery monitor chip - (c) 2004-2005, Szabolcs Gyurko
+[    2.727197] device-mapper: ioctl: 4.31.0-ioctl (2015-3-12) initialised: dm-devel@redhat.com
+[    2.728719] usbcore: registered new interface driver usbhid
+[    2.728961] usbhid: USB HID core driver
+[    2.729161] oprofile: using timer interrupt.
+[    2.729384] nf_conntrack version 0.5.0 (16384 buckets, 65536 max)
+[    2.729960] ipip: IPv4 over IPv4 tunneling driver
+[    2.730544] gre: GRE over IPv4 demultiplexor driver
+[    2.730791] ip_gre: GRE over IPv4 tunneling driver
+[    2.731838] IPv4 over IPsec tunneling driver
+[    2.732576] ip_tables: (C) 2000-2006 Netfilter Core Team
+[    2.732855] Initializing XFRM netlink socket
+[    2.733356] NET: Registered protocol family 10
+[    2.734443] ip6_tables: (C) 2000-2006 Netfilter Core Team
+[    2.734922] sit: IPv6 over IPv4 tunneling driver
+[    2.735551] NET: Registered protocol family 17
+[    2.735819] NET: Registered protocol family 15
+[    2.736086] bridge: automatic filtering via arp/ip/ip6tables has been deprecated. Update your scripts to load br_netfilter if you need this.
+[    2.736752] 8021q: 802.1Q VLAN Support v1.8
+[    2.736955] Key type dns_resolver registered
+[    2.737606] Using IPI No-Shortcut mode
+[    2.738219] registered taskstats version 1
+[    2.738724] console [netcon0] enabled
+[    2.738887] netconsole: network logging started
+[    2.740613] Freeing unused kernel memory: 668K (c0b48000 - c0bef000)
+[1506883888779820368-init]: populating device nodes
+  * Mounting /proc                           [OK]
+  * Mounting /sys                            [OK]
+  * Mounting /dev                            [    2.792099] [1506883888790432611-echo]: [OK]
+[OK]
+  * Mounting /run                            [    2.794975] [1506883888793611507-echo]: [OK]
+[OK]
+[    2.798732] [1506883888797390758-echo]: [OK]
+  * Running udevd                            [    2.801472] [1506883888800139990-echo]:
+[    2.801873] udevd[1316]: starting version 182
+[OK]
+  * Running udevadm add subsystem            [    2.805069] [1506883888803689883-echo]: [OK]
+[OK]
+  * Running udevadm add device               [    2.831626] [1506883888829146749-echo]: [OK]
+[    2.889277] [1506883888887976014-echo]: [OK]
+[OK]
+  * Running udevadm settle                   [    2.892103] Switched to clocksource tsc
+[OK]
+[    3.013128] [1506883889011827651-echo]: [OK]
+[    3.015944] [1506883889014681956-echo]: /ciena/scripts:/ciena/bin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/tmp/bin
+[1506883889017188834-init]: boot initialization
+[    3.024717] [1506883889023417291-echo]: i486-sim
+[    3.027651] [1506883889026378296-echo]: -n i486-sim
+[    3.030972] [1506883889029583342-echo]: pts14
+[    3.034369] [1506883889032874112-echo]: PTSXC
+[    3.038463] [1506883889037174774-echo]: -n PTSXC
+[    3.041147] [1506883889039807929-echo]: pts14
+[    3.044125] [1506883889042823775-echo]: P2
+[    3.047621] [1506883889046186415-echo]: -n P2
+[    3.051232] [1506883889049602915-echo]: pts14
+[    3.055822] [1506883889054472682-echo]: -n pts14
+[    3.058320] [1506883889056974079-echo]: pots-simpts
+[    3.061233] [1506883889059911818-echo]: -n pots-simpts
+[    3.064483] [1506883889062879871-echo]: pots-simpts
+[    3.073098] [1506883889066605904-echo]: pots
+[    3.076057] [1506883889074748917-echo]: -n pots
+[    3.080393] [1506883889077620393-echo]: pots-simpts
+[    3.088432] [1506883889087130588-echo]: 0
+[    3.091353] [1506883889090071836-echo]: -n 0
+[    3.094325] [1506883889092932459-echo]: pots-simpts
+[    3.097503] [1506883889096154610-echo]: pots-simpts
+  * Setting up simulation environment        [    3.100925] [1506883889099576669-echo]: -n simpts
+[    3.119113] [1506883889116469141-echo]: /dev/hdb
+mount sim device: '/dev/hdb'
+[    3.122235] [1506883889120880351-echo]: mount sim device: '/dev/hdb'
+[    3.130250] 8139cp 0000:00:03.0 eth0: link up, 100Mbps, full-duplex, lpa 0x05E1
+[    3.136637] [1506883889135148182-echo]: 172.7.1
+[    3.143859] [1506883889141099890-echo]: PTS
+[    3.149231] [1506883889147873860-echo]: 14
+[    3.154743] [1506883889153379733-echo]: Slot 1
+[    3.159849] [1506883889158533720-echo]: OME6516
+[    3.165029] [1506883889163633605-echo]: 7
+[    3.170059] [1506883889168705290-echo]: 192.170.170.15
+[    3.173609] [1506883889172176304-echo]: Slot 1
+[    3.177195] [1506883889175817899-echo]: 172.7.1
+[    3.180789] [1506883889179464262-echo]: 172.7.1
+Using default netmask: 255.255.0.0
+[    3.185172] [1506883889183791902-echo]: Using default netmask: 255.255.0.0
+PING 172.7.1.35 (172.7.1.35): 56 data bytes
+64 bytes from 172.7.1.35: seq=0 ttl=64 time=0.654 ms
+
+--- 172.7.1.35 ping statistics ---
+1 packets transmitted, 1 packets received, 0% packet loss
+round-trip min/avg/max = 0.654/0.654/0.654 ms
+[    3.193810] [1506883889192085334-echo]: 192.170.170.15
+[    3.197944] [1506883889196176349-echo]: 192.170.170.15
+[    3.203268] [1506883889201187952-echo]: 192.170.170.15
+Using the following network driver for eth2:rtl8139
+[    3.210965] [1506883889209076851-echo]: Using the following network driver for eth2:rtl8139
+ifconfig eth2 192.170.170.7 up
+[    3.214453] 8139cp 0000:00:05.0 eth2: link up, 100Mbps, full-duplex, lpa 0x05E1
+[    3.214820] [1506883889213435233-echo]: ifconfig eth2 192.170.170.7 up
+[    3.223341] [1506883889221407595-echo]: VM7
+mount -n -t nfs -o rw,vers=3,rsize=4096,wsize=4096,hard,nolock,intr 172.7.1.35:/simnfsroot/VM7 /sim/chassis
+[    3.229844] [1506883889228462658-echo]: mount -n -t nfs -o rw,vers=3,rsize=4096,wsize=4096,hard,nolock,intr 172.7.1.35:/simnfsroot/VM7 /sim/chassis
+[    3.328047] input: ImExPS/2 Generic Explorer Mouse as /devices/platform/i8042/serio1/input/input2
+[    5.251623] [1506883891249786938-echo]: 0
+==== Starting primaryship ====
+[    5.255295] [1506883891253852406-echo]: ==== Starting primaryship ====
+PRIMARY = 2
+[    5.261895] [1506883891260397714-echo]: PRIMARY = 2
+[OK]
+  * Enabling loopback IF (127.0.0.1)         [    5.292576] [1506883891290565166-echo]: [OK]
+[OK]
+  * Adding loopback route                    [    5.296934] [1506883891294837803-echo]: [OK]
+[OK]
+  * Adding localhost in /etc/hosts           [    5.300135] [1506883891297926449-echo]: [OK]
+[    5.302516] [1506883891300994391-echo]: 127.0.0.1 localhost
+[OK]
+  * Creating permanent loopback neighbour    [    5.320159] [1506883891318130917-echo]: [OK]
+[OK]
+  * Starting rpcbind daemon                  [    5.322546] [1506883891321192178-echo]: [OK]
+[OK]
+[    5.327331] [1506883891325705879-echo]: [OK]
+[    5.330687] [1506883891328917191-echo]: default
+[1506883891332376565-init]: Default Mode
+[    5.340140] [1506883891338420650-echo]: pts14
+[    5.347207] [1506883891345751788-echo]: /dev/hdd
+[    5.350878] [1506883891349482789-echo]: pts14
+[    5.355869] [1506883891354519289-echo]: /dev/hdd
+[1506883891356942078-init]: /init: partition=/dev/hdd, device=/dev/hdd
+[    5.362629] [1506883891361262105-echo]: pts14
+[1506883891363627427-init]: calling disk check || disk repair
+disk_check: partition=/dev/hdd
+  * Checking filesystem on /dev/hdd          [    5.369174] [1506883891367810544-echo]: disk_check: partition=/dev/hdd
+[OK]
+  * Mounting /dev/hdd on /mnt                [    5.380388] [1506883891378951189-echo]: [OK]
+[OK]
+[    5.385475] [1506883891384201617-echo]: [OK]
+[    5.388067] [1506883891386487901-echo]: pts14
+root: Starting syslog
+Error resolving hostname; host='CTXP'
+Initiating connection failed, reconnecting; time_reopen='10'
+[1506883891487656914-bootexec]: Starting signal catcher
+[1506883891492117209-bootexec]: rc.boot start
+[    5.532700] driver_common: module license 'Proprietary' taints kernel.
+[    5.533002] Disabling lock debugging due to kernel taint
+driver_common was started
+w1com was started
+[    5.614391] safeIo:safeIo_FaultHandlerM_KLM installed!
+safeIo was started
+[    5.646397] <1>
+[    5.646397] hsiFlareAcc_init[hsiFlare]: Hello World.  I am alive !
+[    5.646757] Module Parameters:
+[    5.646899] hsiFlareAcc_dbgFlags = 0x00000000
+[    5.647476] hsiFlareAcc_init: kmalloc
+[    5.647643] hsiFlareAcc_init: before platform_device_register !
+[    5.648143] [hsiFlare] was assigned major number 246.
+[    5.648377] hsiFlareAcc_data.dev_size = 512
+[    5.648557] hsiFlareAcc_data.dev_base = 0xf22eb000
+[    5.648768] Ciena hsiFlare procfs dir created: f10f3a80
+[    5.648992] /proc/ciena/hsiFlare/flags created: f2cb3c00
+[    5.649237] /proc/ciena/hsiFlare/state created: f10f3b00
+[    5.649467] /proc/ciena/hsiFlare/handle created: f10f3980
+[    5.649696] /proc/ciena/hsiFlare/event created: f10f3900
+[    5.649921] /proc/ciena/hsiFlare/registers created: f10f3880
+[    5.650178] /proc/ciena/hsiFlare/handleTbl created: f10f3800
+hsiFlare was started
+Bench boot mode is OFF
+bcpld was started
+[    5.760791]  tatcpld.ko module loaded successfully!
+tatcpld was started
+[    5.799511] i2c i2c-11: Not I2C compliant: can't read SCL
+[    5.799771] i2c i2c-11: Bus may be unreliable
+iofpga was started
+spock was started
+processShelfDotLst done
+============= Start rc.iptables ============
+root: S65rc.firewall: adding ACCEPT rule  for interface eth2
+mkdir: cannot create directory `/var/state/card/bootup.next': No such file or directory
+mkdir: cannot create directory `/var/state/card/bootup': No such file or directory
+touch: cannot touch `/var/state/card/bootup/simTarget': No such file or directory
+tail: cannot open `/mnt/var/log/syseng_messages' for reading: No such file or directory
+tail: cannot open `/mnt/var/log/syseng_everything' for reading: No such file or directory
+rc.boot was started
+[1506883891887660206-bootexec]: rc.linx start module
+Executing rc.linx for 1-A-CM1
+Installing LINX kernel modules
+[    5.919270] LINX: version 2.5.1
+[    5.919429] LINX: Compile-time configuration:
+[    5.919614] LINX: Max number of LINX sockets 4096
+[    5.919814] LINX: Max number of attach references 4096
+[    5.920045] LINX: Max number of remote links 128
+[    5.920241] LINX: Max number of communicating sockets over a link 1024
+[    5.920516] LINX: Max number of timeout references 8192
+[    5.920994] NET: Registered protocol family 29
+pid 2025's current scheduling policy: SCHED_OTHER
+pid 2025's current scheduling priority: 0
+pid 2025's new scheduling policy: SCHED_RR
+pid 2025's new scheduling priority: 84
+LINX modules installed
+[1506883891932270866-bootexec]: rc.linx start linxdisc
+Executing rc.linx for 1-A-CM1
+Starting LINX discovery daemon
+LINXDISC config file is in /tmp/.linxdisc.conf.
+Spawning LINX IPC daemon /bin/linxdisc as 1-A-CM1 on eth0
+LINXDISC was started
+[    7.424787] linx init_ecm_connection tx_def_queue_max_size = 2048
+[    7.768049] LINX: Hunt path "1-A-SP1/" available (RLNH version:2)
+[1506883901980827854-bootexec]: rc.simapp start boot
+Starting simulation application
+[SimApp-simctmbootctrl]::simctmbootctrl Adding set*display to PS.
+[SimApp-simpotsbootctrl]::simpotsbootctrl Adding set*display to PS.
+[   16.002902] random: simApp urandom read with 122 bits of entropy available
+[   16.012309] random: nonblocking pool is initialized
+[SimApp-simdpmgr]::ParseDpInterfaceFile Created 0 interfaces from file /sim/interface.txt
+Have control of primaryship
+[SimApp-simpotsprimary]::Initialize Initial Primary state:2
+[SimApp-simpotsprimary]::DeterminePrimary No Secondary. Becoming primary!
+[SimApp-ElectionFsmCls]::Start action, state Init
+[SimApp-ElectionFsmCls]::JumpToPrimary action, state TimerSet
+[SimApp-simpotsprimary]::TransitionOnline
+[   42.457056] LINX: Hunt path "1-A-SP1/" unavailable
+[   42.457662] linx init_ecm_connection tx_def_queue_max_size = 2048
+[   43.445393] linx init_ecm_connection tx_def_queue_max_size = 2048
+[   43.915059] linx init_ecm_connection tx_def_queue_max_size = 2048
+[   46.445125] linx init_ecm_connection tx_def_queue_max_size = 2048
+[   47.716175] linx init_ecm_connection tx_def_queue_max_size = 2048
+[   49.445518] linx init_ecm_connection tx_def_queue_max_size = 2048
+[   49.765440] LINX: Hunt path "1-A-SP1/" available (RLNH version:2)
+[1506883937009361120-bootexec]: rc.daemons start prepivot
+gatekeeperDaemon was started
+18:52:17 <info> [gatekeeperDaemo]  /bin/gatekeeperDaemon starting
+18:52:17 <info> [gatekeeperDaemo]  GateKeeper: main loop running.
+Execute: /bin/ccnet-ctm -v &
+shelfLstDaemon was started
+18:52:17 <notice>   No software compatibility rev number (SW) in IDP -- assuming rev 1
+18:52:17 <err>   invalid ipv6 address ()
+18:52:17 <err>   Invalid MAC address ().
+
+LostLease done
+18:52:17 <err>   [2017-10-01 18:52:17.121901]|      ccnet-ctm| Failed to exec ccnetworker - gateway detection disabled @ src/generic/ccnet-evo/WorkerControl.cpp:43
+
+
+
+
+ AcceptedIntoCcnet
+
+
+
+ WENT PRIMARY!!!!!!!
+
+BpnDirector::GoPrimary - Went primary
+
+Entering DCN GoPrimary
+
+LostLease done
+
+Leaving DCN GoPrimary
+
+
+
+
+ ExecFound
+
+
+18:52:17 <debug> [ipcDaemon]  IPC_LOG:ipcDaemon starting
+18:52:17 <notice>   No software compatibility rev number (SW) in IDP -- assuming rev 1
+18:52:17 <debug> [ipcDaemon]  IPC_LOG: received IPC_SPA_HUNT_SIG
+18:52:17 <debug> [ipcRstHdlr]  IPC_RESTART:ipcRestartHandler started
+ipcDaemon was started
+rc.daemons was started
+18:52:17 <notice>   No software compatibility rev number (SW) in IDP -- assuming rev 1
+18:52:17 <debug> [ipcRstHdlr]  ipc_LOG:Starting ipcRestart
+
+18:52:17 <info> [inventoryMgr]  /bin/inventoryMgr starting
+18:52:17 <info> [inventoryMgr]  InventoryMgr: create and initialise IPC process.
+18:52:17 <info> [inventoryMgr]  InventoryMgr: Opening Boot CPLD driver library.
+18:52:17 <info> [inventoryMgr]  InventoryMgr: main loop running.
+18:52:17 <info> [inventoryMgr]  IPC Process: hunting for inventorymgr succeeded.
+18:52:17 <notice>   No software compatibility rev number (SW) in IDP -- assuming rev 1
+18:52:17 <info> [inventoryMgr]  InventoryIpc: Entering main loop.
+18:52:17 <debug> [inventoryMgr]  ipc_LOG:InventoryIpc: received IPC_SPA_LINK_UP_SIG
+
+18:52:17 <info> [inventoryMgr]  InventoryIpc: ipcLinkActive
+18:52:17 <info> [inventoryMgr]  InventoryIpc: sendReadyMsg
+18:52:17 <debug> [inventoryMgr]  ipc_LOG:InventoryIpc: received IPC_HUNT_SIG
+
+18:52:17 <info> [inventoryMgr]  InventoryIpc: Found NIAPP
+18:52:17 <info> [inventoryMgr]  InventoryIpc: ALA_query_inventory_cmd
+  * Running boot_exec
+
+
+
+ ExecFound
+
+
+18:52:17 <notice>   No software compatibility rev number (SW) in IDP -- assuming rev 1
+Could not read SW tag from HW IDP device.
+[1506883937159949850-bootexec]: shelf num = 0
+[1506883937160115349-bootexec]: slot type = 11
+[1506883937160248109-bootexec]: slot num = 30
+[1506883937160359691-bootexec]: primary NC = 1
+[1506883937160482514-bootexec]: NC = 1
+[1506883937160593727-bootexec]: subNC = 1
+[1506883937160705353-bootexec]: coNC = 0
+[1506883937160820134-bootexec]: hw idp model num = SIM-5674-P14
+[1506883937160934616-bootexec]: hw idp part num = NTK614AA
+[1506883937161060681-bootexec]: hw idp card rev = 007
+[1506883937161162686-bootexec]: hw idp softw. compat. num =
+[1506883937161274899-bootexec]: Reset History (hex) data: 0x00000000
+[1506883937161500118-bootexec]: local shelf.lst not found.... using defaults
+CtmBootCtrlDevice::HandleEvents() - entering self ctm event handler
+[SimApp-simpotsbootctrl]::PcpCallback SelfStateChangeEvent newStatus:SwInitializing
+[1506883937776988962-bootexec]: Received shelf.lst 0020d800350f NOPROV from SP, Local Shelf.lst c0a87a07 VM7
+[1506883937777080857-bootexec]: Reseting disk info to default and erasing disk config because XC disk does not belong in this node!!!
+[1506883937777172376-bootexec]: Reseting disk info to default and erasing disk config because Last Erase Tstamp from SP is more recent that XCs tstamp!!!
+[1506883937778529935-bootexec]: Using Node ID cached in shelflst [0020d800350f]
+[1506883937778992734-bootexec]: Using Nodal Mac Address from simcontext [EA=02a87a070000]
+[1506883937779344781-bootexec]: Using Nodal Mac Range from simcontext [ER=256]
+[1506883937779906461-bootexec]: Primary subnodal controller hunting for 1-A-SP1/kern_exec and 1-A-SP2/kern_exec
+[1506883937780370125-bootexec]: Sending EXEC_SHELF_SIG to SP
+18:52:17 <notice>   No software compatibility rev number (SW) in IDP -- assuming rev 1
+[1506883937792575406-bootexec]: Sent branding info to CCNET
+[1506883937795212457-bootexec]: Got shelf.lst
+18:52:17 <info> [shelfLstDaemon]  Change to chassisType; old 6, new 5
+18:52:17 <info> [shelfLstDaemon]  Change to tl1ShelfName; old , new OME-000102032900
+18:52:17 <info> [shelfLstDaemon]  Change to tl1MAC; old 00:00:00:00:00:00, new 00:01:02:00:29:00
+18:52:17 <info> [shelfLstDaemon]  Change to current IP; old 0xffffffff, new 0xc0a87a07
+18:52:17 <info> [shelfLstDaemon]  Change to DCN1 IP; old 0xffffffff, new 0xac10e9d6
+18:52:17 <info> [shelfLstDaemon]  Change to DCN3 IP; old 0xffffffff, new 0xac10e9d8
+18:52:17 <info> [shelfLstDaemon]  Change to FTP IP; old 0xffffffff, new 0xc0aaaa0f
+18:52:17 <info> [shelfLstDaemon]  Change to L0Ip IP; old 0xffffffff, new 0x0
+[1506883937796622086-bootexec]: Sent branding info to SHFLST
+[1506883937796694960-bootexec]: Waiting for environment ready signal to continue.
+AutoRevertSimplexUpgradeCheck - shf is null![1506883937796756070-bootexec]: Waiting for environment ready signal from the gate keeper...
+[SimApp-simpotsbootctrl]::PcpCallback SelfStateChangeEvent newStatus:SwInitializing
+[   51.828096] 8139cp 0000:00:04.0 eth1: link up, 100Mbps, full-duplex, lpa 0x05E1
+CfgUpdate - Everything_IP
+18:52:17 <debug> [gatekeeperDaemo]  GateKeeper: Lock CCNET_RDY is open.
+ERROR: /ciena/scripts/potsFirewall.sh not found
+CtmBootCtrlDevice::HandleEvents() - entering self ctm event handler
+[   53.856135] 8139cp 0000:00:04.0 eth1: link up, 100Mbps, full-duplex, lpa 0x05E1
+[   60.329044] LINX: Hunt path "1-A-SP1/" unavailable
+[   60.329598] linx init_ecm_connection tx_def_queue_max_size = 2048
+18:52:26 <debug> [ipcDaemon]  IPC_LOG: received IPC_SPA_ATTACH_SIG
+[   61.944849] linx init_ecm_connection tx_def_queue_max_size = 2048
+[   63.724134] LINX: Hunt path "1-A-SP1/" available (RLNH version:2)
+18:52:29 <info> [inventoryMgr]  InventoryIpc: Found NIAPP
+18:52:29 <debug> [ipcDaemon]  IPC_LOG: received IPC_SPA_HUNT_SIG
+18:52:29 <debug> [inventoryMgr]  ipc_LOG:InventoryIpc: received IPC_SPA_LINK_UP_SIG
+
+18:52:29 <info> [inventoryMgr]  InventoryIpc: ipcLinkActive
+18:52:29 <info> [inventoryMgr]  InventoryIpc: sendReadyMsg
+18:52:29 <info> [inventoryMgr]  InventoryIpc: ALA_query_inventory_cmd
+18:52:32 <info> [inventoryMgr]  InventoryIpc: Getting Boot Info for SP
+18:52:32 <info> [inventoryMgr]  InventoryMgr: IPC messaging completed. Exit Mainloop
+18:52:32 <info> [inventoryMgr]  Deleting inventoryMgrP
+18:52:32 <info> [inventoryMgr]  InventoryMgr: hunting for gatekeeper.
+18:52:32 <info> [inventoryMgr]  InventoryMgr: Sending inventory ready sig to gatekeeper.
+[1506883952210526193-bootexec]: Received environment ready signal.
+[1506883952210773237-bootexec]: Environment ready signal acquired, continuing boot process.
+[1506883952211159005-bootexec]: Last reboot was clean, release validation skipped.
+Infrastructure debug mode is off.
+[1506883952211673472-bootexec]: DB factory restore: User requested to set DB to Factory defaults.
+18:52:32 <debug> [gatekeeperDaemo]  GateKeeper: Lock IPC_RDY is open.
+18:52:32 <info> [gatekeeperDaemo]  GateKeeper: hunting for boot_exec.
+18:52:32 <info> [gatekeeperDaemo]  GateKeeper: sending environment ready signal to boot_exec.
+18:52:32 <info> [gatekeeperDaemo]  GateKeeper: exiting main loop.
+18:52:32 <info> [gatekeeperDaemo]  Deleting gateKeeper_p
+18:52:32 <err> [BootCookieUtil]  get_valid_cookie: cookie data corrupt, erasing cookies
+18:52:32 <err> [BootCookieUtil]  get_valid_cookie: cookie data corrupt, erasing cookies
+18:52:32 <err> [BootCookieUtil]  get_valid_cookie: cookie data corrupt, erasing cookies
+sh: flashutil: command not found
+18:52:32 <info> [inventoryMgr]  InventoryIpc: Boot Info sent to SP
+[1506883952361221103-bootexec]: WARNING! Erase Disk Config Requested! WARNING!
+[1506883952361246359-bootexec]: Checking root file system
+18:52:32 <debug>   RunMkKernel Did not find /mnt/rel/rel_simpts_13.00.2_abenbach/pts14/i486-sim/packages/mkkernel.sh
+18:52:32 <err>   Can not find rootfs /mnt/version.txt file, err = 2. Requesting root fs update.
+
+==================================================
+Updating root file system. This will take a while.
+==================================================
+mv: cannot stat `/mnt/var/crash': No such file or directory
+18:52:32 <notice>   Cannot preserve crash files, command mv -f /mnt/var/crash /mnt/upgradesafe/crash failed with ret 256, stat 1
+mv: cannot stat `/mnt/var/opt': No such file or directory
+18:52:32 <notice>   Cannot preserve opt files, command mv -f /mnt/var/opt /mnt/upgradesafe/opt failed with ret 256, stat 1
+mv: cannot stat `/mnt/Certs': No such file or directory
+Cleaning up rootfs folders...
+18:52:32 <notice>   Cannot preserve cert files, command mv -f /mnt/Certs /mnt/upgradesafe/Certs failed with ret 256, stat 1
+mv: cannot stat `/mnt/upgradesafe/crash': No such file or directory
+18:52:32 <notice>   Cannot restore crash files, command mkdir -p /mnt/var; mv -f /mnt/upgradesafe/crash /mnt/var/crash failed with ret 256, stat 1
+mv: cannot stat `/mnt/upgradesafe/opt': No such file or directory
+18:52:32 <notice>   Cannot restore opt files, command mkdir -p /mnt/var; mv -f /mnt/upgradesafe/opt /mnt/var/opt failed with ret 256, stat 1
+mv: cannot stat `/mnt/upgradesafe/Certs': No such file or directory
+18:52:32 <notice>   Cannot restore cert files, command mv -f /mnt/upgradesafe/Certs /mnt/Certs failed with ret 256, stat 1
+[   66.434638] LINX: Hunt path "1-A-SP1/" unavailable
+[   66.435067] linx init_ecm_connection tx_def_queue_max_size = 2048
+18:52:32 <debug> [ipcDaemon]  IPC_LOG: received IPC_SPA_ATTACH_SIG
+[   67.752927] LINX: Hunt path "1-A-SP1/" available (RLNH version:2)
+18:52:33 <info> [inventoryMgr]  InventoryIpc: Found NIAPP
+18:52:33 <info> [inventoryMgr]  InventoryIpc: Getting Boot Info for SP
+18:52:33 <err> [BootCookieUtil]  get_valid_cookie: cookie data corrupt, erasing cookies
+18:52:33 <err> [BootCookieUtil]  get_valid_cookie: cookie data corrupt, erasing cookies
+18:52:33 <err> [BootCookieUtil]  get_valid_cookie: cookie data corrupt, erasing cookies
+sh: flashutil: command not found
+18:52:33 <info> [inventoryMgr]  InventoryIpc: Boot Info sent to SP
+[   67.799844] LINX: Hunt path "1-A-SP1/" unavailable
+[   67.817623] LINX: Hunt path "1-A-SP1/" available (RLNH version:2)
+18:52:33 <info> [inventoryMgr]  InventoryIpc: Found NIAPP
+18:52:33 <info> [inventoryMgr]  InventoryIpc: Getting Boot Info for SP
+18:52:33 <err> [BootCookieUtil]  get_valid_cookie: cookie data corrupt, erasing cookies
+[   67.824232] LINX: Hunt path "1-A-SP1/" unavailable
+18:52:33 <err> [BootCookieUtil]  get_valid_cookie: cookie data corrupt, erasing cookies
+18:52:33 <err> [BootCookieUtil]  get_valid_cookie: cookie data corrupt, erasing cookies
+sh: flashutil: command not found
+18:52:33 <info> [inventoryMgr]  InventoryIpc: Failed to send boot info to SP
+[   67.945106] linx init_ecm_connection tx_def_queue_max_size = 2048
+[   68.272732] linx init_ecm_connection tx_def_queue_max_size = 2048
+[   70.944964] linx init_ecm_connection tx_def_queue_max_size = 2048
+[   72.632005] LINX: Hunt path "1-A-SP1/" available (RLNH version:2)
+18:52:38 <info> [inventoryMgr]  InventoryIpc: Found NIAPP
+18:52:38 <info> [inventoryMgr]  InventoryIpc: Getting Boot Info for SP
+18:52:38 <debug> [ipcDaemon]  IPC_LOG: received IPC_SPA_HUNT_SIG
+18:52:38 <err> [BootCookieUtil]  get_valid_cookie: cookie data corrupt, erasing cookies
+18:52:38 <err> [BootCookieUtil]  get_valid_cookie: cookie data corrupt, erasing cookies
+18:52:38 <err> [BootCookieUtil]  get_valid_cookie: cookie data corrupt, erasing cookies
+sh: flashutil: command not found
+18:52:38 <info> [inventoryMgr]  InventoryIpc: Boot Info sent to SP
+18:52:38 <debug> [inventoryMgr]  ipc_LOG:InventoryIpc: received IPC_SPA_LINK_UP_SIG
+
+18:52:38 <info> [inventoryMgr]  InventoryIpc: ipcLinkActive
+18:52:38 <info> [inventoryMgr]  InventoryIpc: sendReadyMsg
+18:52:38 <info> [inventoryMgr]  InventoryIpc: ALA_query_inventory_cmd
+18:52:44 <info> [inventoryMgr]  InventoryIpc: Getting Boot Info for SP
+18:52:44 <err> [BootCookieUtil]  get_valid_cookie: cookie data corrupt, erasing cookies
+18:52:44 <err> [BootCookieUtil]  get_valid_cookie: cookie data corrupt, erasing cookies
+18:52:44 <err> [BootCookieUtil]  get_valid_cookie: cookie data corrupt, erasing cookies
+sh: flashutil: command not found
+18:52:44 <info> [inventoryMgr]  InventoryIpc: Boot Info sent to SP
+18:52:47 <info> [inventoryMgr]  InventoryIpc: INVMGR_READY_RETRY_TIMER_SIG received
+[1506883970246424459-bootexec]: Updating root file system done.
+[1506883970246497557-bootexec]: Validating root fs
+cd "/mnt"; md5sum -c "manifest_run.md5" > "/tmp/md5check"
+Verifying checksum of the release (this may take a few minutes).
+18:52:50 <err>   Verifying checksum of the release (this may take a few minutes). Retry 2
+18:52:53 <info> [inventoryMgr]  InventoryIpc: Getting Boot Info for SP
+18:52:53 <err> [BootCookieUtil]  get_valid_cookie: cookie data corrupt, erasing cookies
+18:52:53 <err> [BootCookieUtil]  get_valid_cookie: cookie data corrupt, erasing cookies
+18:52:53 <err> [BootCookieUtil]  get_valid_cookie: cookie data corrupt, erasing cookies
+sh: flashutil: command not found
+18:52:53 <info> [inventoryMgr]  InventoryIpc: Boot Info sent to SP
+18:52:59 <info> [inventoryMgr]  InventoryIpc: INVMGR_READY_RETRY_TIMER_SIG received
+[1506883981502215850-bootexec]: Erasing disk configuration
+bin/erase_rel_disk_cfg running in /mnt/rel/rel_simpts_13.00.2_abenbach/pts14/i486-sim !
+ * removing OSRP ps directory
+ * restoring OSRP factory ps config
+ * removing OSRPPCP ps directory current directory is /mnt/rel/rel_simpts_13.00.2_abenbach/pts14/i486-sim
+ * restoring OSRPPCP factory ps config
+bin/erase_rel_disk_cfg: line 62: cd: cfg/pcpcore/factory/ps/data: No such file or directory
+ * no factory pcp ps config to restore
+ciena/scripts/erase_disk_cfg running in /mnt !
+ * removing all DPB-OSRP sync/restart gates
+ * removing all SAOS config
+ Delete all SAOS CONFIG from SLAT
+18:53:01 <err>   can not read EXEC_UBOOT_BOOT_TYPE env vars from uboot.
+18:53:01 <err>   can not read EXEC_UBOOT_BOOT_TYPE env vars from uboot.
+rsync: no process found
+StopRsync.153: ret = 256 stat = 1
+rsync: no process found
+StopRsync.166 ret = 256 stat = 1
+[1506883982713314544-bootexec]: Running release rel_simpts_13.00.2_abenbach
+[OK]
+Attempting to kill ipcDaemon...
+ipcRstHdlr kill status: 0
+inventoryMgr kill status: 0
+ipcDaemon kill status: 2
+ipcDaemon was stopped
+Attempting to kill shelfLstDaemon...
+[  105.457253] LINX: Hunt path "1-A-SP1/" unavailable
+[  105.457860] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  106.964954] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  107.107041] linx init_ecm_connection tx_def_queue_max_size = 2048
+shelfLstDaemon was stopped
+Attempting to kill ccnet...
+[  107.887949] LINX: Hunt path "1-A-SP1/" available (RLNH version:2)
+CCNET caught signal Terminated (15)
+CCNET exiting
+Attempting to kill DHCP client...
+[  109.964899] LINX: Hunt path "1-A-SP1/" unavailable
+[  109.965268] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  110.417964] linx init_ecm_connection tx_def_queue_max_size = 2048
+Attempting to kill gatekeeperDaemon...
+[  112.964959] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  114.651496] LINX: Hunt path "1-A-SP1/" available (RLNH version:2)
+gatekeeperDaemon was stopped
+rc.daemons was stopped
+Stopping simApp
+Executing rc.linx for 1-A-CM1
+Stopping LINX discovery daemon
+[  115.010740] LINX: Hunt path "1-A-SP1/" unavailable
+LINXDISC stopped
+Executing rc.linx for 1-A-CM1
+Removing LINX kernel modules
+Removing module: /lib/modules/4.1.32/linx_eth_cm.ko
+rc.linx: removed /lib/modules/4.1.32/linx_eth_cm.ko after 1 attempt(s)
+Removing module: /lib/modules/4.1.32/linx.ko
+[  117.119019] NET: Unregistered protocol family 29
+rc.linx: removed /lib/modules/4.1.32/linx.ko after 1 attempt(s)
+LINX modules removed
+spock was stopped
+iofpga was stopped
+[  117.489219]  tatcpld.ko module unloaded successfully!
+tatcpld was stopped
+bcpld was stopped
+[  117.611075] releaseHsiFlareHandle():177 Device is not accessible (state=1).
+[  117.611401] hsiFlare module unloaded successfully!
+hsiFlare was stopped
+[  117.652437] safeIo:safeIo_exit called!
+safeIo was stopped
+w1com was stopped
+driver_common was stopped
+rc.boot was stopped
+root: Stopping syslog
+[  117.869874] [1506884003868228200-echo]: /dev/hdd /mnt ext2 rw,noatime,errors=continue,user_xattr,acl 0 0
+[  117.876333] [1506884003873097110-echo]: /dev/hdd /mnt ext2 rw,noatime,errors=continue,user_xattr,acl 0 0
+[  117.880638] [1506884003879357338-echo]: /dev/hdd /mnt ext2 rw,noatime,errors=continue,user_xattr,acl 0 0
+  * Unmounting /dev/hdd from /mnt            [OK]
+  * Remounting /dev/hdd on /mnt              [  117.962186] [1506884003960896294-echo]: [OK]
+[OK]
+[  117.965698] [1506884003964414636-echo]: [OK]
+No old core files to move
+[  117.983939] [1506884003982693321-echo]: No old core files to move
+Enabling core file generation
+[  117.986377] [1506884003985134851-echo]: Enabling core file generation
+  * stop udevd                               [  117.990823] [1506884003988876141-echo]: |/sbin/core_handler /var/crash 6 %e %p %t
+[OK]
+[  117.993563] [1506884003992185926-echo]: [OK]
+[  117.996727] [1506884003994852805-echo]: pts14
+  * Unmounting /dev/pts                      [  118.004047] [1506884004001854057-echo]: P2
+[OK]
+  * Unmounting /proc                         [  118.016089] [1506884004014414530-echo]: [OK]
+[OK]
+  * Unmounting /sys                          [  118.024754] [1506884004023370136-echo]: [OK]
+[OK]
+  * Unmounting /dev                          [  118.037216] [1506884004036013604-echo]: [OK]
+[OK]
+  * Unmounting /run                          [OK]
+[1506884004064713336-init]: Pivot to disk
+[  118.197078] udevd[2831]: starting version 182
+
+starting pid 2908, tty '': '/etc/init.d/rcS start'
+cat: /proc/ciena/cardType: No such file or directory
+ /etc/init.d/rcS debug_util.sh  has been updated -- 2016_0504
+[  118.553642] [1506884004552149602-echo]:  /etc/init.d/rcS debug_util.sh  has been updated -- 2016_0504
+[  118.562112] [1506884004560634503-echo]: /ciena/scripts:/ciena/bin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/tmp/bin
+rcS: Setting control groups
+[  118.566571] [1506884004564890029-echo]: rcS: Setting control groups
+[  118.571058] [1506884004569194663-echo]: pts14
+[  118.574385] [1506884004573101848-echo]: P2
+/etc/init.d/rcS: line 46: /etc/rc.d/init.d/cgconfig: No such file or directory
+/etc/init.d/rcS: line 47: /etc/rc.d/init.d/cgred: No such file or directory
+mount: mounting none on /cgroup/cpuset failed: No such device
+[  118.590475] [1506884004589142811-echo]: 0
+[  118.593196] [1506884004591822143-echo]: 0
+simwd was started
+Starting system guardian
+System guardian is started
+No old core files to move
+[  118.817637] [1506884004816142993-echo]: No old core files to move
+Enabling core file generation
+[  118.820311] [1506884004819114122-echo]: Enabling core file generation
+[  118.823038] [1506884004821789244-echo]: |/sbin/core_handler /var/crash 6 %e %p %t
+[  118.826336] [1506884004825169726-echo]: pots-simpts
+[  118.830053] [1506884004828786584-echo]: pots-simpts
+[  118.834160] [1506884004832948001-echo]: pots-simpts
+[  118.837694] [1506884004836479465-echo]: pots
+/ciena/scripts/prod_lib.sh: line 166: /proc/nvram-log-data: No such file or directory
+rcS: Starting signal catcher
+[  118.842828] [1506884004841588228-echo]: rcS: Starting signal catcher
+root: Stopping syslog
+root: Starting syslog
+Error resolving hostname; host='CTXP'
+Initiating connection failed, reconnecting; time_reopen='10'
+Module                  Size  Used by
+simwd                   2777  2
+[  118.877668] [1506884004876506558-echo]: pts14
+[  118.881337] [1506884004880207999-echo]: P2
+[  118.885860] [1506884004884526061-echo]: pts14
+[  118.890985] [1506884004889504272-echo]: P2
+[  118.894659] [1506884004893511056-echo]: pts14
+[  118.897956] [1506884004896772586-echo]: P2
+rcS: Starting drivers
+[  118.901717] [1506884004900504421-echo]: rcS: Starting drivers
+driver_common was started
+w1com was started
+[  119.021706] tun: Universal TUN/TAP device driver, 1.6
+[  119.021934] tun: (C) 1999-2004 Max Krasnyansky <maxk@qualcomm.com>
+tun was started
+[  119.057338] safeIo:safeIo_FaultHandlerM_KLM installed!
+safeIo was started
+[  119.098692] <1>
+[  119.098692] hsiFlareAcc_init[hsiFlare]: Hello World.  I am alive !
+[  119.099063] Module Parameters:
+[  119.099199] hsiFlareAcc_dbgFlags = 0x00000000
+[  119.099414] hsiFlareAcc_init: kmalloc
+[  119.099572] hsiFlareAcc_init: before platform_device_register !
+[  119.099981] [hsiFlare] was assigned major number 246.
+[  119.100221] hsiFlareAcc_data.dev_size = 512
+[  119.100404] hsiFlareAcc_data.dev_base = 0xf0932800
+[  119.100861] Ciena hsiFlare procfs dir created: f70f6d00
+[  119.101186] /proc/ciena/hsiFlare/flags created: f70f6d80
+[  119.101423] /proc/ciena/hsiFlare/state created: f111b380
+[  119.101661] /proc/ciena/hsiFlare/handle created: f111b400
+[  119.101897] /proc/ciena/hsiFlare/event created: f111b480
+[  119.102270] /proc/ciena/hsiFlare/registers created: f111b100
+[  119.102527] /proc/ciena/hsiFlare/handleTbl created: f111b080
+hsiFlare was started
+bcpld was started
+/etc/init.d/boot/S11rc.kbct: line 49: [: =: unary operator expected
+[  119.231530] Fail to use OME BCT file 'bct'.
+[  119.231781] No BCT file loaded for OME KDS BCT
+kbct was started
+processShelfDotLst done
+[  119.292081]  tatcpld.ko module loaded successfully!
+tatcpld was started
+*** Running: veth_devices script ***
+Executing: veth_devices->set_veth_devices ...
+[  119.307019] IPv6: ADDRCONF(NETDEV_UP): ibc_vdp: link is not ready
+[  119.308207] IPv6: ADDRCONF(NETDEV_CHANGE): ibc_vdp: link becomes ready
+[  119.309705] Slab corruption (Tainted: P           O   ): kmalloc-32 start=f0378900, len=32
+[  119.310259] 000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+[  119.310627] 010: 00 00 00 00 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b a5  ....kkkkkkkkkkk.
+[  119.310977] Prev obj: start=f03788e0, len=32
+[  119.311175] 000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+[  119.311503] 010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+[  119.311826] Next obj: start=f0378920, len=32
+[  119.312084] 000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+[  119.312589] 010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+*** veth_devices- Completed creation of IBC veth bridge between ibc_gre and ibc_vdp ***
+Executing: veth_devices->set_ibc_vlan_devices ...
+[  119.322073] device eth2.110 entered promiscuous mode
+[  119.322849] device eth2 entered promiscuous mode
+[  119.324932] device eth2.111 entered promiscuous mode
+[  119.327569] device eth2.112 entered promiscuous mode
+[  119.332165] device eth2.113 entered promiscuous mode
+[  119.335653] device eth2.114 entered promiscuous mode
+[  119.338964] device eth2.115 entered promiscuous mode
+[  119.341447] device eth2.116 entered promiscuous mode
+[  119.343829] device eth2.117 entered promiscuous mode
+[  119.348050] device eth2.118 entered promiscuous mode
+[  119.350708] device eth2.119 entered promiscuous mode
+[  119.353218] device eth2.120 entered promiscuous mode
+*** veth_devices- Completed creation of IBC VLAN devices over eth2 ***
+tatcpldInit_ptsxc14PostPivot configuration done
+[  119.536258] i2c i2c-11: Not I2C compliant: can't read SCL
+[  119.536516] i2c i2c-11: Bus may be unreliable
+iofpga was started
+[  119.574679] <1>
+[  119.574679] virtualDev_init[vd]: Hello World.  I am alive !
+[  119.575015] Module Parameters:
+[  119.575152] virtualDev_dbgFlags = 0x00000000
+[  119.575543] virtualDev_init: vmalloc
+[  119.575722] virtualDev_init: before platform_device_register !
+[  119.576559] I was assigned major number 241.
+[  119.576755] virtualDev_data.dev_size = 16384
+[  119.576937] virtualDev_data.dev_base = 0xf88cb000
+vd was started
+spock was started
+topsync was started
+esio was started
+  * Exporting NFS directories                [OK]
+  * Starting NFS mount daemon                [OK]
+  * Starting NFS status monitor daemon       [OK]
+  * Starting NFS server daemon               [OK]
+  * Running NFS stale lock notifier          [OK]
+[  119.805017] pluggableqsfp3: vdmm memory created successfully
+[  119.805349] pluggable_drv_register_procfs creating directory for 3 plugs
+pluggableqsfp was started
+mkdir: cannot create directory `/var/state/card/bootup.next': No such file or directory
+mkdir: cannot create directory `/var/state/card/bootup': No such file or directory
+touch: cannot touch `/var/state/card/bootup/simTarget': No such file or directory
+rc.boot was started
+/enableConsole is NOT present
+[  119.839877] [1506884005838050913-echo]: /enableConsole is NOT present
+Bench boot mode is OFF
+[  119.849098] [1506884005847863085-echo]: Bench boot mode is OFF
+backplane test mode is not checked - default to false
+[  119.851986] [1506884005850691589-echo]: backplane test mode is not checked - default to false
+rcS: Starting oob klm
+[  119.854489] [1506884005853296250-echo]: rcS: Starting oob klm
+Installing oob kernel module: /lib/modules/4.1.32/extra/oobroute.ko
+/lib/modules/4.1.32/extra/oobroute.ko installation succeeded.
+Module                  Size  Used by
+oobroute                 575  0
+pluggableqsfp          16056  0
+esio                   11215  0
+topsync               102235  0
+spock                 402382  2 esio,topsync
+vd                     11374  0
+iofpga                 84619  0
+tatcpld                39859  0
+omeKdsBct              12662  0
+bcpld                 150269  2 spock,tatcpld
+hsiFlare               71359  6 vd,bcpld,spock,tatcpld,topsync,pluggableqsfp
+safeIo                  8354  6 vd,bcpld,spock,tatcpld,hsiFlare,pluggableqsfp
+tun                    17205  0
+w1com                   7420  1 iofpga
+driver_common          19836  11 vd,esio,bcpld,spock,omeKdsBct,tatcpld,topsync,iofpga,safeIo,hsiFlare,pluggableqsfp
+driver_helper           2786  3 bcpld,iofpga,driver_common
+simwd                   2777  2
+rcS: Installing LINX
+[  119.872489] [1506884005871145923-echo]: rcS: Installing LINX
+Executing rc.linx for 1-A-CM1
+Installing LINX kernel modules
+[  119.906061] LINX: version 2.5.1
+[  119.906210] LINX: Compile-time configuration:
+[  119.906401] LINX: Max number of LINX sockets 4096
+[  119.906626] LINX: Max number of attach references 4096
+[  119.906872] LINX: Max number of remote links 128
+[  119.907086] LINX: Max number of communicating sockets over a link 1024
+[  119.907361] LINX: Max number of timeout references 8192
+[  119.907625] NET: Registered protocol family 29
+pid 3368's current scheduling policy: SCHED_OTHER
+pid 3368's current scheduling priority: 0
+pid 3368's new scheduling policy: SCHED_RR
+pid 3368's new scheduling priority: 84
+LINX modules installed
+rcS: Starting LINX, wait 10s
+[  119.921107] [1506884005919998836-echo]: rcS: Starting LINX, wait 10s
+Executing rc.linx for 1-A-CM1
+Starting LINX discovery daemon
+LINXDISC config file is in /tmp/.linxdisc.conf.
+Spawning LINX IPC daemon /bin/linxdisc as 1-A-CM1 on eth0
+LINXDISC was started
+[  121.964965] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  122.995157] LINX: Hunt path "1-A-SP1/" available (RLNH version:2)
+[  123.329045] LINX: Hunt path "1-A-SP1/" unavailable
+[  123.329357] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  124.964892] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  126.515192] LINX: Hunt path "1-A-SP1/" available (RLNH version:2)
+[  129.435194] LINX: Hunt path "1-A-SP1/" unavailable
+[  129.435540] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  129.971848] [1506884015970479172-echo]: pts14
+[  129.975336] [1506884015974060793-echo]: P2
+rc.simnet: Finding MAC address for host 172.7.1.35 from 172.7.1.31
+? (172.7.1.35) at 52:54:00:ca:28:b0 [ether]  on eth0
+rc.simnet: Create LINX link to host 52:54:00:ca:28:b0 from device eth2
+[  130.016185] linx init_ecm_connection tx_def_queue_max_size = 2048
+mkethcon: created connection 'ethcm/ConnToPC'.
+Now use 'mklink -c ethcm/ConnToPC ...' to create a link.
+Starting simulation application
+Starting simApp m2 server
+[SimApp-simctmbootctrl]::simctmbootctrl Adding set*display to PS.
+[SimApp-simpotsbootctrl]::simpotsbootctrl Adding set*display to PS.
+[SimApp-simdpmgr]::ParseDpInterfaceFile Created 0 interfaces from file /sim/interface.txt
+Have control of primaryship
+[SimApp-simpotsprimary]::Initialize Initial Primary state:2
+[SimApp-simpotsprimary]::DeterminePrimary No Secondary. Becoming primary!
+[SimApp-ElectionFsmCls]::Start action, state Init
+[SimApp-ElectionFsmCls]::JumpToPrimary action, state TimerSet
+[SimApp-simpotsprimary]::TransitionOnline
+[SimApp-simpotsbootctrl]::PcpCallback SelfStateChangeEvent newStatus:ResetEmpty
+[  130.964950] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  131.273035] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  131.715131] LINX: Hunt path "1-A-SP1/" available (RLNH version:2)
+[  131.719861] LINX: Hunt path "1-A-SP1/" unavailable
+[  131.749322] LINX: Hunt path "1-A-SP1/" available (RLNH version:2)
+[  131.784425] LINX: Hunt path "1-A-SP1/" unavailable
+[  131.796601] LINX: Hunt path "1-A-SP1/" available (RLNH version:2)
+[  131.949777] LINX: Hunt path "1-A-SP1/" unavailable
+[  133.965056] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  135.631839] LINX: Hunt path "1-A-SP1/" available (RLNH version:2)
+[  168.457293] LINX: Hunt path "1-A-SP1/" unavailable
+[  168.457616] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  169.965060] linx init_ecm_connection tx_def_queue_max_size = 2048
+rcS: Starting mapserver, wait 3s
+[  170.038890] [1506884056037306902-echo]: rcS: Starting mapserver, wait 3s
+Created bufer pool at 0xB731FD20, memSize: 736000, buffSize: 176 numBuffs: 4000, nextAddrP: 0xBF92144C
+[  170.115055] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  172.964832] linx init_ecm_connection tx_def_queue_max_size = 2048
+rcS: Comms ready
+[  173.045758] [1506884059044383522-echo]: rcS: Comms ready
+rcS: Run daemons
+[  173.048655] [1506884059047463218-echo]: rcS: Run daemons
+gatekeeperDaemon was started
+shelfLstDaemon was started
+Execute: /bin/ccnet-ctm &
+
+
+
+
+ AcceptedIntoCcnet
+
+
+
+ WENT PRIMARY!!!!!!!
+
+BpnDirector::GoPrimary - Went primary
+
+Entering DCN GoPrimary
+
+LostLease done
+
+Leaving DCN GoPrimary
+
+
+
+
+ ExecFound
+
+
+ipcDaemon was started
+rc.daemons was started
+[  173.199946] [1506884059198756328-echo]: pts14
+[  173.203700] [1506884059202541698-echo]: P2
+[  173.208246] [1506884059206903737-echo]: pts14
+[  173.211635] [1506884059210476044-echo]: P2
+rcS: Setting SNMP ENV
+[  173.215458] [1506884059214322241-echo]: rcS: Setting SNMP ENV
+root: Stopping syslog
+root: Starting syslog
+Error resolving hostname; host='CTXP'
+Initiating connection failed, reconnecting; time_reopen='10'
+rcS: Starting ntpd
+[  173.242140] [1506884059240973655-echo]: rcS: Starting ntpd
+primary
+[  173.253177] [1506884059252086789-echo]: rcS: Starting kern_exec
+rcS: Starting kern_exec
+Could not read SW tag from HW IDP device.
+
+
+
+
+ ExecFound
+
+
+[  173.313077] 8139cp 0000:00:04.0 eth1: link up, 100Mbps, full-duplex, lpa 0x05E1
+CfgUpdate - Everything_IP
+[  173.360143] VDP: config esmc edev for port 4
+[  173.360851] VDP: configured IBC edev_ibc table & veth interfaces on this card
+[  173.361848] NET: Registered protocol family 27
+[  173.362067] NET: Registered protocol family 28
+[  173.362269] NET: Registered protocol family 30
+[  173.362461] NET: Registered protocol family 25
+[  173.362648] NET: Registered protocol family 31
+[  173.363290] VDP: packet type added on on IBC Virtual Device: ibc_vdp
+vdp was started
+Enabling ipv4 forwarding for SIM
+1 >/proc/sys/net/ipv4/ip_forward
+CtmBootCtrlDevice::HandleEvents() - entering self ctm event handler
+[SimApp-simpotsbootctrl]::PcpCallback SelfStateChangeEvent newStatus:SwInitializing
+[  173.438276] linx init_ecm_connection tx_def_queue_max_size = 2048
+Starting rc.vsftpd...
+1+0 records in
+1+0 records out
+1024 bytes (1.0 kB) copied, 0.000108915 s, 9.4 MB/s
+VSFTPD sparse image file created
+mke2fs 1.42.13 (17-May-2015)
+Creating filesystem with 499713 1k blocks and 125416 inodes
+Filesystem UUID: d87b6cfb-f1a1-458e-9db7-d1f8da5e327a
+Superblock backups stored on blocks:
+	8193, 24577, 40961, 57345, 73729, 204801, 221185, 401409
+
+Allocating group tables:  0/61     done
+Writing inode tables:  0/61     done
+Writing superblocks and filesystem accounting information:  0/61     done
+
+VSFTPD sparse file system created
+tune2fs 1.42.13 (17-May-2015)
+Setting maximal mount count to -1
+Setting interval between checks to 0 seconds
+VSFTPD sparse file system count/time attributes set
+VSFTPD sparse file system loop mounted on /superuser
+VSFTPD default upload directory /superuser
+vsftpd upload area initialized
+rc.system.boot was started
+rcS: Wait 2s, start simshm
+[  173.673278] [1506884059672039697-echo]: rcS: Wait 2s, start simshm
+[  174.305822] sh (3676): drop_caches: 3
+Could not read SW tag from HW IDP device.
+EXEC: STATE 0x8001e001 : dum empty -> loading active Go()
+EXEC: STATE 0x8001e002 : dumber empty -> loading active Go()
+EXEC: STATE 0x8001e003 : dpb empty -> loading active Go()
+EXEC: STATE 0x8001e004 : osrp empty -> loading active Go()
+EXEC: STATE 0x8001e005 : bbb-xc empty -> loading active Go()
+EXEC: STATE 0x8001e006 : cesd-ctm empty -> loading active Go()
+EXEC: STATE 0x8001e007 : umi-c_pts empty -> loading active Go()
+EXEC: STATE 0x8001e008 : cesd-pslm empty -> loading active Go()
+EXEC: STATE 0x8001e000 : exec recovery -> initialize active SetState()
+EXEC: STATE 0x8001e000 : exec initialize -> normal active Event() INIT
+++map+++++++++++++++++++++++++++++++++++++
+Just became nc/sc map instance
+++++++++++++++++++++++++++++++++++++++++++
+[  175.384029] 8139cp 0000:00:04.0 eth1: link up, 100Mbps, full-duplex, lpa 0x05E1
+[  175.736623] [1506884061734140728-echo]: pts14
+[  175.741054] [1506884061739922452-echo]: P2
+[  175.746607] sh (3703): drop_caches: 3
+flash already contains rel_simpts_13.00.2_abenbach
+[  175.784097] [1506884061782388081-echo]: pts14
+[  175.788227] [1506884061786849756-echo]: PTSXC
+[EXEC]: 0x8001e001 : dum [0x1c] rel_simpts_13.00.2_abenbach started. @ 0x0 size 0
+EXEC: STATE 0x8001e001 : dum loading -> starting active Event() loaded
+EXEC: STATE 0x8001e001 : dum starting -> initialize active Event() STAR
+EXEC: STATE 0x8001e001 : dum initialize -> normal active Event() INIT
+[  175.811990] [1506884061810376351-echo]: kern_exec reboot kern_exec_3580 pid_only 3580
+[  175.814530] [1506884061813324259-echo]: kern_exec reboot kern_exec_3589 pid_only 3589
+[  175.817965] [1506884061815858200-echo]: kern_exec reboot kern_exec_3590 pid_only 3590
+[  175.820283] [1506884061819171751-echo]: kern_exec reboot kern_exec_3630 pid_only 3630
+[  175.828236] [1506884061826929801-echo]: 3464
+[  175.833026] [1506884061831861358-echo]: mapserver reboot mapserver pid_only 3464
+[  175.841314] [1506884061839935517-echo]: 3692
+[  175.845704] [1506884061844580846-echo]: inetd reboot inetd pid_only 3692
+[  175.853702] [1506884061852411649-echo]: 3688
+[  175.858664] [1506884061856518704-echo]: crond reboot crond pid_only 3688
+[  175.865972] [1506884061864745993-echo]: ccnet-ctm reboot ccnet-ctm pid_only 3502
+[  175.869331] [1506884061868132349-echo]: pts14
+[  175.872908] [1506884061871563309-echo]: P2
+[  175.877557] [1506884061876338083-echo]: pts14
+[  175.881223] [1506884061879771567-echo]: P2
+[  175.891579] [1506884061890396444-echo]: 3402
+[  175.895155] [1506884061894022647-echo]: linxdisc reboot linxdisc pid_only 3402
+rcS: Activating System Guardian
+[  175.897963] [1506884061896488796-echo]: rcS: Activating System Guardian
+Enabling system monitoring
+System monitoring is started
+run additional guardian services
+[  175.965002] linx init_ecm_connection tx_def_queue_max_size = 2048
+[  176.438228] linx init_ecm_connection tx_def_queue_max_size = 2048
+[EXEC]: 0x8001e002 : dumber [0x3e] rel_simpts_13.00.2_abenbach started. @ 0x0 size 0
+EXEC: STATE 0x8001e002 : dumber loading -> starting active Event() loaded
+EXEC: STATE 0x8001e002 : dumber starting -> initialize active Event() STAR
+Example Intitialize Action (primary 1 cold 1)
+EXEC: STATE 0x8001e002 : dumber initialize -> normal active Event() INIT
+rcS: Turning off KLM printing to console for all but Critical logs
+[  177.090804] [1506884063089587860-echo]: rcS: Turning off KLM printing to console for all but Critical logs
+rcS: Re-enable console output with: dmesg -n 7
+rcS: Sleep 20s to allow for /enableConsole
+[EXEC]: 0x8001e003 : dpb [0x4b] rel_simpts_13.00.2_abenbach started. @ 0x0 size 0
+EXEC: STATE 0x8001e003 : dpb loading -> starting active Event() loaded
+EXEC: STATE 0x8001e003 : dpb starting -> initialize active Event() STAR
+sh: /cgroup/cpu/osrp/tasks: No such file or directory
+sh: /cgroup/cpuacct/osrp/tasks: No such file or directory
+EXEC: STATE 0x8001e003 : dpb initialize -> normal active Event() INIT
+
+Accelerator/SBT driver version 1
+
+[EXEC]: 0x8001e004 : osrp [0x4d] rel_simpts_13.00.2_abenbach started. @ 0x0 size 0
+EXEC: STATE 0x8001e004 : osrp loading -> starting active Event() loaded
+EXEC: STATE 0x8001e004 : osrp starting -> initialize active Event() STAR
+sh: /cgroup/cpu/osrp/tasks: No such file or directory
+sh: /cgroup/cpuacct/osrp/tasks: No such file or directory
+[EXEC]: 0x8001e005 : bbb-xc [0x4c] rel_simpts_13.00.2_abenbach started. @ 0x0 size 0
+EXEC: STATE 0x8001e005 : bbb-xc loading -> starting active Event() loaded
+EXEC: STATE 0x8001e005 : bbb-xc starting -> initialize active Event() STAR
+root: rc.ntpd.client: coarse resync stage 2 complete, resuming ntpd fine adjustments
+root: rc.ntpd: ntpd started
+[EXEC]: 0x8001e006 : cesd-ctm [0x0] rel_simpts_13.00.2_abenbach started. @ 0x0 size 0
+EXEC: STATE 0x8001e006 : cesd-ctm loading -> starting active Event() loaded
+EXEC: STATE 0x8001e006 : cesd-ctm starting -> initialize active Event() STAR
+ToPSync TOPSYNC_9522_REL2 is open fd=24
+Could not read EA tag from HW IDP device.
+Could not read EA tag from HW IDP device.
+Hardware version: 0x00000000
+Application version:
+System state is BOOT
+ToPSync is in BOOT state
+Factory boot version:
+Field boot version:
+Port 0 enabled (0x1)
+Port 1 enabled (0x101)
+    Port 0 MAC:   00:00:00:00:00:00
+    Port 0 SGMII: MAC
+    Port 0 DHCP:  OFF
+    Port 0 IP      0.0.0.0
+    Port 0 mask    0.0.0.0
+    Port 0 gateway 0.0.0.0
+[EXEC]: 0x8001e007 : umi-c_pts [0x0] rel_simpts_13.00.2_abenbach started. @ 0x0 size 0
+EXEC: STATE 0x8001e007 : umi-c_pts loading -> starting active Event() loaded
+EXEC: STATE 0x8001e007 : umi-c_pts starting -> initialize active Event() STAR
+    Port 1 MAC:   00:00:00:00:00:00
+EXEC: STATE 0x8001e007 : umi-c_pts initialize -> normal active Event() INIT
+    Port 1 SGMII: MAC
+    Port 1 DHCP:  OFF
+    Port 1 IP      0.0.0.0
+    Port 1 mask    0.0.0.0
+    Port 1 gateway 0.0.0.0
+Checking MAC Address for Port0... Assigned MAC for Port 0: 00:AA:AA:AA:07:05
+Writing new MAC address for port 0
+Checking MAC Address for Port1... Assigned MAC for Port 1: 00:AA:AA:AA:07:06
+Writing new MAC address for port 1
+Checking Port0 SGMII... Writing new SGMII config for port 0: 0x0 -> 0x1
+Checking Port1 SGMII... Writing new SGMII config for port 1: 0x0 -> 0x1
+Skip firmware upload in SIM
+Setting system state to INTIALISING SYSTEM
+[EXEC]: 0x8001e008 : cesd-pslm [0x0] rel_simpts_13.00.2_abenbach started. @ 0x0 size 0
+EXEC: STATE 0x8001e008 : cesd-pslm loading -> starting active Event() loaded
+EXEC: STATE 0x8001e008 : cesd-pslm starting -> initialize active Event() STAR
+Dead child (zombie) process pid 1 cleaned up.
+Dead child (zombie) process pid 1765 cleaned up.
+Dead child (zombie) process pid 2831 cleaned up.
+Dead child (zombie) process pid 2908 cleaned up.
+Dead child (zombie) process pid 2971 cleaned up.
+Dead child (zombie) process pid 3293 cleaned up.
+Dead child (zombie) process pid 3295 cleaned up.
+Dead child (zombie) process pid 3509 cleaned up.
+Dead child (zombie) process pid 3511 cleaned up.
+Dead child (zombie) process pid 3550 cleaned up.
+Setting system state to INTIALISING APPLICATION
+Writing PTP default parameters...
+    Address    -> New Value
+    0x01014002 -> 0xE0000181
+    0x01014003 -> 0x000000B8
+    0x01014004 -> 0x00000000
+    0x01014006 -> 0x011B1900
+    0x01014007 -> 0x00000000
+Setting system state to RUNNING
+Writing PTP configuration parameters...
+    Address    -> New Value
+    0x0A000004 -> 0x00000000
+    0x0A000000 -> 0x00000000
+    0x0A000001 -> 0x00000000
+    0x0A000002 -> 0x00000002
+    0x0A000004 -> 0x00000001
+    0x0A000003 -> 0x00000003
+    0x0A000005 -> 0x00000001
+Setting OpCLK MUX: OPCLK1 (TO2) from TDM input block
+Reading configuration...
+    Ethernet 0 address: 00:00:00:00:00:00
+    Ethernet 1 address: 00:00:00:00:00:00
+PTP Port Information:
+    Physical port 0
+    Protocol      UDP4
+    Version       0
+    Node ID       00:00:00:00:00:00:00:00
+    Message periods (unicast):
+       Announce       1.0000 s
+       Sync           1.0000 s
+       Delay response 1.0000 s
+
+
+SAFERAM: validMaskSETSFM = 0x0
+
+SWERR: F:ehsi_common.c L:2857 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:2919 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:2974 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:3084 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:2562 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:2441 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:2684 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:2623 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:2741 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:3459 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:3794 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:4023 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:4081 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:4255 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:4313 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:4139 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:4197 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:5413 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:5515 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:5314 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:2857 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:3084 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:2441 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:2562 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:2741 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:3459 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:4023 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:4081 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:4139 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:4197 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:5413 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:5515 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:7108 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:5004 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:5094 Invalid port = 0 or instance = 1
+SWERR: F:ehsi_common.c L:3029 Invalid port = 0 or instance = 1
+SWERR: F:ptsxc_ehsi_common.c L:309 : ehsi_eMotr_common_bind:Unable to bind all the Functions for mother board SFP!!
+SWERR: F:ptsxc_ehsi_common.c L:327 : ehsi_eMotr_common_bind:Unable to bind all the Functions for mother board XFP!!
+SWERR: F:ehsi_otn_switching.c L:487 PTSXC_DEBUG: inside bindEHSI_otn_switching_addPort
+OAF Events ERR: Initialisation INCOMPLETE
+EXEC: STATE 0x8001e005 : bbb-xc initialize -> normal active Event() INIT
+DIDN'T GET RESULT !!
+bnrpath_g=
+curRel_g=rel_simpts_13.00.2_abenbach
+cardType_g=pts14
+cardArch_g=i486-sim
+rcS: Creating RTRV-LOG log directory
+
+starting pid 4756, tty '': '-/bin/sh'
+6500> Binding an VF packet via VDP
+EXEC: STATE 0x8001e006 : cesd-ctm initialize -> normal active Event() INIT
+EXEC: A-1 (-) is supported in release rel_simpts_13.00.2_abenbach.
+EXEC: A-2 (-) is supported in release rel_simpts_13.00.2_abenbach.
+EXEC: A-3 (-) is supported in release rel_simpts_13.00.2_abenbach.
+EXEC: A-4 (-) is supported in release rel_simpts_13.00.2_abenbach.
+EXEC: A-5 (-) is supported in release rel_simpts_13.00.2_abenbach.
+EXEC: A-6 (-) is supported in release rel_simpts_13.00.2_abenbach.
+EXEC: A-7 (-) is supported in release rel_simpts_13.00.2_abenbach.
+EXEC: A-8 (-) is supported in release rel_simpts_13.00.2_abenbach.
+EXEC: A-9 (-) is supported in release rel_simpts_13.00.2_abenbach.
+EXEC: A-10 (-) is supported in release rel_simpts_13.00.2_abenbach.
+EXEC: A-11 (-) is supported in release rel_simpts_13.00.2_abenbach.
+EXEC: A-12 (-) is supported in release rel_simpts_13.00.2_abenbach.
+EXEC: A-13 (-) is supported in release rel_simpts_13.00.2_abenbach.
+EXEC: A-14 (-) is supported in release rel_simpts_13.00.2_abenbach.
+EXEC: A-CM1 (-) is supported in release rel_simpts_13.00.2_abenbach.
+EXEC: A-CM2 (-) is supported in release rel_simpts_13.00.2_abenbach.
+EXEC: A-SP1 (-) is supported in release rel_simpts_13.00.2_abenbach.
+EXEC: A-SP2 (-) is supported in release rel_simpts_13.00.2_abenbach.
+EXEC: A-AP1 (-) is supported in release rel_simpts_13.00.2_abenbach.
+EXEC: A-AP2 (-) is supported in release rel_simpts_13.00.2_abenbach.
+EXEC(STUBBED): A-1 can now boot as the DIP settings are OK.
+EXEC(STUBBED): A-2 can now boot as the DIP settings are OK.
+EXEC(STUBBED): A-3 can now boot as the DIP settings are OK.
+EXEC(STUBBED): A-4 can now boot as the DIP settings are OK.
+EXEC(STUBBED): A-5 can now boot as the DIP settings are OK.
+EXEC(STUBBED): A-6 can now boot as the DIP settings are OK.
+EXEC(STUBBED): A-7 can now boot as the DIP settings are OK.
+EXEC(STUBBED): A-8 can now boot as the DIP settings are OK.
+EXEC(STUBBED): A-9 can now boot as the DIP settings are OK.
+EXEC(STUBBED): A-10 can now boot as the DIP settings are OK.
+EXEC(STUBBED): A-11 can now boot as the DIP settings are OK.
+EXEC(STUBBED): A-12 can now boot as the DIP settings are OK.
+EXEC(STUBBED): A-13 can now boot as the DIP settings are OK.
+EXEC(STUBBED): A-14 can now boot as the DIP settings are OK.
+EXEC(STUBBED): A-CM1 can now boot as the DIP settings are OK.
+EXEC(STUBBED): A-CM2 can now boot as the DIP settings are OK.
+EXEC(STUBBED): A-SP1 can now boot as the DIP settings are OK.
+EXEC(STUBBED): A-SP2 can now boot as the DIP settings are OK.
+EXEC(STUBBED): A-AP1 can now boot as the DIP settings are OK.
+EXEC(STUBBED): A-AP2 can now boot as the DIP settings are OK.
+
+reloading /etc/inittab
+
+reloading /etc/inittab
+EXEC: STATE 0x8001e008 : cesd-pslm initialize -> normal active Event() INIT
+root: rc.ntpd: ntpd started
+EXEC: STATE 0x8001e004 : osrp initialize -> normal active Event() INIT
+CtmBootCtrlDevice::HandleEvents() - entering self ctm event handler
+[SimApp-simpotsbootctrl]::PcpCallback SelfStateChangeEvent newStatus:SwGood
+++map++++++++++++++++++++++++++++++++++++++++++++
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+Map abdication unexpectedly forced by secondary!!
+Please reset and/or remove and reinsert
+your secondary to clear this problem!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
++++++++++++++++++++++++++++++++++++++++++++++++++
+cat: /proc/ciena/oaf/uart_log: No such file or directory
+/ciena/scripts/setsCaptureInfo.sh: line 40: bcmMsgTest: command not found
+/ciena/scripts/setsCaptureInfo.sh: line 44: bcmMsgTest: command not found

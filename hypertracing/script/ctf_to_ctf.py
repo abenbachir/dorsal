@@ -154,8 +154,8 @@ def main(argv):
                 except Exception as ex:
                     print(event.timestamp, myevent, ex)
 
-#        if count > 100000:
-#            break
+        if count > 100000:
+           break
 
     # flush the streams
     for domain, streams in per_cpu_streams.items():
