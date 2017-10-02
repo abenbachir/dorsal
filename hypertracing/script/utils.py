@@ -388,7 +388,7 @@ def get_comm(comms):
         # values
         # thread_name.append("".join(values))
     thread_name.reverse()
-    return "".join(thread_name)
+    return "".join(thread_name).split('\x00')[0]
 
 def handle_l1_event(event):
     fields = get_fields(event)
@@ -741,3 +741,12 @@ def babeltrace_create_writer(stream_name, path, per_cpu_streams):
         per_cpu_streams[stream_name].append(stream)
 
     return event_classes
+
+
+print(get_comm([0x29007a69706d6f63]))
+print(get_comm([0x30, 0x2f72656b726f776b]))
+print(get_comm([0x382d31, 0x6164732f3264626a]))
+print(get_comm([0x29, 0x6d640067726f58]))
+print(get_comm([0x726f, 0x74616e0068006464]))
+print(get_comm([0x64, 0x656863735f756372]))
+
