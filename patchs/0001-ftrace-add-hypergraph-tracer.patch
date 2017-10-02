@@ -1,4 +1,4 @@
-From 75e328dc4827ca85b0d89311ecfd72d18304fc07 Mon Sep 17 00:00:00 2001
+From 3cf35d7f13a9bcc20445e36585a30aa6104d9462 Mon Sep 17 00:00:00 2001
 From: Abderrahmane Benbachir <abderrahmane.benbachir@polymtl.ca>
 Date: Mon, 25 Sep 2017 17:58:22 -0400
 Subject: [PATCH] ftrace: add hypergraph tracer
@@ -27,7 +27,7 @@ index 90f2701d92a7..a75eebdc144e 100644
  ifeq ($(CONFIG_BLOCK),y)
 diff --git a/kernel/trace/trace_hypergraph.c b/kernel/trace/trace_hypergraph.c
 new file mode 100644
-index 000000000000..e0bb86276807
+index 000000000000..6103b72aa64f
 --- /dev/null
 +++ b/kernel/trace/trace_hypergraph.c
 @@ -0,0 +1,245 @@
@@ -278,3 +278,4 @@ index 000000000000..e0bb86276807
 +early_initcall(init_hypergraph_trace);
 -- 
 2.11.0
+
