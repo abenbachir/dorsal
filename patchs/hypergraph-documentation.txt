@@ -1,0 +1,62 @@
+
+Hypergraph is hypertracing proof-of-concept implementation in ftrace infrastructure. we record sched_switch event with function entry & exit.
+
+Hypergraph provide the possibility to a associate which process call stack that led to vmexits 
+
+In Guest
+--------------------------------------------------------------
+$ echo hypergraph > /sys/kernel/debug/tracing/current_tracer
+$ echo 1 > /sys/kernel/debug/tracing/tracing_on
+$ dd if=/dev/zeo of=/tmp/test bs=1K count=5K oflag=sync iflag=sync
+$ echo 0 > /sys/kernel/debug/tracing/tracing_on
+
+
+In Host
+--------------------------------------------------------------
+$ sudo trace-cmd record -e kvm_hypercall -e kvm_exit -f exit_reason!=18
+$ sudo trace-cmd report
+...
+      CPU-11281 [000] 160701.373488: kvm_hypercall:        nr 0x3e8 a0 0x72 a1 0x642 a2 0x0 a3 0x29007a69706d6f63
+      CPU-11281 [000] 160701.373489: kvm_hypercall:        nr 0x64 a0 0xffffffffbc26f7c0 a1 0x1 a2 0x0 a3 0x0
+      CPU-11281 [000] 160701.373490: kvm_hypercall:        nr 0x65 a0 0xffffffffbc26f7c0 a1 0x150 a2 0x1 a3 0x0
+      CPU-11281 [000] 160701.373491: kvm_hypercall:        nr 0x64 a0 0xffffffffbc2a7fe0 a1 0x2 a2 0x0 a3 0x0
+      CPU-11281 [000] 160701.373492: kvm_exit:             reason PENDING_INTERRUPT rip 0xffffffffbc2a8058 info 0 0
+      CPU-11281 [000] 160701.373494: kvm_hypercall:        nr 0x64 a0 0xffffffffbcaf4750 a1 0x3 a2 0x0 a3 0x0
+      CPU-11281 [000] 160701.373495: kvm_hypercall:        nr 0x64 a0 0xffffffffbc285c90 a1 0x4 a2 0x0 a3 0x0
+      CPU-11281 [000] 160701.373496: kvm_hypercall:        nr 0x64 a0 0xffffffffbc2f0100 a1 0x5 a2 0x0 a3 0x0
+      CPU-11281 [000] 160701.373496: kvm_hypercall:        nr 0x65 a0 0xffffffffbc2f0100 a1 0x30 a2 0x5 a3 0x0
+      CPU-11281 [000] 160701.373497: kvm_hypercall:        nr 0x65 a0 0xffffffffbc285c90 a1 0x66f a2 0x4 a3 0x0
+      CPU-11281 [000] 160701.373499: kvm_exit:             reason MSR_WRITE rip 0xffffffffbc25641d info 0 0
+      CPU-11281 [000] 160701.373501: kvm_exit:             reason IO_INSTRUCTION rip 0xffffffffbc6616d5 info c1e20008 0
+      CPU-11281 [000] 160701.373515: kvm_exit:             reason IO_INSTRUCTION rip 0xffffffffbc6616d5 info c1e00008 0
+      CPU-11281 [000] 160701.373519: kvm_exit:             reason IO_INSTRUCTION rip 0xffffffffbc661797 info c1e00000 0
+      CPU-11281 [000] 160701.373522: kvm_exit:             reason IO_INSTRUCTION rip 0xffffffffbc6616d5 info 3f60008 0
+      CPU-11281 [000] 160701.373525: kvm_exit:             reason IO_INSTRUCTION rip 0xffffffffbc6616d5 info 3f60008 0
+      CPU-11281 [000] 160701.373529: kvm_exit:             reason IO_INSTRUCTION rip 0xffffffffbc6616d5 info 1f70008 0
+      CPU-11281 [000] 160701.373533: kvm_exit:             reason IO_INSTRUCTION rip 0xffffffffbc6616d5 info c1e20008 0
+      CPU-11281 [000] 160701.373536: kvm_exit:             reason IO_INSTRUCTION rip 0xffffffffbc661797 info c1e20000 0
+      CPU-11281 [000] 160701.373542: kvm_hypercall:        nr 0x64 a0 0xffffffffbcaf53b0 a1 0x4 a2 0x0 a3 0x0
+      CPU-11281 [000] 160701.373569: kvm_hypercall:        nr 0x65 a0 0xffffffffbcaf53b0 a1 0x6342 a2 0x4 a3 0x0
+      CPU-11281 [000] 160701.373570: kvm_hypercall:        nr 0x64 a0 0xffffffffbc2ad3f0 a1 0x4 a2 0x0 a3 0x0
+      CPU-11281 [000] 160701.373570: kvm_hypercall:        nr 0x65 a0 0xffffffffbc2ad3f0 a1 0x32 a2 0x4 a3 0x0
+      CPU-11281 [000] 160701.373571: kvm_hypercall:        nr 0x64 a0 0xffffffffbc2f0010 a1 0x4 a2 0x0 a3 0x0
+      CPU-11281 [000] 160701.373572: kvm_hypercall:        nr 0x65 a0 0xffffffffbc2f0010 a1 0x2e a2 0x4 a3 0x0
+      CPU-11281 [000] 160701.373573: kvm_hypercall:        nr 0x65 a0 0xffffffffbcaf4750 a1 0x13120 a2 0x3 a3 0x0
+      CPU-11281 [000] 160701.373574: kvm_hypercall:        nr 0x65 a0 0xffffffffbc2a7fe0 a1 0x13fe3 a2 0x2 a3 0x0
+      CPU-11281 [000] 160701.373574: kvm_hypercall:        nr 0x64 a0 0xffffffffbc2eebd0 a1 0x2 a2 0x0 a3 0x0
+      CPU-11281 [000] 160701.373575: kvm_hypercall:        nr 0x65 a0 0xffffffffbc2eebd0 a1 0x3e a2 0x2 a3 0x0
+      CPU-11281 [000] 160701.373576: kvm_hypercall:        nr 0x64 a0 0xffffffffbc2a8f60 a1 0x2 a2 0x0 a3 0x0
+      CPU-11281 [000] 160701.373577: kvm_hypercall:        nr 0x65 a0 0xffffffffbc2a8f60 a1 0x34 a2 0x2 a3 0x0
+      CPU-11281 [000] 160701.373578: kvm_hypercall:        nr 0x64 a0 0xffffffffbc2bbef0 a1 0x2 a2 0x0 a3 0x0
+      CPU-11281 [000] 160701.373578: kvm_hypercall:        nr 0x64 a0 0xffffffffbc2b5d80 a1 0x3 a2 0x0 a3 0x0
+      CPU-11281 [000] 160701.373579: kvm_hypercall:        nr 0x65 a0 0xffffffffbc2b5d80 a1 0x2e a2 0x3 a3 0x0
+      CPU-11281 [000] 160701.373580: kvm_hypercall:        nr 0x64 a0 0xffffffffbc2b7140 a1 0x3 a2 0x0 a3 0x0
+      CPU-11281 [000] 160701.373581: kvm_hypercall:        nr 0x65 a0 0xffffffffbc2b7140 a1 0x2e a2 0x3 a3 0x0
+      CPU-11281 [000] 160701.373581: kvm_hypercall:        nr 0x64 a0 0xffffffffbc2b1880 a1 0x3 a2 0x0 a3 0x0
+      CPU-11281 [000] 160701.373582: kvm_hypercall:        nr 0x64 a0 0xffffffffbc2b1830 a1 0x4 a2 0x0 a3 0x0
+      CPU-11281 [000] 160701.373583: kvm_hypercall:        nr 0x65 a0 0xffffffffbc2b1830 a1 0x47 a2 0x4 a3 0x0
+      CPU-11281 [000] 160701.373584: kvm_hypercall:        nr 0x64 a0 0xffffffffbc2b0e60 a1 0x4 a2 0x0 a3 0x0
+      CPU-11281 [000] 160701.373584: kvm_hypercall:        nr 0x65 a0 0xffffffffbc2b0e60 a1 0x44 a2 0x4 a3 0x0
+      CPU-11281 [000] 160701.373585: kvm_hypercall:        nr 0x65 a0 0xffffffffbc2b1880 a1 0xc57 a2 0x3 a3 0x0
+      CPU-11281 [000] 160701.373586: kvm_hypercall:        nr 0x64 a0 0xffffffffbc2b1880 a1 0x3 a2 0x0 a3 0x0
+      CPU-11281 [000] 160701.373587: kvm_hypercall:        nr 0x64 a0 0xffffffffbc2b0e60 a1 0x4 a2 0x0 a3 0x0

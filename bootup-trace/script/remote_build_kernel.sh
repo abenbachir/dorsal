@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 linuxsource="linux"
-target="ubuntu2"
+target="vm1"
 # virsh setvcpus --live ubuntu 4
 
 
@@ -11,15 +11,15 @@ target="ubuntu2"
 #scp ~/$linuxsource/kernel/hypercall.c $target:~/linux/kernel/
 
 scp ~/$linuxsource/kernel/trace/Makefile $target:~/linux/kernel/trace/
-scp ~/$linuxsource/kernel/trace/trace.c $target:~/linux/kernel/trace/
-scp ~/$linuxsource/kernel/trace/trace.h $target:~/linux/kernel/trace/
+# scp ~/$linuxsource/kernel/trace/trace.c $target:~/linux/kernel/trace/
+# scp ~/$linuxsource/kernel/trace/trace.h $target:~/linux/kernel/trace/
 
 scp ~/$linuxsource/kernel/trace/trace_hypergraph.c $target:~/linux/kernel/trace/
-scp ~/$linuxsource/kernel/trace/trace_hyperbootlevel.c $target:~/linux/kernel/trace/
-scp ~/$linuxsource/kernel/trace/trace_hypertrace.c $target:~/linux/kernel/trace/
+# scp ~/$linuxsource/kernel/trace/trace_hyperbootlevel.c $target:~/linux/kernel/trace/
+# scp ~/$linuxsource/kernel/trace/trace_hypertrace.c $target:~/linux/kernel/trace/
 
-scp ~/$linuxsource/init/main.c $target:~/linux/init/
-scp ~/$linuxsource/init/Makefile $target:~/linux/init/
+# scp ~/$linuxsource/init/main.c $target:~/linux/init/
+# scp ~/$linuxsource/init/Makefile $target:~/linux/init/
 
 
 ssh $target 'cd linux; make -j$(nproc) && sudo make modules_install && sudo make install;'
