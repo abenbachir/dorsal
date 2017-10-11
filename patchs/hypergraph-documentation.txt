@@ -1,62 +1,67 @@
+Hi Steven, 
+This is a followup of our last discussion in linux plumbers about tracing bootup.
+This RFC patch is a hypertracing proof-of-concept implemented with ftrace infrastructure.
 
-Hypergraph is hypertracing proof-of-concept implementation in ftrace infrastructure. we record sched_switch event with function entry & exit.
+I used this technique to associate process callstack with vmexits.
 
-Hypergraph provide the possibility to a associate which process call stack that led to vmexits 
+I also want to apply this technique to trace very early bootup [without using 
+memory allocation], but as you said, ftrace needs to allocate memory in order to 
+store mcounts. You have also mentionned that logdev is an ftrace's ancestor that 
+was able to start tracing very early. Does logdev provide function tracing too ?
 
-In Guest
---------------------------------------------------------------
-$ echo hypergraph > /sys/kernel/debug/tracing/current_tracer
-$ echo 1 > /sys/kernel/debug/tracing/tracing_on
-$ dd if=/dev/zeo of=/tmp/test bs=1K count=5K oflag=sync iflag=sync
-$ echo 0 > /sys/kernel/debug/tracing/tracing_on
+Thanks.
+Abder
+
+This is an example of tracing guest :
+Guest --------------------------------------------------------------
+guest:$ sudo trace-cmd record -p hypergraph
+    plugin 'hypergraph'
+  Hit Ctrl^C to stop recording
+
+Host ---------------------------------------------------------------
+host:$ sudo trace-cmd record -e kvm_hypercall -e kvm_exit -f exit_reason!=18
+  /sys/kernel/debug/tracing/events/kvm/kvm_hypercall
+  /sys/kernel/debug/tracing/events/kvm/kvm_exit
+  Hit Ctrl^C to stop recording
 
 
-In Host
---------------------------------------------------------------
-$ sudo trace-cmd record -e kvm_hypercall -e kvm_exit -f exit_reason!=18
-$ sudo trace-cmd report
+rhost:$ sudo trace-cmd report
+
+0.676967: kvm_hypercall: nr 0x64 a0 0xffffffff96cb0cf0 a1 0xb a2 0x0 a3 0x0
+0.676968: kvm_hypercall: nr 0x65 a0 0xffffffff96cb0cf0 a1 0x48 a2 0xb a3 0x0
+0.676970: kvm_hypercall: nr 0x65 a0 0xffffffff96cb3d00 a1 0xdf4 a2 0xa a3 0x0
+0.676971: kvm_hypercall: nr 0x65 a0 0xffffffff96cbbef0 a1 0xe7c8 a2 0x9 a3 0x0
+
+0.676973: kvm_hypercall: nr 0x3e8 a0 0x67d a1 0x72 a2 0x48313a30 a3 0x2f72656b726f776b
+0.676974: kvm_hypercall: nr 0x64 a0 0xffffffff96ca7fe0 a1 0x1 a2 0x0 a3 0x0
+0.676975: kvm_hypercall: nr 0x65 a0 0xffffffff96ca7fe0 a1 0xe3 a2 0x1 a3 0x0
+0.676976: kvm_hypercall: nr 0x65 a0 0xffffffff974ecf90 a1 0x48feec a2 0x0 a3 0x0
+0.676977: kvm_hypercall: nr 0x64 a0 0xffffffff96c99dd0 a1 0x0 a2 0x0 a3 0x0
+0.676979: kvm_hypercall: nr 0x64 a0 0xffffffff9701bcb0 a1 0x1 a2 0x0 a3 0x0
+0.676979: kvm_hypercall: nr 0x64 a0 0xffffffff9701a4f0 a1 0x2 a2 0x0 a3 0x0
 ...
-114 -> 0x72 -> kworker/0
-1661 -> 0x67d -> compiz
-8 -> x8 -> rcu_sched
+0.677109: kvm_hypercall: nr 0x64 a0 0xffffffff974f4e50 a1 0xa a2 0x0 a3 0x0
+0.677110: kvm_hypercall: nr 0x64 a0 0xffffffff96c85c90 a1 0xb a2 0x0 a3 0x0
+0.677111: kvm_hypercall: nr 0x64 a0 0xffffffff96cf0100 a1 0xc a2 0x0 a3 0x0
+0.677112: kvm_hypercall: nr 0x65 a0 0xffffffff96cf0100 a1 0x32 a2 0xc a3 0x0
+0.677113: kvm_hypercall: nr 0x65 a0 0xffffffff96c85c90 a1 0x6e6 a2 0xb a3 0x0
+0.677114: kvm_exit:      reason MSR_WRITE rip 0xffffffff96c5641d info 0 0
+0.677124: kvm_exit:      reason MSR_WRITE rip 0xffffffff96c61eb4 info 0 0
+0.677126: kvm_hypercall: nr 0x64 a0 0xffffffff974f53b0 a1 0xb a2 0x0 a3 0x0
+0.677127: kvm_exit:      reason PENDING_INTERRUPT rip 0xffffffff974f541d info 0 0
+0.677129: kvm_exit:      reason IO_INSTRUCTION rip 0xffffffff970616d5 info 3f60008 0
+0.677137: kvm_exit:      reason IO_INSTRUCTION rip 0xffffffff970616d5 info 1f70008 0
+0.677142: kvm_exit:      reason IO_INSTRUCTION rip 0xffffffff970616d5 info c1e20008 0
+0.677146: kvm_exit:      reason IO_INSTRUCTION rip 0xffffffff97061797 info c1e20000 0
+0.677158: kvm_hypercall: nr 0x65 a0 0xffffffff974f53b0 a1 0x7ba8 a2 0xb a3 0x0
+0.677160: kvm_hypercall: nr 0x64 a0 0xffffffff96cad3f0 a1 0xb a2 0x0 a3 0x0
+0.677160: kvm_hypercall: nr 0x65 a0 0xffffffff96cad3f0 a1 0x41 a2 0xb a3 0x0
+0.677161: kvm_hypercall: nr 0x64 a0 0xffffffff96cf0010 a1 0xb a2 0x0 a3 0x0
+0.677162: kvm_hypercall: nr 0x65 a0 0xffffffff96cf0010 a1 0x2e a2 0xb a3 0x0
 
 
-sched_switch 0x67d -> 0x72 
-
-CPU-3129  [001]   310.676967: kvm_hypercall:        nr 0x64 a0 0xffffffff96cb0cf0 a1 0xb a2 0x0 a3 0x0
-CPU-3129  [001]   310.676968: kvm_hypercall:        nr 0x65 a0 0xffffffff96cb0cf0 a1 0x48 a2 0xb a3 0x0
-CPU-3129  [001]   310.676970: kvm_hypercall:        nr 0x65 a0 0xffffffff96cb3d00 a1 0xdf4 a2 0xa a3 0x0
-CPU-3129  [001]   310.676971: kvm_hypercall:        nr 0x65 a0 0xffffffff96cbbef0 a1 0xe7c8 a2 0x9 a3 0x0
-
-CPU-3129  [001]   310.676973: kvm_hypercall:        nr 0x3e8 a0 0x67d a1 0x72 a2 0x48313a30 a3 0x2f72656b726f776b
-CPU-3129  [001]   310.676974: kvm_hypercall:        nr 0x64 a0 0xffffffff96ca7fe0 a1 0x1 a2 0x0 a3 0x0
-CPU-3129  [001]   310.676975: kvm_hypercall:        nr 0x65 a0 0xffffffff96ca7fe0 a1 0xe3 a2 0x1 a3 0x0
-CPU-3129  [001]   310.676976: kvm_hypercall:        nr 0x65 a0 0xffffffff974ecf90 a1 0x48feec a2 0x0 a3 0x0
-CPU-3129  [001]   310.676977: kvm_hypercall:        nr 0x64 a0 0xffffffff96c99dd0 a1 0x0 a2 0x0 a3 0x0
-CPU-3129  [001]   310.676979: kvm_hypercall:        nr 0x64 a0 0xffffffff9701bcb0 a1 0x1 a2 0x0 a3 0x0
-CPU-3129  [001]   310.676979: kvm_hypercall:        nr 0x64 a0 0xffffffff9701a4f0 a1 0x2 a2 0x0 a3 0x0
-...
-CPU-3129  [001]   310.677109: kvm_hypercall:        nr 0x64 a0 0xffffffff974f4e50 a1 0xa a2 0x0 a3 0x0
-CPU-3129  [001]   310.677110: kvm_hypercall:        nr 0x64 a0 0xffffffff96c85c90 a1 0xb a2 0x0 a3 0x0
-CPU-3129  [001]   310.677111: kvm_hypercall:        nr 0x64 a0 0xffffffff96cf0100 a1 0xc a2 0x0 a3 0x0
-CPU-3129  [001]   310.677112: kvm_hypercall:        nr 0x65 a0 0xffffffff96cf0100 a1 0x32 a2 0xc a3 0x0
-CPU-3129  [001]   310.677113: kvm_hypercall:        nr 0x65 a0 0xffffffff96c85c90 a1 0x6e6 a2 0xb a3 0x0
-CPU-3129  [001]   310.677114: kvm_exit:             reason MSR_WRITE rip 0xffffffff96c5641d info 0 0
-CPU-3129  [001]   310.677124: kvm_exit:             reason MSR_WRITE rip 0xffffffff96c61eb4 info 0 0
-CPU-3129  [001]   310.677126: kvm_hypercall:        nr 0x64 a0 0xffffffff974f53b0 a1 0xb a2 0x0 a3 0x0
-CPU-3129  [001]   310.677127: kvm_exit:             reason PENDING_INTERRUPT rip 0xffffffff974f541d info 0 0
-CPU-3129  [001]   310.677129: kvm_exit:             reason IO_INSTRUCTION rip 0xffffffff970616d5 info 3f60008 0
-CPU-3129  [001]   310.677137: kvm_exit:             reason IO_INSTRUCTION rip 0xffffffff970616d5 info 1f70008 0
-CPU-3129  [001]   310.677142: kvm_exit:             reason IO_INSTRUCTION rip 0xffffffff970616d5 info c1e20008 0
-CPU-3129  [001]   310.677146: kvm_exit:             reason IO_INSTRUCTION rip 0xffffffff97061797 info c1e20000 0
-CPU-3129  [001]   310.677158: kvm_hypercall:        nr 0x65 a0 0xffffffff974f53b0 a1 0x7ba8 a2 0xb a3 0x0
-CPU-3129  [001]   310.677160: kvm_hypercall:        nr 0x64 a0 0xffffffff96cad3f0 a1 0xb a2 0x0 a3 0x0
-CPU-3129  [001]   310.677160: kvm_hypercall:        nr 0x65 a0 0xffffffff96cad3f0 a1 0x41 a2 0xb a3 0x0
-CPU-3129  [001]   310.677161: kvm_hypercall:        nr 0x64 a0 0xffffffff96cf0010 a1 0xb a2 0x0 a3 0x0
-CPU-3129  [001]   310.677162: kvm_hypercall:        nr 0x65 a0 0xffffffff96cf0010 a1 0x2e a2 0xb a3 0x0
-
-
-When parsing the previous trace we can have the following output :
+A simple parser can transate the numbers into apropriate values, then output 
+will be converted to :
 
 # CPU  DURATION   depth                FUNCTION CALLS
 # |     |   |       |                  |   |   |   |
@@ -93,6 +98,9 @@ When parsing the previous trace we can have the following output :
   1)    XXXXX     | 11 | - - - - - - - - - - - rcu_irq_exit();
 
 
+Guest Symbols from /proc/Kallsyms:
+-------------------------------------
+...
 0xffffffff96ca7fe0 finish_task_switch
 0xffffffff974ecf90 schedule
 0xffffffff96c99dd0 process_one_work
@@ -106,3 +114,4 @@ When parsing the previous trace we can have the following output :
 0xffffffff974f53b0 __do_softirq
 0xffffffff96cad3f0 idle_cpu
 0xffffffff96cf0010 rcu_irq_exit
+...

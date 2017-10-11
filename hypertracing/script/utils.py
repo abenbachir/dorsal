@@ -431,7 +431,7 @@ def handle_l1_event(event):
                 'category': previous_bootlevel['label'].replace('_sync',''),
                 'start': previous_bootlevel['timestamp'],
                 'end': timestamp-500,
-                'color': 0
+                # 'color': 0
             }})
 
         if label == 'late_sync':
@@ -440,12 +440,12 @@ def handle_l1_event(event):
                 'category': label.replace('_sync', ''),
                 'start': timestamp,
                 'end': timestamp + 100000,
-                'color': 0
+                # 'color': 0
             }})
         previous_bootlevel = {'label':label, 'timestamp':timestamp}
 
     if is_sched_switch:
-        prev_state, prev_prio, next_prio = 0, 0, 0
+        prev_state, prev_prio, next_prio, prev_comm = 0, 0, 0, ""
         if is_32b():
             prev_tid, next_tid = fields['a0'] >> 16, fields['a0'] & 0xffff
             prev_state = fields['a1'] >> 24
@@ -456,9 +456,18 @@ def handle_l1_event(event):
             # next_state | next_prio | next_tid
             next_state, next_prio, next_tid = fields['a1'] >> 32 + 16, ((fields['a1'] >> 32) & 0xffff), fields['a1'] & 0xffffffff
             next_comm = get_comm([fields['a2'], fields['a3']])
-        # prev_comm = l1_pr_cpu[cpu_id]['next_comm'] if 'next_comm' in l1_pr_cpu[cpu_id] else 'Unknown %s' % prev_tid
-        process_list[next_tid] = next_comm
-        prev_comm = process_list[prev_tid] if prev_tid in process_list else 'Unknown %s' % prev_tid
+
+        # during boot up tid 1 has the name swapper/0, this port confusion with the idle state
+        if next_comm == 'swapper/0' and next_tid == 1:
+            next_comm = 'init/bootup'
+
+        if next_tid != 0:
+            process_list[next_tid] = next_comm
+
+        if prev_tid == 0:
+            prev_comm = 'swapper/%s' % cpu_id
+        else:
+            prev_comm = process_list[prev_tid] if prev_tid in process_list else 'Unknown %s' % prev_tid
 
         l1_pr_cpu[cpu_id]['prev_tid'] = prev_tid
         l1_pr_cpu[cpu_id]['tid'] = next_tid
@@ -556,87 +565,6 @@ def handle_l1_event(event):
 
     return cpu_id, events
 
-
-def handle_l0_event(event):
-    fields = get_fields(event)
-    timestamp = event.timestamp
-
-    cpu_id = event['cpu_id']
-    if cpu_id not in l0_pr_cpu:
-        l0_pr_cpu[cpu_id] = {
-            'prev_pid': 0, 'pid': 1,'prev_tid': 0, 'tid': 1, 'prev_task': '-', 'task': '-', 'func_entry_timestamp': 0,
-            'func_entry_function_name': "", "stack_head": ""
-        }
-    is_sched_switch = (event.name == "sched_switch")
-    is_function_tracing = ("func_" in event.name)
-
-    if is_sched_switch:
-        prev_pid = fields['prev_tid']
-        prev_tgid = fields['prev_tid']
-        next_pid = fields['next_tid']
-        next_tgid = fields['next_tid']
-
-        l0_pr_cpu[cpu_id]['prev_pid'] = prev_pid
-        l0_pr_cpu[cpu_id]['pid'] = next_pid
-        l0_pr_cpu[cpu_id]['prev_tid'] = prev_tgid
-        l0_pr_cpu[cpu_id]['tid'] = next_tgid
-        l0_pr_cpu[cpu_id]['prev_task'] = fields["prev_comm"]
-        l0_pr_cpu[cpu_id]['task'] = fields["next_comm"]
-        return {"type": event.name, "payload":fields}
-
-    if is_function_tracing:
-        # if show_pid != l0_pr_cpu[cpu_id]['pid']:
-        #     continue
-        pid = fields['pid']
-        tid = fields['tid']
-        procname = "".join(fields['procname'])
-        addr = fields['ip']
-        function_name = addr
-        is_entry = event.name == "func_entry"
-        is_exit = event.name == "func_exit"
-        is_entry_exit = event.name == "func_entry_exit"
-
-        depth = fields["depth"]
-
-        if is_entry:
-            hash_code = fields["hash"]
-            if addr not in l1_hash_dict:
-                l1_hash_dict[addr] = hash_code
-            l0_pr_cpu[cpu_id]['func_entry_timestamp'] = timestamp
-            l0_pr_cpu[cpu_id]['func_entry_function_name'] = function_name
-            l0_pr_cpu[cpu_id]['stack_head'] = function_name
-            entry_obj = FunctionEntry(timestamp, addr, hash_code, depth, pid, tid, cpu_id,"L0")
-            entry_obj.procname = procname
-            return entry_obj
-        if is_exit:
-            dur = fields["duration"]
-            is_leaf = not is_entry and l0_pr_cpu[cpu_id]['stack_head'] == function_name
-            # dur = timestamp - l0_pr_cpu[cpu_id]['func_entry_timestamp']
-
-            hash_code = l1_hash_dict[addr] if addr in l1_hash_dict else 0
-            exit_obj = FunctionExit(timestamp, addr, hash_code, depth, pid, tid, cpu_id, "L0")
-            exit_obj.dur = dur
-            exit_obj.guest_dur = dur
-            exit_obj.is_leaf = is_leaf
-            exit_obj.procname = procname
-            return exit_obj
-        if is_entry_exit:
-            calltime = fields["calltime"]
-            dur = calltime - timestamp
-            is_leaf = not is_entry and l0_pr_cpu[cpu_id]['stack_head'] == function_name
-            # dur = timestamp - l0_pr_cpu[cpu_id]['func_entry_timestamp']
-
-            hash_code = l1_hash_dict[addr] if addr in l1_hash_dict else 0
-            obj = FunctionExitOnly(timestamp, addr, hash_code, depth, pid, tid, cpu_id, "L0")
-            obj.dur = dur
-            obj.guest_dur = dur
-            obj.is_leaf = is_leaf
-            obj.procname = procname
-            obj.calltime = calltime
-            return obj
-        return None
-
-
 def babeltrace_create_event_class(event_name, fields):
     event_class = btw.EventClass(event_name)
     for name, type in fields.items():
@@ -667,7 +595,7 @@ def babeltrace_create_writer(stream_name, path, per_cpu_streams):
 
         events_fields = {
             # marker
-            MARKER_EVENT_NAME: {'start':int64_type, 'end':int64_type, 'category':string_type, 'label':string_type, 'color':uint32_type},
+            MARKER_EVENT_NAME: {'start':int64_type, 'end':int64_type, 'category':string_type, 'label':string_type},
             # sched
             SCHED_SWITCH_EVENT_NAME: {'prev_tid':int32_type, 'prev_prio':int32_type, 'prev_state':int32_type,
                                       'prev_comm':array_type, 'next_tid': int32_type, 'next_prio': int32_type,
@@ -741,12 +669,4 @@ def babeltrace_create_writer(stream_name, path, per_cpu_streams):
         per_cpu_streams[stream_name].append(stream)
 
     return event_classes
-
-
-print(get_comm([0x29007a69706d6f63]))
-print(get_comm([0x30, 0x2f72656b726f776b]))
-print(get_comm([0x382d31, 0x6164732f3264626a]))
-print(get_comm([0x29, 0x6d640067726f58]))
-print(get_comm([0x726f, 0x74616e0068006464]))
-print(get_comm([0x64, 0x656863735f756372]))
 

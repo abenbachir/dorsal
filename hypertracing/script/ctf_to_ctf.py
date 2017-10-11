@@ -18,7 +18,7 @@ per_cpu_streams = {}
 
 
 def main(argv):
-    path = "/home/abder/lttng-traces/oneos-bootup"
+    path = "/home/abder/lttng-traces/oneos-bootup/guest"
     output = None
     try:
         if len(argv) > 0:
@@ -74,7 +74,8 @@ def main(argv):
     # ust_event_classes['guest'] = create_writer("guest-ust", trace_path)
 
     count = 0
-    for event in traces.events:
+    for index in range(traces.events):
+        event = traces.events[index]
         events = []
         cpu_id = event['cpu_id']
         is_guest_event = is_hypercall_event(event.name)
@@ -84,7 +85,7 @@ def main(argv):
             continue
 
         vcpu_id, events = handle_l1_event(event)
-        cpu_id = vcpu_id
+        # cpu_id = vcpu_id
 
         for myevent in events:
             is_ust = isinstance(myevent, EventFunction)
@@ -149,12 +150,12 @@ def main(argv):
                                 new_event.payload(name).value = value
                         except Exception as ex:
                             print(ex)
-                    per_cpu_streams[stream_name][cpu_id].append_event(new_event)
-                    count += 1
+                    if index > 50000:
+                        per_cpu_streams[stream_name][cpu_id].append_event(new_event)
                 except Exception as ex:
                     print(event.timestamp, myevent, ex)
 
-        if count > 100000:
+        if index > 100000*3:
            break
 
     # flush the streams
