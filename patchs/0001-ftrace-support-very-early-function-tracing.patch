@@ -1,0 +1,524 @@
+From cf95a7ac252ee6291ed77d8f1493174c851c1ca5 Mon Sep 17 00:00:00 2001
+From: Abder Benbachir <anis.benbachir@gmail.com>
+Date: Thu, 12 Oct 2017 19:03:24 -0400
+Subject: [PATCH] ftrace: support very early function tracing
+
+"ftrace_vearly" is the kernel cmdline option the enable very early
+function tracing. Filtering is possible using the pre-existing ftrace
+features: ftrace_filter and ftrace_notrace.
+
+Currently, the events are saved in a static array, bootmem can be
+used, but thing can be very difficult when tracing super early, we
+kept the static buffer for now.
+
+The timestamp is an other issue that we solved with rdtsc in x86
+arch, but when tsc feature is not supported we fallback to sched_clock
+which only works after a certain period from the early bootup.
+
+Signed-off-by: Abderrahmane Benbachir <abderrahmane.benbachir@polymtl.ca>
+---
+ arch/x86/kernel/ftrace_64.S |  19 +++
+ include/linux/ftrace.h      |   8 +-
+ init/main.c                 |   1 +
+ kernel/trace/ftrace.c       | 298 +++++++++++++++++++++++++++++++++++++++++++-
+ kernel/trace/trace.c        |  28 +++++
+ kernel/trace/trace.h        |   4 +
+ 6 files changed, 356 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
+index 1dfac634bbf7..8ad29295e7b4 100644
+--- a/arch/x86/kernel/ftrace_64.S
++++ b/arch/x86/kernel/ftrace_64.S
+@@ -145,7 +145,17 @@ EXPORT_SYMBOL(mcount)
+ 
+ #ifdef CONFIG_DYNAMIC_FTRACE
+ 
++
+ ENTRY(function_hook)
++	cmpq $ftrace_stub, ftrace_trace_function_vearly
++	jnz vearly_trace
++	retq
++
++vearly_trace:
++	save_mcount_regs
++	call *ftrace_trace_function_vearly
++	restore_mcount_regs
++
+ 	retq
+ END(function_hook)
+ 
+@@ -263,6 +273,9 @@ ENTRY(function_hook)
+ 	cmpq $ftrace_stub, ftrace_trace_function
+ 	jnz trace
+ 
++	cmpq $ftrace_stub, ftrace_trace_function_vearly
++	jnz vearly_trace
++
+ fgraph_trace:
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+ 	cmpq $ftrace_stub, ftrace_graph_return
+@@ -290,6 +303,12 @@ trace:
+ 	restore_mcount_regs
+ 
+ 	jmp fgraph_trace
++
++vearly_trace:
++	save_mcount_regs
++	call *ftrace_trace_function_vearly
++	restore_mcount_regs
++	retq
+ END(function_hook)
+ #endif /* CONFIG_DYNAMIC_FTRACE */
+ 
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 2e028854bac7..c395a0bf9d98 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -43,9 +43,13 @@
+ #ifdef CONFIG_TRACING
+ void trace_init(void);
+ void early_trace_init(void);
++extern void ftrace_early_init(char *command_line);
++extern void ftrace_early_shutdown(void);
+ #else
+ static inline void trace_init(void) { }
+ static inline void early_trace_init(void) { }
++static inline void ftrace_early_init(char *command_line) { }
++static inline void ftrace_early_shutdown(void) { }
+ #endif
+ 
+ struct module;
+@@ -476,6 +480,8 @@ unsigned long ftrace_get_addr_curr(struct dyn_ftrace *rec);
+ 
+ extern ftrace_func_t ftrace_trace_function;
+ 
++extern ftrace_func_t ftrace_trace_function_vearly;
++
+ int ftrace_regex_open(struct ftrace_ops *ops, int flag,
+ 		  struct inode *inode, struct file *file);
+ ssize_t ftrace_filter_write(struct file *file, const char __user *ubuf,
+@@ -757,7 +763,7 @@ static inline unsigned long get_lock_parent_ip(void)
+ #ifdef CONFIG_FTRACE_MCOUNT_RECORD
+ extern void ftrace_init(void);
+ #else
+-static inline void ftrace_init(void) { }
++static inline void ftrace_init(void) { ftrace_early_shutdown(); }
+ #endif
+ 
+ /*
+diff --git a/init/main.c b/init/main.c
+index 0ee9c6866ada..c794292b18ef 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -511,6 +511,7 @@ asmlinkage __visible void __init start_kernel(void)
+ 	char *command_line;
+ 	char *after_dashes;
+ 
++	ftrace_early_init(boot_command_line);
+ 	set_task_stack_end_magic(&init_task);
+ 	smp_setup_processor_id();
+ 	debug_objects_early_init();
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 8319e09e15b9..878770c8041c 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -115,6 +115,7 @@ static DEFINE_MUTEX(ftrace_lock);
+ 
+ static struct ftrace_ops __rcu *ftrace_ops_list __read_mostly = &ftrace_list_end;
+ ftrace_func_t ftrace_trace_function __read_mostly = ftrace_stub;
++ftrace_func_t ftrace_trace_function_vearly __read_mostly = ftrace_stub;
+ static struct ftrace_ops global_ops;
+ 
+ #if ARCH_SUPPORTS_FTRACE_OPS
+@@ -5917,6 +5918,8 @@ void __init ftrace_init(void)
+ 	unsigned long count, flags;
+ 	int ret;
+ 
++	ftrace_early_shutdown();
++
+ 	local_irq_save(flags);
+ 	ret = ftrace_dyn_arch_init();
+ 	local_irq_restore(flags);
+@@ -5939,7 +5942,6 @@ void __init ftrace_init(void)
+ 				  __stop_mcount_loc);
+ 
+ 	set_ftrace_early_filters();
+-
+ 	return;
+  failed:
+ 	ftrace_disabled = 1;
+@@ -6011,11 +6013,14 @@ static void ftrace_update_trampoline(struct ftrace_ops *ops)
+ 
+ #endif /* CONFIG_DYNAMIC_FTRACE */
+ 
++static void ftrace_early_fill_ringbuffer(struct trace_array* tr);
++
+ __init void ftrace_init_global_array_ops(struct trace_array *tr)
+ {
+ 	tr->ops = &global_ops;
+ 	tr->ops->private = tr;
+ 	ftrace_init_trace_array(tr);
++	ftrace_early_fill_ringbuffer(tr);
+ }
+ 
+ void ftrace_init_array_ops(struct trace_array *tr, ftrace_func_t func)
+@@ -6882,3 +6887,294 @@ void ftrace_graph_exit_task(struct task_struct *t)
+ 	kfree(ret_stack);
+ }
+ #endif
++
++/*
++ * ------------------ Very Early Function Tracing --------------------
++ */
++#ifdef CONFIG_FUNCTION_TRACER
++
++static void ftrace_function_vearly_trace_call(unsigned long ip,
++       unsigned long parent_ip, struct ftrace_ops *op, struct pt_regs *regs);
++
++#define VEARLY_MAX_ENTRIES 50000
++#define ftrace_vearly_disable() \
++	ftrace_trace_function_vearly = ftrace_stub
++#define ftrace_vearly_enable() \
++	ftrace_trace_function_vearly = ftrace_function_vearly_trace_call
++#define is_ftrace_vearly_enabled() \
++	ftrace_trace_function_vearly != ftrace_stub
++
++/* 
++ * In very early stage : 
++ *   - only CPU0 is running, there is no need to store it
++ *   - tsc counter is used
++ *
++*/
++struct ftrace_vearly_entry {
++	unsigned long ip;
++	unsigned long parent_ip;
++	unsigned long long cpu_khz;
++	unsigned long long tsc;
++	unsigned long long clock;
++};
++
++static int ftrace_vearly_enabled __initdata = 0;
++static unsigned long vearly_entries_count __initdata = 0;
++static struct ftrace_vearly_entry ftrace_vearly_entries[VEARLY_MAX_ENTRIES] __initdata;
++
++#ifdef CONFIG_DYNAMIC_FTRACE
++
++#define VEARLY_FILTER_SIZE 10000
++static unsigned long vearly_notrace_count __initdata = 0;
++static unsigned long ftrace_vearly_notrace_list[VEARLY_FILTER_SIZE] __initdata;
++static unsigned long vearly_filter_count __initdata = 0;
++static unsigned long ftrace_vearly_filter_list[VEARLY_FILTER_SIZE] __initdata;
++static char ftrace_vearly_notrace_buf[COMMAND_LINE_SIZE] __initdata;
++static char ftrace_vearly_filter_buf[COMMAND_LINE_SIZE] __initdata;
++
++static __init int ftrace_vearly_notrace_addr(unsigned long addr)
++{	
++	int i;
++
++	for (i = 0; i < vearly_notrace_count; i++) {
++		if (ftrace_vearly_notrace_list[i] == addr)
++			return 1;
++	}
++	return 0;
++}
++
++static __init int ftrace_vearly_filter_addr(unsigned long addr)
++{	
++	int i;
++
++	for (i = 0; i < vearly_filter_count; i++) {
++		if (ftrace_vearly_filter_list[i] == addr)
++			return 1;
++	}
++	return 0;
++}
++
++static int
++ftrace_vearly_match_record(unsigned long ip, struct ftrace_glob *func_g)
++{
++	char str[KSYM_SYMBOL_LEN];
++	char *modname;
++
++	kallsyms_lookup(ip, NULL, NULL, &modname, str);
++
++	return ftrace_match(str, func_g);
++}
++
++static __init void ftrace_vearly_regex(char *func, int len, int enable)
++{
++	extern unsigned long __start_mcount_loc[];
++	extern unsigned long __stop_mcount_loc[];
++
++	unsigned long *start = __start_mcount_loc;
++	unsigned long *end = __stop_mcount_loc;
++	unsigned long count;
++	unsigned long addr;
++	unsigned long *p;
++	struct ftrace_glob func_g = { .type = MATCH_FULL };
++	int clear_filter = 0;
++
++	count = end - start;
++
++	if (!count)
++		return;
++
++	if (func) {
++		func_g.type = filter_parse_regex(func, len, &func_g.search,
++						 &clear_filter);
++		func_g.len = strlen(func_g.search);
++	}
++
++	p = start;
++	while (p < end) 
++	{
++		addr = ftrace_call_adjust(*p++);
++		if (!addr)
++			continue;
++
++		if (!enable && vearly_notrace_count > VEARLY_FILTER_SIZE)
++			return;
++
++		if (enable && vearly_filter_count > VEARLY_FILTER_SIZE)
++			return;
++
++		if (ftrace_vearly_match_record(addr, &func_g)) 
++		{
++			if (enable){
++				if (!ftrace_vearly_filter_addr(addr))
++					ftrace_vearly_filter_list[vearly_filter_count++] = addr;
++			}else{
++				if (!ftrace_vearly_notrace_addr(addr))
++					ftrace_vearly_notrace_list[vearly_notrace_count++] = addr;
++			}
++		}
++	}
++	
++}
++
++void __init ftrace_set_vearly_filter(char *buf, int enable)
++{
++	char *func;
++
++	while (buf) {
++		func = strsep(&buf, ",");
++		ftrace_vearly_regex(func, strlen(func), enable);
++	}
++}
++
++static __init int set_ftrace_vearly_notrace(char *str)
++{
++	strlcpy(ftrace_vearly_notrace_buf, str, COMMAND_LINE_SIZE);
++	ftrace_set_vearly_filter(ftrace_vearly_notrace_buf, 0);
++    return 1;
++}
++
++static __init int set_ftrace_vearly_filter(char *str)
++{
++	strlcpy(ftrace_vearly_filter_buf, str, COMMAND_LINE_SIZE);
++	ftrace_set_vearly_filter(ftrace_vearly_filter_buf, 1);
++    return 1;
++}
++
++#endif /* CONFIG_DYNAMIC_FTRACE */
++
++static __init int set_ftrace_vearly_enable(char *str)
++{
++	ftrace_vearly_enabled = 1;
++    return 1;
++}
++
++static __init void 
++ftrace_function_vearly_trace_call(unsigned long ip, unsigned long parent_ip,
++			struct ftrace_ops *op, struct pt_regs *regs)
++{
++#ifdef CONFIG_DYNAMIC_FTRACE
++	if (vearly_notrace_count && ftrace_vearly_notrace_addr(ip))
++		return;
++
++	if (vearly_filter_count && !ftrace_vearly_filter_addr(ip))
++		return;
++#endif
++
++	if (vearly_entries_count >= VEARLY_MAX_ENTRIES)
++			return;
++
++	struct ftrace_vearly_entry entry = 
++	{
++		.ip = ip,
++		.parent_ip = parent_ip,
++#ifdef CONFIG_X86_TSC
++		.tsc = rdtsc(),
++		.cpu_khz = x86_platform.calibrate_cpu(),
++#else
++		.clock = trace_clock_local(),
++#endif
++	};
++	ftrace_vearly_entries[vearly_entries_count++] = entry;
++}
++
++static void __init ftrace_early_fill_ringbuffer(struct trace_array* tr)
++{
++	int i, size;
++	u64 ns, prev_ns = 0;
++	const u64 constant = 1000000;
++
++	if (!ftrace_vearly_enabled)
++		return;
++
++	preempt_disable_notrace();
++	size = vearly_entries_count; 
++	for (i = 0; i < size; i++) 
++	{
++		struct ftrace_vearly_entry entry = ftrace_vearly_entries[i];
++		if (entry.tsc) 
++		{
++			/* 
++			 * ns = cycles * (10^6 / cpu_khz)
++			 * formula taken from arch/x86/kernel/tsc.c
++			 */
++			ns = entry.tsc;
++			if (entry.cpu_khz > constant)
++				ns /= (entry.cpu_khz / constant); 
++			else
++				ns *= (constant / entry.cpu_khz);
++		} else {
++			ns = entry.clock;
++		}
++		
++		trace_function_timestamp(tr, entry.ip, entry.parent_ip, 0, 0, 
++			ns - prev_ns);
++		prev_ns = ns;
++	}
++	preempt_enable_notrace();
++}
++/* 
++ * this will be used as __setup_param, because there is no 
++ * very_early_param(str, fn)
++*/
++static struct obs_kernel_param ftrace_vearly_params[] __initdata = 
++{
++	{ .str = "ftrace_vearly", .setup_func = set_ftrace_vearly_enable },
++	{ .str = "ftrace_notrace", .setup_func = set_ftrace_vearly_notrace },
++	{ .str = "ftrace_filter", .setup_func = set_ftrace_vearly_filter },
++};
++
++static int __init ftrace_do_very_early_param(char *param, char *val,
++				 const char *unused, void *arg)
++{
++	int i;
++	struct obs_kernel_param *p;
++	int size = sizeof(ftrace_vearly_params)/sizeof(struct obs_kernel_param);
++
++	for (i = 0; i < size; i++) {
++		p = &ftrace_vearly_params[i];
++		if (strcmp(param, p->str) == 0) {
++			p->setup_func(val);
++			return 0;
++		}
++	}
++	return 0;
++}
++
++void __init ftrace_early_init(char *command_line)
++{
++	static char tmp_cmdline[COMMAND_LINE_SIZE] __initdata;
++
++	strlcpy(tmp_cmdline, command_line, COMMAND_LINE_SIZE);
++	parse_args("ftrace very early options", tmp_cmdline, NULL, 0, 0, 0, NULL,
++		ftrace_do_very_early_param);
++
++	if (ftrace_vearly_enabled)
++		ftrace_vearly_enable();
++}
++
++void __init ftrace_early_shutdown(void)
++{
++	if (ftrace_trace_function_vearly == ftrace_stub)
++		return;
++	
++	ftrace_vearly_disable();
++		
++#ifdef CONFIG_DYNAMIC_FTRACE
++	pr_info("ftrace: vearly %lu entries, ftrace_notrace=%lu, ftrace_filter=%lu",
++	vearly_entries_count, vearly_notrace_count, vearly_filter_count);
++#else
++	pr_info("ftrace: vearly %lu recorded entries", vearly_entries_count);
++#endif
++}
++
++#else /* !CONFIG_FUNCTION_TRACER */
++
++inline void __init ftrace_early_init(char *command_line)
++{
++}
++
++inline void __init ftrace_early_shutdown(void)
++{
++}
++
++#endif /* CONFIG_FUNCTION_TRACER */
+\ No newline at end of file
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 752e5daf0896..ea3d8da2e579 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -2554,6 +2554,33 @@ trace_function(struct trace_array *tr,
+ 	}
+ }
+ 
++void
++trace_function_timestamp(struct trace_array *tr,
++	       unsigned long ip, unsigned long parent_ip, unsigned long flags,
++	       int pc, u64 timestamp)
++{
++	struct trace_event_call *call = &event_function;
++	struct ring_buffer *buffer = tr->trace_buffer.buffer;
++	struct ring_buffer_event *event;
++	struct ftrace_entry *entry;
++
++	event = __trace_buffer_lock_reserve(buffer, TRACE_FN, sizeof(*entry), 
++						flags, pc);
++	if (!event)
++		return;
++
++	event->time_delta = timestamp;
++
++	entry = ring_buffer_event_data(event);
++	entry->ip = ip;
++	entry->parent_ip = parent_ip;
++
++	if (!call_filter_check_discard(call, entry, buffer, event)) {
++		if (static_branch_unlikely(&ftrace_exports_enabled))
++			ftrace_exports(event);
++		__buffer_unlock_commit(buffer, event);
++	}
++}
+ #ifdef CONFIG_STACKTRACE
+ 
+ #define FTRACE_STACK_MAX_ENTRIES (PAGE_SIZE / sizeof(unsigned long))
+@@ -8276,6 +8303,7 @@ void ftrace_dump(enum ftrace_dump_mode oops_dump_mode)
+ }
+ EXPORT_SYMBOL_GPL(ftrace_dump);
+ 
++
+ __init static int tracer_alloc_buffers(void)
+ {
+ 	int ring_buf_size;
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 652c682707cd..9aa22e261812 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -624,6 +624,10 @@ void trace_init_global_iter(struct trace_iterator *iter);
+ 
+ void tracing_iter_reset(struct trace_iterator *iter, int cpu);
+ 
++void trace_function_timestamp(struct trace_array *tr,
++		    unsigned long ip,
++		    unsigned long parent_ip,
++		    unsigned long flags, int pc, u64 timestamp);
+ void trace_function(struct trace_array *tr,
+ 		    unsigned long ip,
+ 		    unsigned long parent_ip,
+-- 
+2.11.0
+

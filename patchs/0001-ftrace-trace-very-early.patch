@@ -1,0 +1,225 @@
+From 39b200ed7ecd94c1dc233f743b42b698a8668830 Mon Sep 17 00:00:00 2001
+From: Abder Benbachir <anis.benbachir@gmail.com>
+Date: Thu, 12 Oct 2017 19:03:24 -0400
+Subject: [PATCH] ftrace: trace very early
+
+---
+ arch/x86/include/asm/ftrace.h |  4 +++
+ arch/x86/kernel/ftrace.c      | 58 +++++++++++++++++++++++++++++++++++++++++++
+ arch/x86/kernel/ftrace_64.S   |  4 +++
+ include/linux/ftrace.h        |  1 +
+ include/linux/init.h          |  3 +++
+ init/main.c                   | 35 +++++++++++++++++++++++++-
+ kernel/trace/ftrace.c         |  3 ++-
+ 7 files changed, 106 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
+index eccd0ac6bc38..3d9ed9041d87 100644
+--- a/arch/x86/include/asm/ftrace.h
++++ b/arch/x86/include/asm/ftrace.h
+@@ -30,6 +30,10 @@ static inline unsigned long ftrace_call_adjust(unsigned long addr)
+ 	return addr;
+ }
+ 
++extern void ftrace_function_very_early(unsigned long ip, unsigned long parent_ip,
++			void *op, void *regs);
++extern void ftrace_very_early_print(void);
++
+ #ifdef CONFIG_DYNAMIC_FTRACE
+ 
+ struct dyn_arch_ftrace {
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index 9bef1bbeba63..7c42fb53427b 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -29,6 +29,64 @@
+ #include <asm/ftrace.h>
+ #include <asm/nops.h>
+ 
++#define do_hypercall(nr, p1, p2, p3) __asm__ __volatile__(".byte 0x0F,0x01,0xC1\n"::"a"(nr), \
++"b"(p1), "c"(p2), "d"(p3));
++
++#define VERY_EARLY_BUFFER_SIZE 600000
++struct vearly_entry {
++	unsigned long timestamp;
++	unsigned long ip;
++	unsigned long parent_ip;
++};
++
++static unsigned long ftrace_vearly_enabled __initdata;
++static unsigned long vearly_entries_count = 0;
++static unsigned long vearly_missed_entries = 0;
++static struct vearly_entry ftrace_vearly_buffer[VERY_EARLY_BUFFER_SIZE] __initdata;
++
++void ftrace_trace_function_vearly(unsigned long ip, unsigned long parent_ip,
++			void *op, void *regs)
++{
++	if(!ftrace_vearly_enabled)
++		return;
++
++	if (vearly_entries_count >= VERY_EARLY_BUFFER_SIZE) {
++		vearly_missed_entries++;
++		return;
++	}
++
++	struct vearly_entry entry = {
++		.ip = ip,
++		parent_ip = parent_ip
++	};
++	ftrace_vearly_buffer[vearly_entries_count++] = entry;
++	do_hypercall(103, ip, parent_ip, 0);
++}
++
++void ftrace_very_early_print(void)
++{
++	int i;
++	for (i = 0; i < vearly_entries_count; i++) {
++		struct vearly_entry entry = ftrace_vearly_buffer[i];
++		printk(KERN_INFO"%lu:%ps <- %ps\n", entry.ip, (void *)entry.ip, (void *)entry.parent_ip);
++	}
++}
++
++static __init int set_ftrace_vearly_filter(char *str)
++{
++	// FIXME: support filtering
++    return 1;
++}
++very_early_param("ftrace_vearly_filter", set_ftrace_vearly_filter);
++
++static __init int set_ftrace_vearly_enable(char *str)
++{
++	ftrace_vearly_enabled = 1;
++    return 1;
++}
++very_early_param("ftrace_vearly", set_ftrace_vearly_enable);
++
++
+ #ifdef CONFIG_DYNAMIC_FTRACE
+ 
+ int ftrace_arch_code_modify_prepare(void)
+diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
+index 1dfac634bbf7..af43340528c7 100644
+--- a/arch/x86/kernel/ftrace_64.S
++++ b/arch/x86/kernel/ftrace_64.S
+@@ -145,7 +145,11 @@ EXPORT_SYMBOL(mcount)
+ 
+ #ifdef CONFIG_DYNAMIC_FTRACE
+ 
++
+ ENTRY(function_hook)
++	save_mcount_regs
++	call ftrace_trace_function_vearly
++	restore_mcount_regs
+ 	retq
+ END(function_hook)
+ 
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 2e028854bac7..fbe829e28d0f 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -256,6 +256,7 @@ static inline int ftrace_function_local_disabled(struct ftrace_ops *ops)
+ extern void ftrace_stub(unsigned long a0, unsigned long a1,
+ 			struct ftrace_ops *op, struct pt_regs *regs);
+ 
++
+ #else /* !CONFIG_FUNCTION_TRACER */
+ /*
+  * (un)register_ftrace_function must be a macro since the ops parameter
+diff --git a/include/linux/init.h b/include/linux/init.h
+index 94769d687cf0..ebe0d33bfc46 100644
+--- a/include/linux/init.h
++++ b/include/linux/init.h
+@@ -240,6 +240,9 @@ struct obs_kernel_param {
+ #define early_param(str, fn)						\
+ 	__setup_param(str, fn, fn, 1)
+ 
++#define very_early_param(str, fn)					\
++	__setup_param(str, fn, fn, 2)
++
+ #define early_param_on_off(str_on, str_off, var, config)		\
+ 									\
+ 	int var = IS_ENABLED(config);					\
+diff --git a/init/main.c b/init/main.c
+index 0ee9c6866ada..bb55bdb95b67 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -442,7 +442,7 @@ static int __init do_early_param(char *param, char *val,
+ 	const struct obs_kernel_param *p;
+ 
+ 	for (p = __setup_start; p < __setup_end; p++) {
+-		if ((p->early && parameq(param, p->str)) ||
++		if ((p->early == 1 && parameq(param, p->str)) ||
+ 		    (strcmp(param, "console") == 0 &&
+ 		     strcmp(p->str, "earlycon") == 0)
+ 		) {
+@@ -475,6 +475,37 @@ void __init parse_early_param(void)
+ 	done = 1;
+ }
+ 
++/* Check for very early params. */
++static int __init do_very_early_param(char *param, char *val,
++				 const char *unused, void *arg)
++{
++	const struct obs_kernel_param *p;
++
++	for (p = __setup_start; p < __setup_end; p++) {
++		if (p->early == 2 && parameq(param, p->str)) {
++			// Malformed very early option can not be printed with printk
++			// printk relies on the PDA which is not initialized yet.
++			p->setup_func(val);
++		}
++	}
++	return 0;
++}
++
++/* Will be called at the top of start_kernel. */
++static void __init parse_very_early_param(void)
++{
++	static int parsed_done __initdata;
++	static char tmp_cmdline[COMMAND_LINE_SIZE] __initdata;
++
++	if (parsed_done)
++		return;
++
++	/* All fall through to do_very_early_param. */
++	strlcpy(tmp_cmdline, boot_command_line, COMMAND_LINE_SIZE);
++	parse_args("early options", tmp_cmdline, NULL, 0, 0, 0, NULL,
++		do_very_early_param);
++	parsed_done = 1;
++}
+ void __init __weak arch_post_acpi_subsys_init(void) { }
+ 
+ void __init __weak smp_setup_processor_id(void)
+@@ -511,6 +542,8 @@ asmlinkage __visible void __init start_kernel(void)
+ 	char *command_line;
+ 	char *after_dashes;
+ 
++	parse_very_early_param();
++
+ 	set_task_stack_end_magic(&init_task);
+ 	smp_setup_processor_id();
+ 	debug_objects_early_init();
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 8319e09e15b9..2f1632af25cd 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -5917,6 +5917,8 @@ void __init ftrace_init(void)
+ 	unsigned long count, flags;
+ 	int ret;
+ 
++	ftrace_very_early_print();
++
+ 	local_irq_save(flags);
+ 	ret = ftrace_dyn_arch_init();
+ 	local_irq_restore(flags);
+@@ -5939,7 +5941,6 @@ void __init ftrace_init(void)
+ 				  __stop_mcount_loc);
+ 
+ 	set_ftrace_early_filters();
+-
+ 	return;
+  failed:
+ 	ftrace_disabled = 1;
+-- 
+2.11.0
+
