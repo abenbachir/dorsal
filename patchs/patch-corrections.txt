@@ -39,7 +39,8 @@ enable ftrace_exports to add a hook to update the timestamp.
 
 Then you need to add a handler into the ring buffer code to update the
 timestamp for you. More below.
-dd a hook into ftrace_exports() and then add a handler into the ring
+
+add a hook into ftrace_exports() and then add a handler into the ring
 buffer that allows you to update the timestamp.
 
 
