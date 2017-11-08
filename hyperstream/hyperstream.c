@@ -24,7 +24,7 @@ int main(int argc, char** argv)
     unsigned long int buffer_output[MAX_HYPERCALL_SIZE];
     sprintf(filename,"file.txt");
 
-    fp = fopen("file.txt", "r");
+    fp = fopen("file.txt", "rb");
     output = fopen("output2.txt", "w");
     if (!fp || !output){
         printf("Can not open file\n");
