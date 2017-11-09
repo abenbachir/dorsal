@@ -1,0 +1,1 @@
+cmd_/home/abder/utils/hypergraph/hypergraph-host.ko := ld -r -m elf_x86_64 -T ./scripts/module-common.lds --build-id  -o /home/abder/utils/hypergraph/hypergraph-host.ko /home/abder/utils/hypergraph/hypergraph-host.o /home/abder/utils/hypergraph/hypergraph-host.mod.o ;  true

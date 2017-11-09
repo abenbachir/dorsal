@@ -27,7 +27,9 @@ git format-patch matser..your-branch
 
 # check stat
 git apply --stat mypatch.patch
+
 # check the patch
 git apply --check mypatch.patch
+
 # apply patch with signoff
 git am --signoff < mypatch.patch

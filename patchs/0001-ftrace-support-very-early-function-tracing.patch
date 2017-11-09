@@ -1,4 +1,4 @@
-From d358f30d6c40a1b13818598ddbfaa3f5a97312a5 Mon Sep 17 00:00:00 2001
+From 591c994c0b38f7e0226e6187b9f7023213faeed0 Mon Sep 17 00:00:00 2001
 From: Abderrahmane Benbachir <abderrahmane.benbachir@polymtl.ca>
 Date: Thu, 12 Oct 2017 19:03:24 -0400
 Subject: [PATCH] ftrace: support very early function tracing
@@ -39,15 +39,15 @@ Cc: linux-kernel@vger.kernel.org
  include/linux/ftrace.h      |  16 ++-
  init/main.c                 |   1 +
  kernel/trace/Kconfig        |  51 ++++++++
- kernel/trace/ftrace.c       | 294 +++++++++++++++++++++++++++++++++++++++++++-
+ kernel/trace/ftrace.c       | 295 +++++++++++++++++++++++++++++++++++++++++++-
  kernel/trace/trace.c        |   3 +
- 8 files changed, 413 insertions(+), 14 deletions(-)
+ 8 files changed, 414 insertions(+), 14 deletions(-)
 
 diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 971feac13506..03da741c088b 100644
+index 2fdb23313dd5..c74870150c54 100644
 --- a/arch/x86/Kconfig
 +++ b/arch/x86/Kconfig
-@@ -137,6 +137,7 @@ config X86
+@@ -138,6 +138,7 @@ config X86
  	select HAVE_FENTRY			if X86_64 || DYNAMIC_FTRACE
  	select HAVE_FTRACE_MCOUNT_RECORD
  	select HAVE_FUNCTION_GRAPH_TRACER
@@ -56,10 +56,10 @@ index 971feac13506..03da741c088b 100644
  	select HAVE_GCC_PLUGINS
  	select HAVE_HW_BREAKPOINT
 diff --git a/arch/x86/kernel/ftrace_32.S b/arch/x86/kernel/ftrace_32.S
-index 722a145b4139..af3a55677a7a 100644
+index b6c6468e10bc..71f2cfb5513c 100644
 --- a/arch/x86/kernel/ftrace_32.S
 +++ b/arch/x86/kernel/ftrace_32.S
-@@ -29,12 +29,7 @@ EXPORT_SYMBOL(mcount)
+@@ -30,12 +30,7 @@ EXPORT_SYMBOL(mcount)
  # define MCOUNT_FRAME			0	/* using frame = false */
  #endif
  
@@ -73,7 +73,7 @@ index 722a145b4139..af3a55677a7a 100644
  #ifdef USING_FRAME_POINTER
  # ifdef CC_USING_FENTRY
  	/*
-@@ -71,11 +66,9 @@ ENTRY(ftrace_caller)
+@@ -72,11 +67,9 @@ ENTRY(ftrace_caller)
  
  	movl	function_trace_op, %ecx
  	subl	$MCOUNT_INSN_SIZE, %eax
@@ -87,7 +87,7 @@ index 722a145b4139..af3a55677a7a 100644
  	addl	$4, %esp			/* skip NULL pointer */
  	popl	%edx
  	popl	%ecx
-@@ -88,6 +81,40 @@ ftrace_call:
+@@ -89,6 +82,40 @@ ftrace_call:
  	addl	$4, %esp			/* skip parent ip */
  # endif
  #endif
@@ -129,10 +129,10 @@ index 722a145b4139..af3a55677a7a 100644
  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
  .globl ftrace_graph_call
 diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
-index 1dfac634bbf7..35f73a9dbbd2 100644
+index c832291d948a..a2949701771f 100644
 --- a/arch/x86/kernel/ftrace_64.S
 +++ b/arch/x86/kernel/ftrace_64.S
-@@ -146,7 +146,21 @@ EXPORT_SYMBOL(mcount)
+@@ -147,7 +147,21 @@ EXPORT_SYMBOL(mcount)
  #ifdef CONFIG_DYNAMIC_FTRACE
  
  ENTRY(function_hook)
@@ -155,10 +155,10 @@ index 1dfac634bbf7..35f73a9dbbd2 100644
  
  ENTRY(ftrace_caller)
 diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index 2e028854bac7..c3f2ba246fc9 100644
+index e54d257983f2..b11f0169f2c9 100644
 --- a/include/linux/ftrace.h
 +++ b/include/linux/ftrace.h
-@@ -272,6 +272,16 @@ static inline void ftrace_kill(void) { }
+@@ -273,6 +273,16 @@ static inline void ftrace_kill(void) { }
  static inline void ftrace_free_init_mem(void) { }
  #endif /* CONFIG_FUNCTION_TRACER */
  
@@ -175,7 +175,7 @@ index 2e028854bac7..c3f2ba246fc9 100644
  #ifdef CONFIG_STACK_TRACER
  
  #define STACK_TRACE_ENTRIES 500
-@@ -476,6 +486,10 @@ unsigned long ftrace_get_addr_curr(struct dyn_ftrace *rec);
+@@ -477,6 +487,10 @@ unsigned long ftrace_get_addr_curr(struct dyn_ftrace *rec);
  
  extern ftrace_func_t ftrace_trace_function;
  
@@ -186,7 +186,7 @@ index 2e028854bac7..c3f2ba246fc9 100644
  int ftrace_regex_open(struct ftrace_ops *ops, int flag,
  		  struct inode *inode, struct file *file);
  ssize_t ftrace_filter_write(struct file *file, const char __user *ubuf,
-@@ -757,7 +771,7 @@ static inline unsigned long get_lock_parent_ip(void)
+@@ -758,7 +772,7 @@ static inline unsigned long get_lock_parent_ip(void)
  #ifdef CONFIG_FTRACE_MCOUNT_RECORD
  extern void ftrace_init(void);
  #else
@@ -277,7 +277,7 @@ index 434c840e2d82..54dec6f9546a 100644
  	bool "Kernel Function Graph Tracer"
  	depends on HAVE_FUNCTION_GRAPH_TRACER
 diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 8319e09e15b9..6221e23e094f 100644
+index 8319e09e15b9..5421b638dd22 100644
 --- a/kernel/trace/ftrace.c
 +++ b/kernel/trace/ftrace.c
 @@ -33,7 +33,6 @@
@@ -313,7 +313,7 @@ index 8319e09e15b9..6221e23e094f 100644
  	local_irq_save(flags);
  	ret = ftrace_dyn_arch_init();
  	local_irq_restore(flags);
-@@ -6882,3 +6885,288 @@ void ftrace_graph_exit_task(struct task_struct *t)
+@@ -6882,3 +6885,289 @@ void ftrace_graph_exit_task(struct task_struct *t)
  	kfree(ret_stack);
  }
  #endif
@@ -345,7 +345,8 @@ index 8319e09e15b9..6221e23e094f 100644
 +# define ftrace_vearly_trace_function ftrace_trace_function
 +#endif
 +
-+static inline __init void ftrace_vearly_disable(void) {
++static inline __init void ftrace_vearly_disable(void)
++{
 +	ftrace_vearly_trace_function = ftrace_stub;
 +}
 +
@@ -501,7 +502,7 @@ index 8319e09e15b9..6221e23e094f 100644
 +
 +static __init u64 early_trace_clock(void)
 +{
-+        return early_timestamp;
++	return early_timestamp;
 +}
 +
 +void __init ftrace_early_fill_ringbuffer(void *data)

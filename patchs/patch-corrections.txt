@@ -2,49 +2,29 @@
 
 PATCH v2:
 
-1) The save and restore above looks to be a cut and paste copy of the
-ftrace_caller code in the same file. Why not have those uses this too,
-instead of having duplicate code?
+1) Update Kconfig
 
+2) Make filters depends on FTRACE_MCOUNT_RECORD instead of CONFIG_DYNAMIC_FTRACE,
+so we can use filtering without relying on dynamic config, because we dont do 
+live patching.
 
-2) Never put default y unless you have a very good reason to do so. The
-DYNAMIC_FTRACE is default y because it is only enabled when
-FUNCTION_TRACER is enabled, and DYNAMIC_FTRACE is better than static
-ftrace.
+But FTRACE_MCOUNT_RECORD depends on CONFIG_DYNAMIC_FTRACE, should we break this 
+dependency ?
 
-This is to be default n (which is the default, so just remove the
-default y).
+3) Use ring_buffer_set_clock
 
-3) OK, the help text needs a rewrite ;-)
-        help
-          Normally, function tracing can only start after memory has
-          been initialized early in boot. If "ftrace=function" is added
-          to the command line, then function tracing will start after
-          memory setup.
+Timestamps got changed when enabling function tracing :
+[0.340111]   <idle>-0  0dp.. 18446744073671635us : mem_cache_init <-start_kernel
+[0.340622]   <idle>-0  0dp.. 18446744073671775us : vmalloc_init <-start_kernel
 
-          In order to trace functions before that, this option will
-          have function tracing tracing before memory setup is
-          complete, by placing the trace in a temporary buffer, which
-          will be copied to the trace buffer after memory setup. The
-          size of this temporary buffer is defined by
-          VERY_EARLY_BUF_SHIFT.
+ftrace=function start here
 
+[0.341119]   <idle>-0  0dp.1 48004us : sched_init <-start_kernel
+[0.341520]   <idle>-0  0dp.1 48005us : wait_bit_init <-sched
 
-4) config VERY_EARLY_BUF_SHIFT
-Probably should call this "VERY_EARLY_FTRACE_BUF_SHIFT" Just to be more
-specific.
-Should probably have the range start at 8.
+4) Remove arch specific code and use the default locale_clock until we found a
+better solution fo this.
 
-5) Probably want to include the kernel parameter used: "ftrace_filter" "ftrace_notrace"
-
-6) remove #include <linux/trace.h>
-
-7) #define ftrace_vearly_disable() (ftrace_vearly_trace_function = ftrace_stub)
-Make this a static inline function.
-
-8) make filters depends on FTRACE_MCOUNT_RECORD instead of CONFIG_DYNAMIC_FTRACE
-
-9) use ring_buffer_set_clock
 -------------------------------------------------------------------------------------
 PATCH v1:
 1) Use ARRAY_SIZE(ftrace_vearly_params) instead of sizeof
