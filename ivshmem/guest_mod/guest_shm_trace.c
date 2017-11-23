@@ -44,7 +44,6 @@ void setup_shm_regions(struct ivshmem_dev_t* shmem_dev) {
 static void probe_sched_switch(void *ignore, bool preempt,
            struct task_struct *prev, struct task_struct *next)
 {
-	// long int* buf = (long int*)next->comm;
 	struct shm_event_entry* entry;
 	if(!is_tracing_enabled())
 		return;
@@ -55,10 +54,7 @@ static void probe_sched_switch(void *ignore, bool preempt,
 	entry->timestamp = local_clock();
 	entry->cpu_id = smp_processor_id();
 	entry->event_type = SCHED_SWITCH_EVENT_NR;
-	printk("i=%d) sched_switch tsc=%llu cpu_id=%u type=%u", 
-		shm_config->buff_size-1, 
-		entry->timestamp, entry->cpu_id, entry->event_type
-	);
+
 	struct sched_switch_payload payload = {
 		.prev_tid = prev->pid,
 		.next_tid = next->pid,

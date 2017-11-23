@@ -49,6 +49,12 @@ struct shm_event_entry {
 	char payload[PAYLOAD_SIZE];
 };
 
+struct host_vmsync {
+	int spinlock;
+	struct shm_event_entry kvm_exit;
+	struct shm_event_entry kvm_entry;
+};
+
 /*
  * sched_switch
  */
@@ -173,6 +179,8 @@ struct kvm_exit_payload {
 	u64 guest_rip;
 	unsigned int exit_reason;
 };
+
+
 
 void get_payload_from_num(int event_type, char *payload) {
 
