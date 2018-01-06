@@ -17,6 +17,10 @@ __asm__ __volatile__(".byte 0x0F,0x01,0xC1\n"::"a"(nr), "b"(p1), "c"(p2), "d"(p3
 #define do_hypercall_0() __asm__ __volatile__(".byte 0x0F,0x01,0xC1\n":: )
 
 
+void my_hypercall(void) 
+{
+	do_hypercall(99, 100, 101, 102, 103);
+}
 
 void benchmark(int repeat)
 {
@@ -25,7 +29,7 @@ void benchmark(int repeat)
 
     for ( i=0; i < repeat; i++) {
         tic(ts_start);
-        do_hypercall(99, i, i, i, i);
+        do_hypercall(99, 100, 101, 102, 103);
         toc(ts_end);
         unsigned long int ns = elapsed_nsec(ts_start, ts_end);
         // printf("%lu\n", ns);
@@ -130,7 +134,7 @@ struct kvm_vcpu_arch {
     )
 int main(int argc, char** argv)
 {
-    struct timespec ts_start, ts_end;
+/*    struct timespec ts_start, ts_end;
     unsigned long int ns;
     struct kvm_vcpu_arch vcpu;
     for (int i=0; i < NR_VCPU_REGS; i++) {
@@ -149,5 +153,7 @@ int main(int argc, char** argv)
     for (int i=0; i < NR_VCPU_REGS; i++) {
         printf("%d -> %d\n", i, vcpu.regs[i]);
     }
+    */
+	 do_hypercall(99, 100, 101, 102, 103);
     return 0;
 }

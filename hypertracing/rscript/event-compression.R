@@ -90,7 +90,7 @@ plot <- ggplot(data_filtered, aes(compressed_event, time)) +
   # geom_point(aes(x=2,y=0.6), colour= muted("red"), shape=1, size=7) +
   # geom_label(aes(x=compressed_event+0.3,y=time+80, label=paste(args_for_payload,"args")),
   #   fill = muted("red"), colour = "white", fontface = "bold", nudge_x = 1, nudge_y=0.3) +
-  geom_label_repel(aes(y=time, label=paste(args_for_payload,"payload\nfields")),
+  geom_label_repel(aes(y=time, label=paste(args_for_payload*8,"Bytes\npayload")),
                    size = 3.2, segment.size = 0.5, colour="white", segment.color=muted("red"),  fill = muted("red"),
                    min.segment.length = unit(0, "lines"), nudge_x = 1.5, nudge_y = 20
   ) +

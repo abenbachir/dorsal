@@ -1,0 +1,147 @@
+From 8115a9e73fab32214f7f03637b59265697740c6b Mon Sep 17 00:00:00 2001
+From: Abderrahmane Benbachir <abderrahmane.benbachir@polymtl.ca>
+Date: Thu, 26 Oct 2017 17:29:42 -0400
+Subject: [PATCH] trace bootlevel: a way of tracing boot levels
+
+Tracing boot levels (security, early, core, arch, ..)
+
+Signed-off-by: Abderrahmane Benbachir <abderrahmane.benbachir@polymtl.ca>
+---
+ init/Makefile          |   2 +-
+ init/trace_bootlevel.c | 111 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 112 insertions(+), 1 deletion(-)
+ create mode 100644 init/trace_bootlevel.c
+
+diff --git a/init/Makefile b/init/Makefile
+index c4fb45525d08..541b165fd0c7 100644
+--- a/init/Makefile
++++ b/init/Makefile
+@@ -4,7 +4,7 @@
+ 
+ ccflags-y := -fno-function-sections -fno-data-sections
+ 
+-obj-y                          := main.o version.o mounts.o
++obj-y                          := main.o trace_bootlevel.o version.o mounts.o
+ ifneq ($(CONFIG_BLK_DEV_INITRD),y)
+ obj-y                          += noinitramfs.o
+ else
+diff --git a/init/trace_bootlevel.c b/init/trace_bootlevel.c
+new file mode 100644
+index 000000000000..adaf9a61ccbe
+--- /dev/null
++++ b/init/trace_bootlevel.c
+@@ -0,0 +1,111 @@
++/*
++ *
++ * bootlevel : Bootlevel tracer.
++ *
++ * Copyright (c) 2018-2017 Abderrahmane Benbachir <abderrahmane.benbachir@polymtl.ca>
++ *
++ */
++#include <linux/init.h>
++#include <asm/setup.h>
++#include <linux/ftrace.h>
++
++#define MAX_LEVEL_NAME 20
++#define MAX_LEVELS_SIZE 12
++#define nr_early 0
++#define nr_pure 1
++#define nr_core 2
++#define nr_postcore 3
++#define nr_arch 4
++#define nr_subsys 5
++#define nr_fs 6
++#define nr_rootfs 7
++#define nr_device 8
++#define nr_late 9
++#define nr_console 10
++#define nr_security 11
++
++static int __init bootlevel_handler(void);
++
++static initcall_t __initcall_bootlevel_handler_2 __used \
++	__attribute__((__section__(".initcall1.init")));
++
++static initcall_t bootlevel_init __initdata = bootlevel_handler;
++static int tracing_enabled __initdata;
++static char prev_level_name[MAX_LEVEL_NAME] __initdata;
++
++static int __init notrace trace_bootlevel_handler(char* level_name, 
++	unsigned int nr_level, 	unsigned int sync)
++{
++	if (!tracing_enabled)
++		return 0;
++	
++	if (prev_level_name[0] && nr_level != nr_console 
++		&& nr_level != nr_security) {
++		 trace_printk("<-- end:%s boot level", prev_level_name);
++	}
++	trace_printk("--> start:%s boot level", level_name);
++
++	strlcpy(prev_level_name, level_name, MAX_LEVEL_NAME);
++
++	return 0;														   
++} 
++
++static int __init bootlevel_handler(void)
++{
++	printk("======> abder");
++	return 0;
++}
++
++static int __init notrace set_bootlevel_enabled(char *str)
++{
++	long val;
++
++	if (kstrtol(str, 10, &val) == 0)
++		tracing_enabled = val > 0;
++
++	if (tracing_enabled)
++		__initcall_bootlevel_handler_2 = bootlevel_handler;
++	return 1;
++}
++__setup("trace_bootlevel=", set_bootlevel_enabled);
++
++
++#define TRACE_BOOTLEVEL(level)									\
++static int __init trace_bootlevel_handler_##level(void)			\
++{																\
++	return trace_bootlevel_handler(#level"", nr_##level, 0);	\
++}																\
++level##_initcall(trace_bootlevel_handler_##level);
++
++#define TRACE_BOOTLEVEL_SYNC(level)									\
++static int __init trace_bootlevel_handler_sync_##level(void)		\
++{																	\
++	return trace_bootlevel_handler(#level"_sync",nr_##level, 1);	\
++}																	\
++level##_initcall_sync(trace_bootlevel_handler_sync_##level);
++
++// TRACE_BOOTLEVEL(early)
++// TRACE_BOOTLEVEL(pure)
++// TRACE_BOOTLEVEL(core)
++// TRACE_BOOTLEVEL(postcore)
++// TRACE_BOOTLEVEL(arch)
++// TRACE_BOOTLEVEL(subsys)
++// TRACE_BOOTLEVEL(fs)
++// TRACE_BOOTLEVEL(rootfs)
++// TRACE_BOOTLEVEL(device)
++// TRACE_BOOTLEVEL(late)
++// TRACE_BOOTLEVEL(console)
++// TRACE_BOOTLEVEL(security)
++
++// TRACE_BOOTLEVEL_SYNC(core)
++// TRACE_BOOTLEVEL_SYNC(postcore)
++// TRACE_BOOTLEVEL_SYNC(arch)
++// TRACE_BOOTLEVEL_SYNC(subsys)
++// TRACE_BOOTLEVEL_SYNC(fs)
++// TRACE_BOOTLEVEL_SYNC(device)
++// TRACE_BOOTLEVEL_SYNC(late)
++
++
++// early_initcall(bootlevel_init);
++
++
+-- 
+2.11.0
+
