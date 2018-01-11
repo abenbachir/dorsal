@@ -119,6 +119,23 @@ late,87.868856, 133163
 
 Boot-up time = 2608.425825 ms
 
+    Boot level      | time (ms) |  events  |
+---------------------------------------------
+console 			| 0.83		|	0		|
+security			
+early               |   93.70   |   20091  |			
+pure                |    2.62   |    4868  |
+core                |    1.97   |    3449  |
+core_sync			|
+postcore            |    1.49   |    2723  |
+arch                |    0.67   |    1171  |
+subsys              |  141.48   |  112486  |
+fs                  |  279.30   |  497719  |
+rootfs              |    6.04   |   10121  |
+device              |  407.28   |  408668  |
+late                |   87.86   |  133163  |
+\end{bashcode}
+
 
 
 1)   <syste>-1	| start_kernel(){ at 0 ms
@@ -144,3 +161,36 @@ Boot-up time = 2608.425825 ms
 		Start initcall phase : late sync + 904.351889 ms
 >>>>>  	Stop Tracing at 1037.700269 ms
 1)   <syste>-1	|  d=0  | run_init_process() { at 1037.701913 ms
+
+
+
+Boot-up time = 2 778,58
+
+level			|		time(ms)	|		events
+---------------------------------------------------------------
+console			|		0.83		|		 0
+security		|		138.96		|		 0
+early			|		93.70		|		 20091 			
+pure			|		2.62		|		  4868
+core,sync		|		4			|		7249
+postcore,sync	|		2.77		|		 5104
+arch,sync		|		16.77		|		 31797
+subsys,sync		|		143.08		|		 115448
+fs,sync			|		1871.23		|		 2 425 311 
+rootfs			|		6.05		|		 10121
+device,sync		|		410.7		|		 414 508
+late,sync		|		90.2		|		 133163	 
+-------------------------------------------------------------
+2 778,58	time	events	part of boot time
+console	0,83	0	0,03 %
+security	134,96	0	4,86 %
+early	93,70	20091	3,37 %
+pure	2,62	4868	0,09 %
+core+sync	4,00	7249	0,14 %
+postcore+sync	2,77	5104	0,10 %
+arch+sync	16,77	31797	0,60 %
+subsys+sync	143,08	115448	5,15 %
+fs+sync	1 871,23	2425311	67,34 %
+rootfs	6,05	10121	0,22 %
+device+sync	410,70	414508	14,78 %
+late+sync	90,20	133163	3,25 %
