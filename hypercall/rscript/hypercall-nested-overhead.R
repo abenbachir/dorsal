@@ -65,21 +65,24 @@ for(i in 1:nrow(unique_data)) {
 
 p <- ggplot(unique_data, aes(x=reorder(layer, median), y=median)) +
   geom_bar(aes(fill=mode), position="stack", stat="identity") +
-  geom_text(aes(label=paste(time_label, ratio, sep='\n' )),
-            colour='white',  fontface = "bold",size = 4,
-            position=position_dodge(width=0.1), vjust=1.3) +
+  geom_text(aes(label=paste(time_label, ratio, sep=' ' )),
+            colour='white',  size = 3.4,
+            position=position_dodge(width=0.1), vjust=1.9) +
   # coord_flip() +
   scale_fill_manual(values = colors) +
   # geom_hline(yintercept = c(baseline), linetype="dotted") +
-  labs(x ="Virtualization layers", y ="", fill = "VMCALL EXITS") +
+  labs(x ="Virtualization layers", y ="Time (ns)", fill = "VMCALL exits") +
   
   theme_light()+
   theme(
     # legend.position="none",
-    legend.position=c(.2,.9),
+    legend.position=c(.23,.85)
     # axis.text.y = element_text(size=12),
-    axis.text.x = element_text(size=12),
-    axis.text.y = element_blank()
+    # axis.text.x = element_text(size=12)
+    # axis.text.y = element_blank()
   )
 
+pdf(file="./plots/hypercall-nested-overhead.pdf", width=5.16, height=4.6)
 plot(p)
+
+dev.off()

@@ -1,64 +1,64 @@
 layer,tracer,compressed_event,workload,configuration,time
-L1,None,0,syscall_benchmark,getcpu_0_5000,127479
-L1,None,0,syscall_benchmark,getcpu_0_5000,128217
-L1,None,0,syscall_benchmark,getcpu_0_5000,118345
-L1,None,0,syscall_benchmark,getcpu_0_5000,118354
-L1,None,0,syscall_benchmark,getcpu_0_5000,118502
-L1,None,0,syscall_benchmark,getcpu_0_5000,132267
-L1,None,0,syscall_benchmark,getcpu_0_5000,127192
-L1,None,0,syscall_benchmark,getcpu_0_5000,128849
-L1,None,0,syscall_benchmark,getcpu_0_5000,119621
-L1,None,0,syscall_benchmark,getcpu_0_5000,132706
-L1,None,0,syscall_benchmark,getcpu_0_5000,128304
-L1,None,0,syscall_benchmark,getcpu_0_5000,133569
-L1,None,0,syscall_benchmark,getcpu_0_5000,118266
-L1,None,0,syscall_benchmark,getcpu_0_5000,127496
-L1,None,0,syscall_benchmark,getcpu_0_5000,145637
-L1,None,0,syscall_benchmark,getcpu_0_5000,147794
-L1,None,0,syscall_benchmark,getcpu_0_5000,127419
-L1,None,0,syscall_benchmark,getcpu_0_5000,118296
-L1,None,0,syscall_benchmark,getcpu_0_5000,118319
-L1,None,0,syscall_benchmark,getcpu_0_5000,127561
-L1,None,0,syscall_benchmark,getcpu_0_5000,213065
-L1,None,0,syscall_benchmark,getcpu_0_5000,119163
-L1,None,0,syscall_benchmark,getcpu_0_5000,118173
-L1,None,0,syscall_benchmark,getcpu_0_5000,127856
-L1,None,0,syscall_benchmark,getcpu_0_5000,124345
-L1,None,0,syscall_benchmark,getcpu_0_5000,127089
-L1,None,0,syscall_benchmark,getcpu_0_5000,119708
-L1,None,0,syscall_benchmark,getcpu_0_5000,119100
-L1,None,0,syscall_benchmark,getcpu_0_5000,154058
-L1,None,0,syscall_benchmark,getcpu_0_5000,118271
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2281900
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2277675
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2425987
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2157770
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2593288
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2359529
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2163953
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2074033
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2083954
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2330069
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2187463
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2091856
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2127092
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2160865
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2123810
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2085061
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2084968
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2070379
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2089318
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2258097
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2142551
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2331513
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2220751
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2189918
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2136791
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2098662
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2126342
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2204327
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2188005
-L1,Hypertracing,0,syscall_benchmark,getcpu_0_5000,2123846
+L1,None,1,syscall_benchmark,getcpu_0_5000,127479
+L1,None,1,syscall_benchmark,getcpu_0_5000,128217
+L1,None,1,syscall_benchmark,getcpu_0_5000,118345
+L1,None,1,syscall_benchmark,getcpu_0_5000,118354
+L1,None,1,syscall_benchmark,getcpu_0_5000,118502
+L1,None,1,syscall_benchmark,getcpu_0_5000,132267
+L1,None,1,syscall_benchmark,getcpu_0_5000,127192
+L1,None,1,syscall_benchmark,getcpu_0_5000,128849
+L1,None,1,syscall_benchmark,getcpu_0_5000,119621
+L1,None,1,syscall_benchmark,getcpu_0_5000,132706
+L1,None,1,syscall_benchmark,getcpu_0_5000,128304
+L1,None,1,syscall_benchmark,getcpu_0_5000,133569
+L1,None,1,syscall_benchmark,getcpu_0_5000,118266
+L1,None,1,syscall_benchmark,getcpu_0_5000,127496
+L1,None,1,syscall_benchmark,getcpu_0_5000,145637
+L1,None,1,syscall_benchmark,getcpu_0_5000,147794
+L1,None,1,syscall_benchmark,getcpu_0_5000,127419
+L1,None,1,syscall_benchmark,getcpu_0_5000,118296
+L1,None,1,syscall_benchmark,getcpu_0_5000,118319
+L1,None,1,syscall_benchmark,getcpu_0_5000,127561
+L1,None,1,syscall_benchmark,getcpu_0_5000,213065
+L1,None,1,syscall_benchmark,getcpu_0_5000,119163
+L1,None,1,syscall_benchmark,getcpu_0_5000,118173
+L1,None,1,syscall_benchmark,getcpu_0_5000,127856
+L1,None,1,syscall_benchmark,getcpu_0_5000,124345
+L1,None,1,syscall_benchmark,getcpu_0_5000,127089
+L1,None,1,syscall_benchmark,getcpu_0_5000,119708
+L1,None,1,syscall_benchmark,getcpu_0_5000,119100
+L1,None,1,syscall_benchmark,getcpu_0_5000,154058
+L1,None,1,syscall_benchmark,getcpu_0_5000,118271
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2281900
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2277675
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2425987
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2157770
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2593288
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2359529
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2163953
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2074033
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2083954
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2330069
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2187463
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2091856
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2127092
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2160865
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2123810
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2085061
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2084968
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2070379
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2089318
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2258097
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2142551
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2331513
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2220751
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2189918
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2136791
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2098662
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2126342
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2204327
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2188005
+L1,Hypertracing,1,syscall_benchmark,getcpu_0_5000,2123846
 L1,Hypertracing_compress_10,10,syscall_benchmark,getcpu_0_5000,420536
 L1,Hypertracing_compress_10,10,syscall_benchmark,getcpu_0_5000,418287
 L1,Hypertracing_compress_10,10,syscall_benchmark,getcpu_0_5000,501796
@@ -509,123 +509,123 @@ L1,Hypertracing_compress_9,9,syscall_benchmark,getcpu_0_5000,433249
 L1,Hypertracing_compress_9,9,syscall_benchmark,getcpu_0_5000,427158
 L1,Hypertracing_compress_9,9,syscall_benchmark,getcpu_0_5000,463921
 L1,Hypertracing_compress_9,9,syscall_benchmark,getcpu_0_5000,462133
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,236117
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,249170
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,237694
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,290559
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,342935
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,250570
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,237567
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,272158
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,232875
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,240428
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,237792
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,237245
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,238944
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,247374
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,234303
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,237826
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,237492
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,240345
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,238714
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,243409
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,262914
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,240142
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,238507
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,237492
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,238034
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,238730
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,237911
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,239280
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,251057
-L1,Event Compressing,0,syscall_benchmark,getcpu_0_5000,240249
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6129212063
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6143796364
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6106469944
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6092395945
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6149323516
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6115361716
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6091320944
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6123095791
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6247457534
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6167782622
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6109939601
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6100811561
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6115142205
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6112848268
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6118096143
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6121430637
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6077972782
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6152607698
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6112331767
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6140365276
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6117073428
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6130459426
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6120138173
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6157941074
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6120946674
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6138746084
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6106347160
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6102094745
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6110559991
-L1,Lttng,0,syscall_benchmark,getcpu_1_10000000,6117573820
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6341840530
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6358432534
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6288096293
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6281837875
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6311453648
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6300442002
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6298366567
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6276799281
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6322916459
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6318079096
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6280112489
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6308830102
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6274950270
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6274872044
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6290672765
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6335306889
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6335287121
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6285010233
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6336589963
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6301675036
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6380245880
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6327836296
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6287157712
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6304578777
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6311021572
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6259842633
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6288888987
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6507202773
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6301432976
-L1,Ftrace,0,syscall_benchmark,getcpu_1_10000000,6589900166
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7431718225
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7456009465
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7516520374
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7472198356
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7495515373
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7493327815
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7600359833
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7399728886
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7466794283
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7410435409
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7561779016
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7493258271
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7412275278
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7433920823
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7506995058
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7466550330
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7448592048
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7491050683
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7446345188
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7506732547
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7506341651
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7548775168
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7451033169
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7500974490
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7471402409
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7576343837
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7523235948
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7588012601
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7491499208
-L1,Perf,0,syscall_benchmark,getcpu_1_10000000,7511760911
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,236117
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,249170
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,237694
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,290559
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,342935
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,250570
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,237567
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,272158
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,232875
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,240428
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,237792
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,237245
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,238944
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,247374
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,234303
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,237826
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,237492
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,240345
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,238714
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,243409
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,262914
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,240142
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,238507
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,237492
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,238034
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,238730
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,237911
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,239280
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,251057
+L1,Event Compressing,1,syscall_benchmark,getcpu_0_5000,240249
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6129212063
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6143796364
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6106469944
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6092395945
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6149323516
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6115361716
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6091320944
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6123095791
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6247457534
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6167782622
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6109939601
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6100811561
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6115142205
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6112848268
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6118096143
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6121430637
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6077972782
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6152607698
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6112331767
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6140365276
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6117073428
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6130459426
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6120138173
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6157941074
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6120946674
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6138746084
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6106347160
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6102094745
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6110559991
+L1,Lttng,1,syscall_benchmark,getcpu_1_10000000,6117573820
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6341840530
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6358432534
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6288096293
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6281837875
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6311453648
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6300442002
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6298366567
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6276799281
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6322916459
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6318079096
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6280112489
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6308830102
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6274950270
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6274872044
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6290672765
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6335306889
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6335287121
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6285010233
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6336589963
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6301675036
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6380245880
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6327836296
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6287157712
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6304578777
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6311021572
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6259842633
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6288888987
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6507202773
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6301432976
+L1,Ftrace,1,syscall_benchmark,getcpu_1_10000000,6589900166
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7431718225
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7456009465
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7516520374
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7472198356
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7495515373
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7493327815
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7600359833
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7399728886
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7466794283
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7410435409
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7561779016
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7493258271
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7412275278
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7433920823
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7506995058
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7466550330
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7448592048
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7491050683
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7446345188
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7506732547
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7506341651
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7548775168
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7451033169
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7500974490
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7471402409
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7576343837
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7523235948
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7588012601
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7491499208
+L1,Perf,1,syscall_benchmark,getcpu_1_10000000,7511760911

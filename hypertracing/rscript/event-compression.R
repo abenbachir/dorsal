@@ -11,7 +11,7 @@ source("./hypertracing/rscript/global.R")
 data <- read.table("./hypertracing/data/event-compression.csv", header=T, sep=",")
 
 # data$nb_events <- 
-hypercall_arguments = 9
+hypercall_arguments = 10
 time_delta_per_arg = 2
 
 data_filtered <- ddply(data, .(layer, tracer, compressed_event, workload, configuration),
@@ -58,14 +58,15 @@ ftrace <- subset(data_filtered, tracer == "Ftrace" )
 perf <- subset(data_filtered, tracer == "Perf" )
 
 data_filtered = subset(data_filtered, startsWith(as.character(tracer),"Hyper") )
-data_filtered = subset(data_filtered, (args_for_payload %% 1) == 0 | compressed_event == 2 | compressed_event == 4)
+# data_filtered = subset(data_filtered, (args_for_payload %% 1) == 0 | compressed_event == 2 | compressed_event == 4 | compressed_event == 20)
+data_filtered = subset(data_filtered, compressed_event %in% c(1,2,3,4,5,9,15,20))
 
 compression_overhead = compression$time
 lttng_overhead = lttng$time_avg - 510
 ftrace_overhead = ftrace$time_avg - 510
 perf_overhead = perf$time_avg - 510
 baseline = compression$baseline
-
+# Offloading Latency of a Hypercall When Enabling Event Compression
 compression_color = "darkorange2"
 ftrace_color = "deepskyblue4"
 lttng_color = "#6f2054"
@@ -92,27 +93,30 @@ plot <- ggplot(data_filtered, aes(compressed_event, time)) +
   #   fill = muted("red"), colour = "white", fontface = "bold", nudge_x = 1, nudge_y=0.3) +
   geom_label_repel(aes(y=time, label=paste(args_for_payload*8,"Bytes\npayload")),
                    size = 3.2, segment.size = 0.5, colour="white", segment.color=muted("red"),  fill = muted("red"),
-                   min.segment.length = unit(0, "lines"), nudge_x = 1.5, nudge_y = 20
+                   min.segment.length = unit(0, "lines"), nudge_x = 2.0, nudge_y = 20
   ) +
   # geom_text(aes(y=baseline, x = 0, label="Baseline" ), colour='black', size = 3.4,
   #           position=position_dodge(width=0.9), vjust=-0.15) +
   # 
   # annotate("text", x = 1, y = baseline+baseline*0.2, label = "Baseline                     ") +
   annotate("label", x = 19, y = lttng_overhead, label = "      Lttng      ", color="white", fill=lttng_color,
-             label.padding = unit(0.45, "lines")) +
+             label.padding = unit(0.35, "lines"),size = 3.5) +
   annotate("label", x = 19, y = ftrace_overhead, label = "     Ftrace     ", color="white", fill=ftrace_color,
-             label.padding = unit(0.45, "lines")) +
+           label.padding = unit(0.35, "lines"),size = 3.5) +
   annotate("label", x = 19, y = perf_overhead, label = "      Perf      ", color="white", fill=perf_color,
-           label.padding = unit(0.45, "lines")) +
+           label.padding = unit(0.35, "lines"),size = 3.5) +
   annotate("label", x = 19, y = compression_overhead, label = "Compression", color="white", fill=compression_color,  
-             label.padding = unit(0.45, "lines")) +
-  labs(title = "Offloading Latency of a Hypercall When Enabling Event Compression",x ="Number of compressed events", y ="Latency (ns)", fill="Cost of") +
+           label.padding = unit(0.35, "lines"),size = 3.5) +
+  labs(title = "",x ="Number of compressed events", y ="Latency (ns)", fill="Cost of") +
   # scale_fill_manual(values = colors) +
   theme_light() +
   theme(
     # legend.position = c(0.94,0.91),
     # legend.title=element_blank(),
-    axis.text.x = element_text(size = 10),
-    axis.text.y = element_text(margin = margin(t=2,b=1))
+    # axis.text.x = element_text(size = 10),
+    # axis.text.y = element_text(margin = margin(t=2,b=1))
   )
+pdf(file="./plots/event-compression.pdf", width=7.8, height=5.5)
 plot(plot)
+
+dev.off()

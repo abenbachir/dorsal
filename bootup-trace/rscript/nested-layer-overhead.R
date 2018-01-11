@@ -19,7 +19,7 @@ unique_data <- unique(data[c("nested_level", "boot_level", "t_median", "t_mean")
 
 p <- ggplot(unique_data, aes(x=reorder(boot_level, -t_median), y=t_median)) +
   # coord_flip() +
-  facet_wrap(~boot_level, scale="free") +
+  facet_wrap(~nested_level, scale="free") +
   geom_bar(aes(fill=nested_level),position="dodge",stat="identity") +
   # geom_text(aes(label=paste('overhead','%') ), colour='white',  fontface = "bold",
   #           # label.padding = unit(0.5, "lines"),
