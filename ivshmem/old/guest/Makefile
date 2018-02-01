@@ -21,7 +21,7 @@ default:
 	$(MAKE) -C $(KDIR) M=$$PWD modules
 	$(CC) -Wall -Wextra $(CFLAGS) -O2 $(usr).c -o $(usr)
 	$(CC) -Wall -Wextra $(CFLAGS) -O2 $(bench).c -o $(bench)
-	$(CC) -Wall -Wextra $(CFLAGS) -O2 $(test).c -o $(test)
+#	$(CC) -Wall -Wextra $(CFLAGS) -O2 $(test).c -o $(test)
 
 clean:
 	$(MAKE) -C $(KDIR) M=$$PWD clean

@@ -1,0 +1,1 @@
+cmd_/home/abder/utils/ivshmem/old/guest/ne_ivshmem_ldd_basic.ko := ld -r -m elf_x86_64 -T ./scripts/module-common.lds --build-id  -o /home/abder/utils/ivshmem/old/guest/ne_ivshmem_ldd_basic.ko /home/abder/utils/ivshmem/old/guest/ne_ivshmem_ldd_basic.o /home/abder/utils/ivshmem/old/guest/ne_ivshmem_ldd_basic.mod.o ;  true
