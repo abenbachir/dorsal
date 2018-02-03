@@ -14,7 +14,7 @@ data33 <- read.table("./hypercall/data/hypercall-nested-patch-l3.csv", header=T,
 
 baseline <- median(data1$elapsed_time)
 
-colors <- c( "#af2054", "#5f2054", "#ff0d54")
+
 data1$layer <- 'L1'
 data2$layer <- 'L2'
 data3$layer <- 'L3'
@@ -22,15 +22,21 @@ data11$layer <- 'L1'
 data22$layer <- 'L2'
 data33$layer <- 'L3'
 
-multiple = 'Multiple exits (nested)'
-single = 'Single exit'
+multiple = "Exit multiplication"
+single = "Guest single exit"
+optimization = "Nested single exit (L0 optimization)"
 data2$mode <- multiple
 data3$mode <- multiple
 data1$mode <- single
-data11$mode <- single
-data22$mode <- single
-data33$mode <- single
+data11$mode <- optimization
+data22$mode <- optimization
+data33$mode <- optimization
 
+# colors <- c( "#af2054", "#5f2054", "#ff0d54")
+# colors <- c("#5f2054", "#0f2054",  "#ff8d54")
+colors <- c( "#ef0d54", "#2571b0", "#5f2054")
+# colors <- c(multiple = "gray10", single = "#cf1f54", optimization="dodgerblue2")
+  
 data <- rbind(data1, data2, data3, data22, data33)
 
 data <- ddply(data, .(layer,mode),
@@ -59,7 +65,7 @@ for(i in 1:nrow(unique_data)) {
       unique_data[i,]$median <- row$median/11
     
   }else{
-    unique_data[i,]$ratio <- paste('(',round(row$overhead,2),'%)',sep='')
+    unique_data[i,]$ratio <- paste('(',round(row$overhead,2),'%)\n [ KVM patch ]',sep='')
   }
 }
 
@@ -67,16 +73,16 @@ p <- ggplot(unique_data, aes(x=reorder(layer, median), y=median)) +
   geom_bar(aes(fill=mode), position="stack", stat="identity") +
   geom_text(aes(label=paste(time_label, ratio, sep=' ' )),
             colour='white',  size = 3.4,
-            position=position_dodge(width=0.1), vjust=1.9) +
+            position=position_dodge(width=0.1), vjust=1.3) +
   # coord_flip() +
   scale_fill_manual(values = colors) +
   # geom_hline(yintercept = c(baseline), linetype="dotted") +
-  labs(x ="Virtualization layers", y ="Time (ns)", fill = "VMCALL exits") +
+  labs(x ="Virtualization layers", y ="Overhead (ns)", fill = "") +
   
   theme_light()+
   theme(
     # legend.position="none",
-    legend.position=c(.23,.85)
+    legend.position=c(.3,.86)
     # axis.text.y = element_text(size=12),
     # axis.text.x = element_text(size=12)
     # axis.text.y = element_blank()
@@ -86,3 +92,4 @@ pdf(file="./plots/hypercall-nested-overhead.pdf", width=5.16, height=4.6)
 plot(p)
 
 dev.off()
+plot(p)

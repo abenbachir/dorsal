@@ -58,8 +58,10 @@ ftrace <- subset(data_filtered, tracer == "Ftrace" )
 perf <- subset(data_filtered, tracer == "Perf" )
 
 data_filtered = subset(data_filtered, startsWith(as.character(tracer),"Hyper") )
-# data_filtered = subset(data_filtered, (args_for_payload %% 1) == 0 | compressed_event == 2 | compressed_event == 4 | compressed_event == 20)
-data_filtered = subset(data_filtered, compressed_event %in% c(1,2,3,4,5,9,15,20))
+data_filtered = subset(data_filtered, compressed_event %in% c(1,2,3,4,5,9,15))
+
+data_filtered$label <- paste(data_filtered$args_for_payload*8,"B")
+data_filtered$label[data_filtered$compressed_event == 1] <- paste(data_filtered$args_for_payload*8,"Bytes\npayload")
 
 compression_overhead = compression$time
 lttng_overhead = lttng$time_avg - 510
@@ -73,7 +75,7 @@ lttng_color = "#6f2054"
 perf_color = "deeppink"
 plot <- ggplot(data_filtered, aes(compressed_event, time)) +
   scale_x_continuous(breaks = seq(0, max(data_filtered$compressed_event), 1)) +
-  scale_y_continuous(breaks = seq(0, max(data_filtered$time), 25)) +
+  scale_y_continuous(breaks = seq(0, max(data_filtered$time), 50)) +
   geom_point(aes(), size=1.5) +  
   # geom_point(aes(), size=data_filtered$args_for_payload*2, shape=1, stroke=1) +
   geom_line() +
@@ -91,22 +93,22 @@ plot <- ggplot(data_filtered, aes(compressed_event, time)) +
   # geom_point(aes(x=2,y=0.6), colour= muted("red"), shape=1, size=7) +
   # geom_label(aes(x=compressed_event+0.3,y=time+80, label=paste(args_for_payload,"args")),
   #   fill = muted("red"), colour = "white", fontface = "bold", nudge_x = 1, nudge_y=0.3) +
-  geom_label_repel(aes(y=time, label=paste(args_for_payload*8,"Bytes\npayload")),
+  geom_label_repel(aes(y=time, label=label),
                    size = 3.2, segment.size = 0.5, colour="white", segment.color=muted("red"),  fill = muted("red"),
-                   min.segment.length = unit(0, "lines"), nudge_x = 2.0, nudge_y = 20
+                   min.segment.length = unit(0, "lines"), nudge_x = 0.5, nudge_y = 20
   ) +
   # geom_text(aes(y=baseline, x = 0, label="Baseline" ), colour='black', size = 3.4,
   #           position=position_dodge(width=0.9), vjust=-0.15) +
   # 
   # annotate("text", x = 1, y = baseline+baseline*0.2, label = "Baseline                     ") +
-  annotate("label", x = 19, y = lttng_overhead, label = "      Lttng      ", color="white", fill=lttng_color,
-             label.padding = unit(0.35, "lines"),size = 3.5) +
-  annotate("label", x = 19, y = ftrace_overhead, label = "     Ftrace     ", color="white", fill=ftrace_color,
-           label.padding = unit(0.35, "lines"),size = 3.5) +
-  annotate("label", x = 19, y = perf_overhead, label = "      Perf      ", color="white", fill=perf_color,
-           label.padding = unit(0.35, "lines"),size = 3.5) +
-  annotate("label", x = 19, y = compression_overhead, label = "Compression", color="white", fill=compression_color,  
-           label.padding = unit(0.35, "lines"),size = 3.5) +
+  annotate("label", x = max(data_filtered$compressed_event)-1, y = lttng_overhead, label = "      Lttng      ", color="white", fill=lttng_color,
+             label.padding = unit(0.3, "lines"),size = 3) +
+  annotate("label", x = max(data_filtered$compressed_event)-1, y = ftrace_overhead, label = "     Ftrace     ", color="white", fill=ftrace_color,
+           label.padding = unit(0.3, "lines"),size = 3) +
+  annotate("label", x = max(data_filtered$compressed_event)-1, y = perf_overhead, label = "      Perf      ", color="white", fill=perf_color,
+           label.padding = unit(0.3, "lines"),size = 3) +
+  annotate("label", x = max(data_filtered$compressed_event)-1, y = compression_overhead, label = "Compression", color="white", fill=compression_color,  
+           label.padding = unit(0.3, "lines"),size = 3) +
   labs(title = "",x ="Number of compressed events", y ="Latency (ns)", fill="Cost of") +
   # scale_fill_manual(values = colors) +
   theme_light() +
@@ -116,7 +118,9 @@ plot <- ggplot(data_filtered, aes(compressed_event, time)) +
     # axis.text.x = element_text(size = 10),
     # axis.text.y = element_text(margin = margin(t=2,b=1))
   )
-pdf(file="./plots/event-compression.pdf", width=7.8, height=5.5)
+# pdf(file="./plots/event-compression.pdf", width=7.8, height=5.5)
+pdf(file="./plots/event-compression.pdf", width=5.16, height=4.3)
 plot(plot)
 
 dev.off()
+plot(plot)
