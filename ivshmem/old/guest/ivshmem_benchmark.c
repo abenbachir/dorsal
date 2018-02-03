@@ -28,8 +28,9 @@
 const char *devicepath = "/dev/ivshmem0";
 
 ssize_t device_size = 512 * 1E6; // 512MB
-// long lengths[] = {80, 320, 640, 1024, 4096, 8182, 16384, 32768, 65536, 1024000};
-long lengths[] = {8182000,16384000,32768000};
+long lengths[] = {80, 320, 640, 1024, 4096, 8182, 16384, 32768, 65536, 
+    1024000, 8182000, 16384000, 32768000};
+//long lengths[] = {8182000,16384000,32768000};
 
 int do_benchmark(const char* stagefile, long buffer_length)
 {
@@ -68,7 +69,19 @@ int do_benchmark(const char* stagefile, long buffer_length)
     unsigned long long read_bytes = 0;
     
     int bytes = fread(buffer, sizeof(char), buffer_length, fp);
-    read_bytes += bytes;
+    read_bytes = bytes;
+    /* warm up */
+    /*while (read_bytes < (unsigned int)device_size){
+        memcpy((char *)itr, buffer, buffer_length);
+        itr += buffer_length;
+        bytes = fread(buffer, sizeof(char), buffer_length, fp);
+        read_bytes += bytes;
+    }
+
+    read_bytes = bytes;
+    itr = map;
+    */
+
     tic(ts_start);
     while (bytes > 0 && read_bytes < (unsigned int)device_size){
 
@@ -99,7 +112,7 @@ int do_benchmark(const char* stagefile, long buffer_length)
 }
 int main(int argc, char **argv)
 {
-	int samples = 10;
+	int samples = 30;
     const char* stagefile = argv[1];
 	printf("buffer size bytes, througthput Gbits/s, transfered data MB\n");
     for (int i = 0; i < sizeof(lengths)/sizeof(lengths[0]); i++ ) {
