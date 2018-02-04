@@ -10,12 +10,12 @@ L1,Perf,syscall_benchmark,getcpu_0_5000,129500,,"Baseline",129500
 L1,Perf,syscall_benchmark,getcpu_0_5000,129500,,"Guest Tracing",943440
 L1,HyperCompres(2),syscall_benchmark,getcpu_0_5000,129500,,"Baseline",129500
 L1,HyperCompres(2),syscall_benchmark,getcpu_0_5000,129500,,"Hypercall",542083
-L1,HyperCompres(2),syscall_benchmark,getcpu_0_5000,129500,,"Syscall Probe",27921
+L1,HyperCompres(2),syscall_benchmark,getcpu_0_5000,129500,,"Probe",27921
 L1,HyperCompres(2),syscall_benchmark,getcpu_0_5000,129500,,"Time+Compression",85615
 L1,HyperCompres(2),syscall_benchmark,getcpu_0_5000,129500,,"Host Tracing",121594
 L1,Hypertracing,syscall_benchmark,getcpu_0_5000,129500,,"Baseline",129500
 L1,Hypertracing,syscall_benchmark,getcpu_0_5000,129500,,"Hypercall",1585285
-L1,Hypertracing,syscall_benchmark,getcpu_0_5000,129500,,"Syscall Probe",27921
+L1,Hypertracing,syscall_benchmark,getcpu_0_5000,129500,,"Probe",27921
 L1,Hypertracing,syscall_benchmark,getcpu_0_5000,129500,,"Host Tracing",439417
 L1,Strace,syscall_benchmark,getcpu_0_5000,129500,,"Baseline",129500
 L1,Strace,syscall_benchmark,getcpu_0_5000,129500,,"Guest Tracing",15523489
@@ -32,13 +32,13 @@ L2,Perf,syscall_benchmark,getcpu_0_5000,129500,,"Baseline",129500
 L2,Perf,syscall_benchmark,getcpu_0_5000,129500,,"Guest Tracing",1070376
 L2,HyperCompres(2),syscall_benchmark,getcpu_0_5000,129500,,"Baseline",129500
 L2,HyperCompres(2),syscall_benchmark,getcpu_0_5000,129500,,"Hypercall",607778
-L2,HyperCompres(2),syscall_benchmark,getcpu_0_5000,129500,,"Syscall Probe",33553
+L2,HyperCompres(2),syscall_benchmark,getcpu_0_5000,129500,,"Probe",33553
 L2,HyperCompres(2),syscall_benchmark,getcpu_0_5000,129500,,"Time+Compression",85615
 L2,HyperCompres(2),syscall_benchmark,getcpu_0_5000,129500,,"Host Tracing",146665
 L2,HyperCompres(2),syscall_benchmark,getcpu_0_5000,129500,,"Nested Cost",78447.8
 L2,Hypertracing,syscall_benchmark,getcpu_0_5000,129500,,"Baseline",129500
 L2,Hypertracing,syscall_benchmark,getcpu_0_5000,129500,,"Hypercall",1604786
-L2,Hypertracing,syscall_benchmark,getcpu_0_5000,129500,,"Syscall Probe",33553
+L2,Hypertracing,syscall_benchmark,getcpu_0_5000,129500,,"Probe",33553
 L2,Hypertracing,syscall_benchmark,getcpu_0_5000,129500,,"Host Tracing",466630
 L2,Hypertracing,syscall_benchmark,getcpu_0_5000,129500,,"Nested Cost",93503.9
 L2,Strace,syscall_benchmark,getcpu_0_5000,129500,,"Baseline",129500

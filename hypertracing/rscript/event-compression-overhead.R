@@ -15,8 +15,8 @@ library(stringi)
 # #ffd204 => yellow
 # #3faf1f
 colors <- c("Baseline" = "gray10", "Guest Tracing" = "#6f2054", "Write to disk"="dodgerblue2",
-            "Host Tracing" = "#0f1f54", "Hypercall" = "#cf1f54", 
-            "Probe"="darkorange2", "Time+Compression"="yellow2", "Nested Cost"="#3faf1f")
+            "Host Tracing" = "#2f1f54", "Hypercall" = "#cf1f54", 
+            "Syscall Probe"="darkorange2", "Time+Compression"="yellow2", "Nested Cost"="#3faf1f")
 
 # layer,tracer,workload,configuration,time,event,freq,total_event_cost,cost_per_event
 data <- read.table("./hypertracing/data/syscall-nutshell-overhead.csv", header=T, sep=",")
@@ -60,26 +60,35 @@ for(i in 1:nrow(data)) {
     # data[i,]$overhead <- ''
   }
 }
+data <- subset(data, tracer == "Hypertracing" | tracer == "HyperCompres(2)")
+data$compression[data$tracer == 'Hypertracing'] <- '1 event (disabled)'
+data$compression[data$tracer == 'HyperCompres(2)'] <- '2 events'
 
-plot <- ggplot(data, aes(x=reorder(tracer, total_time), y = time_per_event)) +
+plot <- ggplot(data, aes(x=reorder(component, time_per_event), y = time_per_event)) +
   # geom_bar(aes(fill=component ), position="stack",stat="identity") +
-  geom_col(aes(fill=component), position=position_stack(reverse = TRUE)) +
-  # scale_y_continuous(breaks = seq(0, max(data$total_time), 200)) +
-  facet_wrap(~layer, ncol=2) +
+  geom_col(aes(fill=compression), position=position_dodge()) +
+  scale_y_continuous(breaks = seq(0, max(data$total_time), 25)) +
+  # facet_wrap(~layer, ncol=2) +
   # coord_flip() +
   # geom_label_repel(aes(y=tracing_events, label=paste(tracing_events,event_type)),
   #                  size = 3, segment.size = 0.3, colour="black", fill="white",
   #                  min.segment.length = unit(0, "lines"), nudge_x = 0
   # ) +
-  geom_text(aes(y=total_time_per_event, label=overhead), colour='black', size = 3.4,
-            position=position_dodge(width=0.9), vjust=-1) +
-  labs(title = "Average latency of getcpu system call for multiple tracers", x ="Tracers", y ="Latency (ns)", fill="Cost of") +
-  scale_fill_manual(values = colors) +
+  # geom_text(aes(y=total_time_per_event, label=overhead), colour='black', size = 3.4,
+  #           position=position_dodge(width=0.9), vjust=-1) +
+  labs(title = "", x ="Cost of", y ="Latency (ns)", fill="Event Compression") +
+  # scale_fill_manual(values = colors) +
+  scale_fill_manual(values = c('#2f1f54','#cf1f54')) +
   theme_light() +
   theme(
-    # legend.position = c(0.94,0.91),
+    legend.position = c(0.2,0.85),
     # legend.title=element_blank(),
-    axis.text.x = element_text(angle = 20, hjust = 1, vjust=1, size = 10),
+    # axis.text.x = element_text(angle = 20, hjust = 1, vjust=1, size = 10),
     axis.text.y = element_text(margin = margin(t=2,b=1))
   )
+# Average latency of getcpu system call for multiple tracers
+pdf(file="./plots/event-compression-overhead.pdf", width=5.16, height=4)
+plot(plot)
+
+dev.off()
 plot(plot)
