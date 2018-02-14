@@ -24,13 +24,13 @@
 #define elapsed_nsec(start, end) (end.tv_nsec + 1E9 * end.tv_sec) - (start.tv_nsec + 1E9 * start.tv_sec)
 #define bytes_to_kb(a) (a/1E3)
 #define bytes_to_mb(a) (a/1E6)
-
+//#define WARM_UP 1
 const char *devicepath = "/dev/ivshmem0";
 
 ssize_t device_size = 512 * 1E6; // 512MB
-long lengths[] = {80, 320, 640, 1024, 4096, 8182, 16384, 32768, 65536, 
-    1024000, 8182000, 16384000, 32768000};
-//long lengths[] = {8182000,16384000,32768000};
+//long lengths[] = {80, 320, 640, 1024, 4096, 8182, 16384, 32768, 65536, 
+//    1024000, 8182000, 4096000, 16384000, 32768000};
+long lengths[] = {8, 64, 256, 512};
 
 int do_benchmark(const char* stagefile, long buffer_length)
 {
@@ -70,17 +70,17 @@ int do_benchmark(const char* stagefile, long buffer_length)
     
     int bytes = fread(buffer, sizeof(char), buffer_length, fp);
     read_bytes = bytes;
+#ifdef WARM_UP
     /* warm up */
-    /*while (read_bytes < (unsigned int)device_size){
+    while (read_bytes < (unsigned int)device_size){
         memcpy((char *)itr, buffer, buffer_length);
         itr += buffer_length;
         bytes = fread(buffer, sizeof(char), buffer_length, fp);
         read_bytes += bytes;
     }
-
     read_bytes = bytes;
     itr = map;
-    */
+#endif
 
     tic(ts_start);
     while (bytes > 0 && read_bytes < (unsigned int)device_size){
@@ -112,7 +112,7 @@ int do_benchmark(const char* stagefile, long buffer_length)
 }
 int main(int argc, char **argv)
 {
-	int samples = 30;
+	int samples = 10;
     const char* stagefile = argv[1];
 	printf("buffer size bytes, througthput Gbits/s, transfered data MB\n");
     for (int i = 0; i < sizeof(lengths)/sizeof(lengths[0]); i++ ) {

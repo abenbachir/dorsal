@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmfxml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="xmldefinition.xsd">
+
+
+
+    <pattern version="0" id="vgpus.workloads.wait.analysis2">
+		<head>
+			<traceType id="org.eclipse.linuxtools.lttng2.kernel.tracetype" />
+			<label value="KVMGT -- Wait Analysis -- Per Queue View" />
+		</head>
+
+
+		<patternHandler initial="workloads">
+
+		<!-- -*- -*- conditions -*- -*- -->
+			<test id="workload_id_condition">
+				<if>
+					<condition>
+						<stateValue type="eventField" value="workload"/>
+						<stateValue type="query">
+							<stateAttribute type="constant" value="#CurrentScenario" />
+							<stateAttribute type="constant" value="workload_id" />
+						</stateValue>
+					</condition>
+				</if>
+			</test>	
+
+
+			<test id="seqno_condition">
+				<if>
+					<condition>
+						<stateValue type="eventField" value="seqno"/>
+						<stateValue type="query">
+							<stateAttribute type="constant" value="#CurrentScenario" />
+							<stateAttribute type="constant" value="sequence_number" />
+						</stateValue>
+					</condition>
+				</if>
+			</test>	
+
+		<!-- -*- -*- Actions -*- -*- -->
+
+		<!-- to apply to "workload_queue" event -->
+		<action id="on_kvmgt_wait_start"> 					
+			<stateChange>
+			    <stateAttribute type="constant" value="#CurrentScenario" />
+			    <stateAttribute type="constant" value="workload_id" />
+			    <stateValue type="eventField" value="workload" />
+			</stateChange>
+
+			<stateChange>
+			    <stateAttribute type="constant" value="queues" />
+		            <stateAttribute type="constant" value="gvt_Q" />
+			    <stateAttribute type="pool" />
+			    <stateValue type="query">
+				<stateAttribute type="constant" value="#CurrentScenario" />
+				<stateAttribute type="constant" value="workload_id" />
+			    </stateValue>
+			</stateChange>
+
+
+		</action>
+
+		<!-- to apply to "workload_submit" event -->
+		<action id="on_kvmgt_wait_stop"> 
+			<stateChange>
+			    <stateAttribute type="constant" value="#CurrentScenario" />
+			    <stateAttribute type="constant" value="sequence_number" />
+			    <stateValue type="eventField" value="seqno" />
+			</stateChange>
+			
+			<stateChange>
+			    <stateAttribute type="constant" value="queues" />
+		            <stateAttribute type="constant" value="gvt_Q" />
+			    <stateAttribute type="pool" />
+			    <stateValue type="null" />
+			</stateChange>
+		</action>
+
+		<!-- to apply to "i915_gem_request_add" event -->
+		<action id="on_i915_wait_start"> 
+			<stateChange>
+			    <stateAttribute type="constant" value="queues" />
+		            <stateAttribute type="constant" value="i915_Q" />
+			    <stateAttribute type="pool" />
+			    <stateValue type="query">
+				<stateAttribute type="constant" value="#CurrentScenario" />
+				<stateAttribute type="constant" value="workload_id" />
+			    </stateValue>
+			</stateChange>
+		</action>
+
+		<!-- to apply to "i915_gem_request_in" event -->
+		<action id="on_i915_wait_stop"> 			
+			<stateChange>
+			    <stateAttribute type="constant" value="queues" />
+		            <stateAttribute type="constant" value="i915_Q" />
+			    <stateAttribute type="pool" />
+			    <stateValue type="null" />
+			</stateChange>	
+
+			<stateChange>
+			    <stateAttribute type="constant" value="queues" />
+		            <stateAttribute type="constant" value="i915_Running" />
+			    <stateAttribute type="pool" />
+			    <stateValue type="query">
+				<stateAttribute type="constant" value="#CurrentScenario" />
+				<stateAttribute type="constant" value="workload_id" />
+			    </stateValue>
+			</stateChange>
+		</action>
+
+		<!-- to apply to "i915_gem_request_out" event or "intel_engine_notify" event-->
+		<action id="on_i915_exec_stop"> 			
+			<stateChange>
+			    <stateAttribute type="constant" value="queues" />
+		            <stateAttribute type="constant" value="i915_Running" />
+			    <stateAttribute type="pool" />
+			    <stateValue type="null" />
+			</stateChange>	
+
+			<stateChange>
+			    <stateAttribute type="constant" value="queues" />
+		            <stateAttribute type="constant" value="i915_Running" />
+			    <stateAttribute type="pool" />
+			    <stateValue type="null" />
+			</stateChange>
+		</action>
+			
+
+		<!-- 	FSMs -->
+
+		<fsm id="workloads" initial="state_start" consuming="false">
+
+			<state id="state_start">
+				<transition event="workload_queue"          target="state_kvmgt_wait_begin" action="on_kvmgt_wait_start" />
+			</state>
+
+			<state id="state_kvmgt_wait_begin">
+				<transition event="workload_submit"          target="state_i915_wait_begin"  action="on_kvmgt_wait_stop"     cond="workload_id_condition" />
+			</state>
+
+			<state id="state_i915_wait_begin">
+				<transition event="i915_gem_request_add"     target="state_i915_wait_end"    action="on_i915_wait_start"     cond="seqno_condition"  />
+			</state>
+		
+
+			<state id="state_i915_wait_end">
+				<transition event="i915_gem_request_in"      target="state_i915_exec_begin"    action="on_i915_wait_stop"      cond="seqno_condition"  />
+			</state>
+
+			<state id="state_i915_exec_begin">
+				<transition event="intel_engine_notify"      target="state_i915_exec_end"          action="on_i915_exec_stop"     cond="seqno_condition"  />
+			</state>
+
+			<state id="state_i915_exec_begin">
+				<transition event="i915_gem_request_out"      target="state_i915_exec_end"          action="on_i915_exec_stop"     cond="seqno_condition"  />
+			</state>				
+
+			<final id="state_i915_exec_end" />
+
+		</fsm>	
+
+	</patternHandler>
+</pattern>
+
+
+<!--  ****************************************************************************************   -->
+
+<!-- This is the definition of the time-graph view -->
+
+    <timeGraphView id="vGPU.Wait.Analysis.View2">
+        <head>
+            <analysis id="vgpus.workloads.wait.analysis2" />
+            <label value="KVMGT -- Wait Analysis -- Per Queue View" />
+        </head>
+
+        <!-- Control Flow View -->
+        <entry path="queues/*" displayText="true">
+		<display type="self" />
+		<name type="self" />
+		<entry path="*"  displayText="true">
+			<display type="self" />
+		</entry>			
+	</entry>
+
+    </timeGraphView>
+
+</tmfxml>

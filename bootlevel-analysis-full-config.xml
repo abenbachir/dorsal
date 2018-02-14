@@ -1,0 +1,1177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmfxml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="xmldefinition.xsd">
+
+
+
+
+<!-- The state provider assigns states from events -->
+    <stateProvider version="0" id="abder.state.provider">
+		<head>
+            <traceType id="org.eclipse.linuxtools.lttng2.kernel.tracetype" />
+            <label value="Full Boot levels Analysis" />
+        </head>
+        		<!-- Convenience names for the state values -->
+        <definedValue name="INITCALL_NOT_RUNNING" value="11111" />
+        <definedValue name="BOOT_LEVELS_NOT_RUNNING" value="22222" />
+
+        <definedValue name="VMLAUNCH" value="33333" />
+        <definedValue name="FIRST_KERNEL_CODE_HYPERCALL_NR" value="9000" />
+        <definedValue name="START_KERNEL_HYPERCALL_NR" value="9001" />
+        <definedValue name="USERSPACE_RUNNING" value="9002" /> 
+        <definedValue name="KERNEL_PANIC" value="9003" /> 
+        
+        <definedValue name="BOOTLEVEL_HYPERCALL_NR" value="3000" />
+        <definedValue name="BOOTLEVEL_ENTRY_HYPERCALL_NR" value="3001" />
+        <definedValue name="BOOTLEVEL_EXIT_HYPERCALL_NR" value="3002" />
+
+        <definedValue name="INITCALL_ENTRY_HYPERCALL_NR" value="4001" />
+        <definedValue name="INITCALL_EXIT_HYPERCALL_NR" value="4002" />
+
+        <location id="BootLevel">
+			<stateAttribute type="constant" value="CPUs" />
+			<stateAttribute type="eventField" value="cpu" />
+			<stateAttribute type="constant" value="VMs" />
+			<stateAttribute type="eventField" value="context._tid" />
+			<stateAttribute type="constant" value="Boot levels" />
+		</location>
+		<location id="Modules">
+			<stateAttribute type="constant" value="CPUs" />
+			<stateAttribute type="eventField" value="cpu" />
+			<stateAttribute type="constant" value="VMs" />
+			<stateAttribute type="eventField" value="context._tid" />
+			<stateAttribute type="constant" value="Modules" />
+		</location>
+		<!-- Event handlers -->        
+		<eventHandler eventName="kvm_x86_hypercall">
+			<stateChange>
+				<if>
+					<condition>
+						<field name="nr" />
+						<stateValue type="int" value="$KERNEL_PANIC" />
+					</condition>
+				</if>
+				<then>
+					<stateAttribute type="location" value="Modules" />
+					<stateValue type="long" value="$KERNEL_PANIC" />
+				</then>
+			</stateChange>
+			<stateChange>
+				<if>
+					<condition>
+						<field name="nr" />
+						<stateValue type="int" value="$START_KERNEL_HYPERCALL_NR" />
+					</condition>
+				</if>
+				<then>
+					<stateAttribute type="location" value="BootLevel" />
+					<stateValue type="long" value="$START_KERNEL_HYPERCALL_NR" />
+				</then>
+			</stateChange>
+			<stateChange>
+				<if>
+					<condition>
+						<field name="nr" />
+						<stateValue type="int" value="$FIRST_KERNEL_CODE_HYPERCALL_NR" />
+					</condition>
+				</if>
+				<then>
+					<stateAttribute type="location" value="BootLevel" />
+					<stateValue type="long" value="$FIRST_KERNEL_CODE_HYPERCALL_NR" />
+				</then>
+			</stateChange>
+			<stateChange>
+				<if>
+					<condition>
+						<field name="nr" />
+						<stateValue type="int" value="$BOOTLEVEL_ENTRY_HYPERCALL_NR" />
+					</condition>
+				</if>
+				<then>
+					<stateAttribute type="location" value="BootLevel" />
+					<stateValue type="eventField" value="a0" forcedType="long" />
+				</then>
+			</stateChange>
+			<stateChange>
+				<if>
+					<condition>
+						<field name="nr" />
+						<stateValue type="int" value="$BOOTLEVEL_EXIT_HYPERCALL_NR" />
+					</condition>
+				</if>
+				<then>
+					<stateAttribute type="location" value="BootLevel" />
+					<stateValue type="long" value="$BOOT_LEVELS_NOT_RUNNING" />
+				</then>
+			</stateChange>
+			<stateChange>
+				<if>
+					<condition>
+						<field name="nr" />
+						<stateValue type="int" value="$USERSPACE_RUNNING" />
+					</condition>
+				</if>
+				<then>
+					<stateAttribute type="location" value="BootLevel" />
+					<stateValue type="long" value="$USERSPACE_RUNNING" />
+				</then>
+			</stateChange>
+			<stateChange>
+				<if>
+					<condition>
+						<field name="nr" />
+						<stateValue type="int" value="$INITCALL_ENTRY_HYPERCALL_NR" />
+					</condition>
+				</if>
+				<then>
+					<stateAttribute type="location" value="Modules" />
+					<stateValue type="eventField" value="a0" forcedType="long" />
+				</then>
+			</stateChange>
+			<stateChange>
+				<if>
+					<condition>
+						<field name="nr" />
+						<stateValue type="int" value="$INITCALL_EXIT_HYPERCALL_NR" />
+					</condition>
+				</if>
+				<then>
+					<stateAttribute type="location" value="Modules" />
+					<stateValue type="long" value="$INITCALL_NOT_RUNNING" />
+				</then>
+			</stateChange>
+		</eventHandler>
+
+		<eventHandler eventName="kvm_x86_write_tsc_offset">
+			<stateChange>
+				<if>
+					<condition>
+						<field name="previous_tsc_offset" />
+						<stateValue type="int" value="0" />
+					</condition>
+				</if>
+				<then>
+					<stateAttribute type="location" value="BootLevel" />
+					<stateValue type="long" value="$VMLAUNCH" />
+				</then>
+			</stateChange>
+		</eventHandler>
+
+    </stateProvider>
+
+    <!-- This is the definition of the time-graph view -->
+    <timeGraphView id="org.eclipse.linuxtools.tmf.analysis.xml.ui.views.statesystem">
+        <head>
+            <analysis id="abder.state.provider" />
+            <label value="Full Boot levels Analysis View" />
+        </head>
+
+        <!-- StateValues-->
+		 <!-- black -->
+		<definedValue name="" value="11111" color="#cdcdcd" />
+		<definedValue name="" value="22222" color="#bdbdbd" /> <!-- light gray -->
+		<definedValue name="BIOS + BootLoader" value="33333" color="#252525" />
+		
+		<definedValue name="First kernel code" value="9000" color="#88419d" />
+		<definedValue name="Kernel inits" value="9001" color="#7a0177" /> <!-- #fe9929 -->
+		<definedValue name="Userspace" value="9002" color="#41ab5d" /> 
+		<definedValue name="Kernel panic" value="9003" color="#000000" /> 
+
+        <definedValue name="Console" value="10" color="#e7298a" /> <!-- yellow #ffd700 -->
+		<definedValue name="Security" value="11" color="#960001" /> <!-- red -->
+		<definedValue name="Early" value="0" color="#225ea8" /> <!-- violet -->
+		<definedValue name="Pure" value="1" color="#74a9cf" /> <!-- green -->
+		<definedValue name="Core" value="2" color="#4dac26" /> <!-- orange -->
+		<definedValue name="Core sync" value="12" color="#fe9929" />
+		<definedValue name="Postcore" value="3" color="#78c679" /> <!-- light green -->
+		<definedValue name="Postcore sync" value="13" color="#d9f0a3" />
+		<definedValue name="Arch" value="4" color="#a8ddb5" /> <!-- blue ocean -->
+		<definedValue name="Arch sync" value="14" color="#1d91c0" />
+		<definedValue name="Subsys" value="5" color="#ffd700" /> <!-- violet -->
+		<definedValue name="Subsys sync" value="15" color="#fe9929" />
+		<definedValue name="Filesystem" value="6" color="#cc4c02" /> <!--  -->
+		<definedValue name="Filesystem sync" value="16" color="#8c2d04" />
+		<definedValue name="Rootfs" value="7" color="#2a9088" /> <!--   -->
+		<definedValue name="Device" value="8" color="#0570b0" /> <!--  -->
+		<definedValue name="Device sync" value="18" color="#fcc5c0" />
+		<definedValue name="Late" value="9" color="#0c2c84" /> <!--  -->
+		<definedValue name="Late sync" value="19" color="#bf812d" />
+
+<definedValue name="trace_bootlevel_handler_console" value="101" color="mycolor" />
+<definedValue name="con_init" value="102" color="mycolor" />
+<definedValue name="hvc_console_init" value="103" color="mycolor" />
+<definedValue name="xen_cons_init" value="104" color="mycolor" />
+<definedValue name="univ8250_console_init" value="105" color="mycolor" />
+<definedValue name="trace_bootlevel_end_handler_console" value="106" color="mycolor" />
+<definedValue name="trace_bootlevel_handler_security" value="107" color="mycolor" />
+<definedValue name="selinux_init" value="108" color="mycolor" />
+<definedValue name="smack_init" value="109" color="mycolor" />
+<definedValue name="tomoyo_init" value="110" color="mycolor" />
+<definedValue name="apparmor_init" value="111" color="mycolor" />
+<definedValue name="integrity_iintcache_init" value="112" color="mycolor" />
+<definedValue name="trace_bootlevel_end_handler_security" value="113" color="mycolor" />
+<definedValue name="trace_bootlevel_handler_early" value="114" color="mycolor" />
+<definedValue name="trace_init_flags_sys_exit" value="115" color="mycolor" />
+<definedValue name="trace_init_flags_sys_enter" value="116" color="mycolor" />
+<definedValue name="init_hw_perf_events" value="117" color="mycolor" />
+<definedValue name="init_real_mode" value="118" color="mycolor" />
+<definedValue name="trace_init_perf_perm_irq_work_exit" value="119" color="mycolor" />
+<definedValue name="register_nmi_cpu_backtrace_handler" value="120" color="mycolor" />
+<definedValue name="numachip_system_init" value="121" color="mycolor" />
+<definedValue name="early_efi_map_fb" value="122" color="mycolor" />
+<definedValue name="spawn_ksoftirqd" value="123" color="mycolor" />
+<definedValue name="migration_init" value="124" color="mycolor" />
+<definedValue name="check_cpu_stall_init" value="125" color="mycolor" />
+<definedValue name="srcu_bootup_announce" value="126" color="mycolor" />
+<definedValue name="rcu_spawn_gp_kthread" value="127" color="mycolor" />
+<definedValue name="cpu_stop_init" value="128" color="mycolor" />
+<definedValue name="init_events" value="129" color="mycolor" />
+<definedValue name="init_trace_printk" value="130" color="mycolor" />
+<definedValue name="event_trace_enable_again" value="131" color="mycolor" />
+<definedValue name="jump_label_init_module" value="132" color="mycolor" />
+<definedValue name="dynamic_debug_init" value="133" color="mycolor" />
+<definedValue name="rand_initialize" value="134" color="mycolor" />
+<definedValue name="trace_bootlevel_end_handler_early" value="135" color="mycolor" />
+<definedValue name="trace_bootlevel_handler_pure" value="136" color="mycolor" />
+<definedValue name="ipc_ns_init" value="137" color="mycolor" />
+<definedValue name="init_mmap_min_addr" value="138" color="mycolor" />
+<definedValue name="evm_display_config" value="139" color="mycolor" />
+<definedValue name="init_cpufreq_transition_notifier_list" value="140" color="mycolor" />
+<definedValue name="net_ns_init" value="141" color="mycolor" />
+<definedValue name="trace_bootlevel_end_handler_pure" value="142" color="mycolor" />
+<definedValue name="trace_bootlevel_handler_core" value="143" color="mycolor" />
+<definedValue name="xen_pvh_gnttab_setup" value="144" color="mycolor" />
+<definedValue name="e820__register_nvs_regions" value="145" color="mycolor" />
+<definedValue name="cpufreq_register_tsc_scaling" value="146" color="mycolor" />
+<definedValue name="init_cpu_syscore" value="147" color="mycolor" />
+<definedValue name="reboot_init" value="148" color="mycolor" />
+<definedValue name="init_lapic_sysfs" value="149" color="mycolor" />
+<definedValue name="cpu_hotplug_pm_sync_init" value="150" color="mycolor" />
+<definedValue name="alloc_frozen_cpus" value="151" color="mycolor" />
+<definedValue name="wq_sysfs_init" value="152" color="mycolor" />
+<definedValue name="ksysfs_init" value="153" color="mycolor" />
+<definedValue name="pm_init" value="154" color="mycolor" />
+<definedValue name="pm_disk_init" value="155" color="mycolor" />
+<definedValue name="swsusp_header_init" value="156" color="mycolor" />
+<definedValue name="rcu_set_runtime_mode" value="157" color="mycolor" />
+<definedValue name="init_jiffies_clocksource" value="158" color="mycolor" />
+<definedValue name="futex_init" value="159" color="mycolor" />
+<definedValue name="cgroup_wq_init" value="160" color="mycolor" />
+<definedValue name="cgroup1_wq_init" value="161" color="mycolor" />
+<definedValue name="ftrace_mod_cmd_init" value="162" color="mycolor" />
+<definedValue name="init_wakeup_tracer" value="163" color="mycolor" />
+<definedValue name="init_graph_trace" value="164" color="mycolor" />
+<definedValue name="init_per_zone_wmark_min" value="165" color="mycolor" />
+<definedValue name="init_zero_pfn" value="166" color="mycolor" />
+<definedValue name="memory_failure_init" value="167" color="mycolor" />
+<definedValue name="cma_init_reserved_areas" value="168" color="mycolor" />
+<definedValue name="fsnotify_init" value="169" color="mycolor" />
+<definedValue name="filelock_init" value="170" color="mycolor" />
+<definedValue name="init_script_binfmt" value="171" color="mycolor" />
+<definedValue name="init_elf_binfmt" value="172" color="mycolor" />
+<definedValue name="init_compat_elf_binfmt" value="173" color="mycolor" />
+<definedValue name="debugfs_init" value="174" color="mycolor" />
+<definedValue name="tracefs_init" value="175" color="mycolor" />
+<definedValue name="securityfs_init" value="176" color="mycolor" />
+<definedValue name="prandom_init" value="177" color="mycolor" />
+<definedValue name="pinctrl_init" value="178" color="mycolor" />
+<definedValue name="gpiolib_dev_init" value="179" color="mycolor" />
+<definedValue name="sfi_sysfs_init" value="180" color="mycolor" />
+<definedValue name="virtio_init" value="181" color="mycolor" />
+<definedValue name="regulator_init" value="182" color="mycolor" />
+<definedValue name="iommu_init" value="183" color="mycolor" />
+<definedValue name="early_resume_init" value="184" color="mycolor" />
+<definedValue name="opp_debug_init" value="185" color="mycolor" />
+<definedValue name="cpufreq_core_init" value="186" color="mycolor" />
+<definedValue name="cpuidle_init" value="187" color="mycolor" />
+<definedValue name="capsule_reboot_register" value="188" color="mycolor" />
+<definedValue name="bsp_pm_check_init" value="189" color="mycolor" />
+<definedValue name="sock_init" value="190" color="mycolor" />
+<definedValue name="net_inuse_init" value="191" color="mycolor" />
+<definedValue name="net_defaults_init" value="192" color="mycolor" />
+<definedValue name="init_default_flow_dissectors" value="193" color="mycolor" />
+<definedValue name="netlink_proto_init" value="194" color="mycolor" />
+<definedValue name="trace_bootlevel_end_handler_core" value="195" color="mycolor" />
+<definedValue name="trace_bootlevel_handler_sync_core" value="196" color="mycolor" />
+<definedValue name="__gnttab_init" value="197" color="mycolor" />
+<definedValue name="trace_bootlevel_end_handler_sync_core" value="198" color="mycolor" />
+<definedValue name="trace_bootlevel_handler_postcore" value="199" color="mycolor" />
+<definedValue name="irq_sysfs_init" value="200" color="mycolor" />
+<definedValue name="bdi_class_init" value="201" color="mycolor" />
+<definedValue name="mm_sysfs_init" value="202" color="mycolor" />
+<definedValue name="gpiolib_sysfs_init" value="203" color="mycolor" />
+<definedValue name="pcibus_class_init" value="204" color="mycolor" />
+<definedValue name="pci_driver_init" value="205" color="mycolor" />
+<definedValue name="rio_bus_init" value="206" color="mycolor" />
+<definedValue name="backlight_class_init" value="207" color="mycolor" />
+<definedValue name="xenbus_init" value="208" color="mycolor" />
+<definedValue name="tty_class_init" value="209" color="mycolor" />
+<definedValue name="vtconsole_class_init" value="210" color="mycolor" />
+<definedValue name="iommu_dev_init" value="211" color="mycolor" />
+<definedValue name="mipi_dsi_bus_init" value="212" color="mycolor" />
+<definedValue name="wakeup_sources_debugfs_init" value="213" color="mycolor" />
+<definedValue name="register_node_type" value="214" color="mycolor" />
+<definedValue name="regmap_initcall" value="215" color="mycolor" />
+<definedValue name="sram_init" value="216" color="mycolor" />
+<definedValue name="syscon_init" value="217" color="mycolor" />
+<definedValue name="spi_init" value="218" color="mycolor" />
+<definedValue name="i2c_init" value="219" color="mycolor" />
+<definedValue name="init_ladder" value="220" color="mycolor" />
+<definedValue name="init_menu" value="221" color="mycolor" />
+<definedValue name="pcc_init" value="222" color="mycolor" />
+<definedValue name="amd_postcore_init" value="223" color="mycolor" />
+<definedValue name="trace_bootlevel_end_handler_postcore" value="224" color="mycolor" />
+<definedValue name="kobject_uevent_init" value="225" color="mycolor" />
+<definedValue name="trace_bootlevel_handler_sync_postcore" value="226" color="mycolor" />
+<definedValue name="trace_bootlevel_end_handler_sync_postcore" value="227" color="mycolor" />
+<definedValue name="trace_bootlevel_handler_arch" value="228" color="mycolor" />
+<definedValue name="bts_init" value="229" color="mycolor" />
+<definedValue name="pt_init" value="230" color="mycolor" />
+<definedValue name="boot_params_ksysfs_init" value="231" color="mycolor" />
+<definedValue name="sbf_init" value="232" color="mycolor" />
+<definedValue name="arch_kdebugfs_init" value="233" color="mycolor" />
+<definedValue name="mtrr_if_init" value="234" color="mycolor" />
+<definedValue name="ffh_cstate_init" value="235" color="mycolor" />
+<definedValue name="activate_jump_labels" value="236" color="mycolor" />
+<definedValue name="gigantic_pages_init" value="237" color="mycolor" />
+<definedValue name="kcmp_cookies_init" value="238" color="mycolor" />
+<definedValue name="acpi_pci_init" value="239" color="mycolor" />
+<definedValue name="dma_bus_init" value="240" color="mycolor" />
+<definedValue name="dma_channel_table_init" value="241" color="mycolor" />
+<definedValue name="setup_vcpu_hotplug_event" value="242" color="mycolor" />
+<definedValue name="register_xen_pci_notifier" value="243" color="mycolor" />
+<definedValue name="xen_pcpu_init" value="244" color="mycolor" />
+<definedValue name="dmi_id_init" value="245" color="mycolor" />
+<definedValue name="numachip_timer_init" value="246" color="mycolor" />
+<definedValue name="pci_arch_init" value="247" color="mycolor" />
+<definedValue name="trace_bootlevel_end_handler_arch" value="248" color="mycolor" />
+<definedValue name="trace_bootlevel_handler_sync_arch" value="249" color="mycolor" />
+<definedValue name="trace_bootlevel_end_handler_sync_arch" value="250" color="mycolor" />
+<definedValue name="trace_bootlevel_handler_subsys" value="251" color="mycolor" />
+<definedValue name="init_vdso" value="252" color="mycolor" />
+<definedValue name="sysenter_setup" value="253" color="mycolor" />
+<definedValue name="fixup_ht_bug" value="254" color="mycolor" />
+<definedValue name="topology_init" value="255" color="mycolor" />
+<definedValue name="mtrr_init_finialize" value="256" color="mycolor" />
+<definedValue name="uid_cache_init" value="257" color="mycolor" />
+<definedValue name="param_sysfs_init" value="258" color="mycolor" />
+<definedValue name="user_namespace_sysctl_init" value="259" color="mycolor" />
+<definedValue name="proc_schedstat_init" value="260" color="mycolor" />
+<definedValue name="pm_sysrq_init" value="261" color="mycolor" />
+<definedValue name="create_proc_profile" value="262" color="mycolor" />
+<definedValue name="crash_save_vmcoreinfo_init" value="263" color="mycolor" />
+<definedValue name="crash_notes_memory_init" value="264" color="mycolor" />
+<definedValue name="cgroup_namespaces_init" value="265" color="mycolor" />
+<definedValue name="user_namespaces_init" value="266" color="mycolor" />
+<definedValue name="hung_task_init" value="267" color="mycolor" />
+<definedValue name="dev_map_init" value="268" color="mycolor" />
+<definedValue name="oom_init" value="269" color="mycolor" />
+<definedValue name="default_bdi_init" value="270" color="mycolor" />
+<definedValue name="percpu_enable_async" value="271" color="mycolor" />
+<definedValue name="kcompactd_init" value="272" color="mycolor" />
+<definedValue name="init_reserve_notifier" value="273" color="mycolor" />
+<definedValue name="init_admin_reserve" value="274" color="mycolor" />
+<definedValue name="init_user_reserve" value="275" color="mycolor" />
+<definedValue name="swap_init_sysfs" value="276" color="mycolor" />
+<definedValue name="swapfile_init" value="277" color="mycolor" />
+<definedValue name="hugetlb_init" value="278" color="mycolor" />
+<definedValue name="ksm_init" value="279" color="mycolor" />
+<definedValue name="hugepage_init" value="280" color="mycolor" />
+<definedValue name="mem_cgroup_swap_init" value="281" color="mycolor" />
+<definedValue name="mem_cgroup_init" value="282" color="mycolor" />
+<definedValue name="page_idle_init" value="283" color="mycolor" />
+<definedValue name="sel_ib_pkey_init" value="284" color="mycolor" />
+<definedValue name="crypto_wq_init" value="285" color="mycolor" />
+<definedValue name="cryptomgr_init" value="286" color="mycolor" />
+<definedValue name="cryptd_init" value="287" color="mycolor" />
+<definedValue name="init_bio" value="288" color="mycolor" />
+<definedValue name="blk_settings_init" value="289" color="mycolor" />
+<definedValue name="blk_ioc_init" value="290" color="mycolor" />
+<definedValue name="blk_softirq_init" value="291" color="mycolor" />
+<definedValue name="blk_mq_init" value="292" color="mycolor" />
+<definedValue name="genhd_device_init" value="293" color="mycolor" />
+<definedValue name="sx150x_init" value="294" color="mycolor" />
+<definedValue name="byt_gpio_init" value="295" color="mycolor" />
+<definedValue name="chv_pinctrl_init" value="296" color="mycolor" />
+<definedValue name="spt_pinctrl_init" value="297" color="mycolor" />
+<definedValue name="gpiolib_debugfs_init" value="298" color="mycolor" />
+<definedValue name="lp_gpio_init" value="299" color="mycolor" />
+<definedValue name="rc5t583_gpio_init" value="300" color="mycolor" />
+<definedValue name="palmas_gpio_init" value="301" color="mycolor" />
+<definedValue name="tps6586x_gpio_init" value="302" color="mycolor" />
+<definedValue name="tps65910_gpio_init" value="303" color="mycolor" />
+<definedValue name="pwm_debugfs_init" value="304" color="mycolor" />
+<definedValue name="pwm_sysfs_init" value="305" color="mycolor" />
+<definedValue name="pci_slot_init" value="306" color="mycolor" />
+<definedValue name="fbmem_init" value="307" color="mycolor" />
+<definedValue name="acpi_init" value="308" color="mycolor" />
+<definedValue name="pnp_init" value="309" color="mycolor" />
+<definedValue name="balloon_init" value="310" color="mycolor" />
+<definedValue name="xen_setup_shutdown_event" value="311" color="mycolor" />
+<definedValue name="xenbus_probe_backend_init" value="312" color="mycolor" />
+<definedValue name="xenbus_probe_frontend_init" value="313" color="mycolor" />
+<definedValue name="xen_acpi_pad_init" value="314" color="mycolor" />
+<definedValue name="misc_init" value="315" color="mycolor" />
+<definedValue name="tpm_init" value="316" color="mycolor" />
+<definedValue name="vga_arb_device_init" value="317" color="mycolor" />
+<definedValue name="cn_init" value="318" color="mycolor" />
+<definedValue name="parport_default_proc_register" value="319" color="mycolor" />
+<definedValue name="pm860x_i2c_init" value="320" color="mycolor" />
+<definedValue name="wm8400_module_init" value="321" color="mycolor" />
+<definedValue name="wm831x_i2c_init" value="322" color="mycolor" />
+<definedValue name="wm831x_spi_init" value="323" color="mycolor" />
+<definedValue name="wm8350_i2c_init" value="324" color="mycolor" />
+<definedValue name="tps65910_i2c_init" value="325" color="mycolor" />
+<definedValue name="tps80031_init" value="326" color="mycolor" />
+<definedValue name="ezx_pcap_init" value="327" color="mycolor" />
+<definedValue name="da903x_init" value="328" color="mycolor" />
+<definedValue name="da9052_spi_init" value="329" color="mycolor" />
+<definedValue name="da9052_i2c_init" value="330" color="mycolor" />
+<definedValue name="lp8788_init" value="331" color="mycolor" />
+<definedValue name="da9055_i2c_init" value="332" color="mycolor" />
+<definedValue name="max77843_i2c_init" value="333" color="mycolor" />
+<definedValue name="max8925_i2c_init" value="334" color="mycolor" />
+<definedValue name="max8997_i2c_init" value="335" color="mycolor" />
+<definedValue name="max8998_i2c_init" value="336" color="mycolor" />
+<definedValue name="ab3100_i2c_init" value="337" color="mycolor" />
+<definedValue name="tps6586x_init" value="338" color="mycolor" />
+<definedValue name="tps65090_init" value="339" color="mycolor" />
+<definedValue name="aat2870_init" value="340" color="mycolor" />
+<definedValue name="palmas_i2c_init" value="341" color="mycolor" />
+<definedValue name="rc5t583_i2c_init" value="342" color="mycolor" />
+<definedValue name="sec_pmic_init" value="343" color="mycolor" />
+<definedValue name="as3711_i2c_init" value="344" color="mycolor" />
+<definedValue name="libnvdimm_init" value="345" color="mycolor" />
+<definedValue name="dax_fs_init" value="346" color="mycolor" />
+<definedValue name="dma_buf_init" value="347" color="mycolor" />
+<definedValue name="init_scsi" value="348" color="mycolor" />
+<definedValue name="ata_init" value="349" color="mycolor" />
+<definedValue name="phy_init" value="350" color="mycolor" />
+<definedValue name="usb_init" value="351" color="mycolor" />
+<definedValue name="serio_init" value="352" color="mycolor" />
+<definedValue name="input_init" value="353" color="mycolor" />
+<definedValue name="rtc_init" value="354" color="mycolor" />
+<definedValue name="dw_i2c_init_driver" value="355" color="mycolor" />
+<definedValue name="rc_core_init" value="356" color="mycolor" />
+<definedValue name="pps_init" value="357" color="mycolor" />
+<definedValue name="ptp_init" value="358" color="mycolor" />
+<definedValue name="power_supply_class_init" value="359" color="mycolor" />
+<definedValue name="hwmon_init" value="360" color="mycolor" />
+<definedValue name="md_init" value="361" color="mycolor" />
+<definedValue name="edac_init" value="362" color="mycolor" />
+<definedValue name="mmc_init" value="363" color="mycolor" />
+<definedValue name="leds_init" value="364" color="mycolor" />
+<definedValue name="dmi_init" value="365" color="mycolor" />
+<definedValue name="efisubsys_init" value="366" color="mycolor" />
+<definedValue name="acpi_wmi_init" value="367" color="mycolor" />
+<definedValue name="devfreq_init" value="368" color="mycolor" />
+<definedValue name="devfreq_event_init" value="369" color="mycolor" />
+<definedValue name="devfreq_simple_ondemand_init" value="370" color="mycolor" />
+<definedValue name="devfreq_performance_init" value="371" color="mycolor" />
+<definedValue name="devfreq_powersave_init" value="372" color="mycolor" />
+<definedValue name="devfreq_userspace_init" value="373" color="mycolor" />
+<definedValue name="iio_init" value="374" color="mycolor" />
+<definedValue name="vme_init" value="375" color="mycolor" />
+<definedValue name="ras_init" value="376" color="mycolor" />
+<definedValue name="nvmem_init" value="377" color="mycolor" />
+<definedValue name="init_soundcore" value="378" color="mycolor" />
+<definedValue name="alsa_sound_init" value="379" color="mycolor" />
+<definedValue name="alsa_seq_device_init" value="380" color="mycolor" />
+<definedValue name="hda_bus_init" value="381" color="mycolor" />
+<definedValue name="pci_subsys_init" value="382" color="mycolor" />
+<definedValue name="proto_init" value="383" color="mycolor" />
+<definedValue name="net_dev_init" value="384" color="mycolor" />
+<definedValue name="neigh_init" value="385" color="mycolor" />
+<definedValue name="fib_notifier_init" value="386" color="mycolor" />
+<definedValue name="fib_rules_init" value="387" color="mycolor" />
+<definedValue name="init_cgroup_netprio" value="388" color="mycolor" />
+<definedValue name="bpf_lwt_init" value="389" color="mycolor" />
+<definedValue name="pktsched_init" value="390" color="mycolor" />
+<definedValue name="tc_filter_init" value="391" color="mycolor" />
+<definedValue name="tc_action_init" value="392" color="mycolor" />
+<definedValue name="genl_init" value="393" color="mycolor" />
+<definedValue name="ipv4_netfilter_init" value="394" color="mycolor" />
+<definedValue name="cipso_v4_init" value="395" color="mycolor" />
+<definedValue name="bt_init" value="396" color="mycolor" />
+<definedValue name="netlbl_init" value="397" color="mycolor" />
+<definedValue name="rfkill_init" value="398" color="mycolor" />
+<definedValue name="nfc_init" value="399" color="mycolor" />
+<definedValue name="trace_bootlevel_end_handler_subsys" value="400" color="mycolor" />
+<definedValue name="trace_bootlevel_handler_sync_subsys" value="401" color="mycolor" />
+<definedValue name="xen_mcfg_late" value="402" color="mycolor" />
+<definedValue name="watchdog_init" value="403" color="mycolor" />
+<definedValue name="trace_bootlevel_end_handler_sync_subsys" value="404" color="mycolor" />
+<definedValue name="trace_bootlevel_handler_fs" value="405" color="mycolor" />
+<definedValue name="nmi_warning_debugfs" value="406" color="mycolor" />
+<definedValue name="save_microcode_in_initrd" value="407" color="mycolor" />
+<definedValue name="hpet_late_init" value="408" color="mycolor" />
+<definedValue name="init_amd_nbs" value="409" color="mycolor" />
+<definedValue name="clocksource_done_booting" value="410" color="mycolor" />
+<definedValue name="tracer_init_tracefs" value="411" color="mycolor" />
+<definedValue name="init_trace_printk_function_export" value="412" color="mycolor" />
+<definedValue name="init_graph_tracefs" value="413" color="mycolor" />
+<definedValue name="event_trace_init" value="414" color="mycolor" />
+<definedValue name="init_kprobe_trace" value="415" color="mycolor" />
+<definedValue name="init_uprobe_trace" value="416" color="mycolor" />
+<definedValue name="bpf_init" value="417" color="mycolor" />
+<definedValue name="init_pipe_fs" value="418" color="mycolor" />
+<definedValue name="cgroup_writeback_init" value="419" color="mycolor" />
+<definedValue name="inotify_user_setup" value="420" color="mycolor" />
+<definedValue name="eventpoll_init" value="421" color="mycolor" />
+<definedValue name="anon_inode_init" value="422" color="mycolor" />
+<definedValue name="init_dax_wait_table" value="423" color="mycolor" />
+<definedValue name="proc_locks_init" value="424" color="mycolor" />
+<definedValue name="dquot_init" value="425" color="mycolor" />
+<definedValue name="quota_init" value="426" color="mycolor" />
+<definedValue name="proc_cmdline_init" value="427" color="mycolor" />
+<definedValue name="proc_consoles_init" value="428" color="mycolor" />
+<definedValue name="proc_cpuinfo_init" value="429" color="mycolor" />
+<definedValue name="proc_devices_init" value="430" color="mycolor" />
+<definedValue name="proc_interrupts_init" value="431" color="mycolor" />
+<definedValue name="proc_loadavg_init" value="432" color="mycolor" />
+<definedValue name="proc_meminfo_init" value="433" color="mycolor" />
+<definedValue name="proc_stat_init" value="434" color="mycolor" />
+<definedValue name="proc_uptime_init" value="435" color="mycolor" />
+<definedValue name="proc_version_init" value="436" color="mycolor" />
+<definedValue name="proc_softirqs_init" value="437" color="mycolor" />
+<definedValue name="proc_kcore_init" value="438" color="mycolor" />
+<definedValue name="vmcore_init" value="439" color="mycolor" />
+<definedValue name="proc_kmsg_init" value="440" color="mycolor" />
+<definedValue name="proc_page_init" value="441" color="mycolor" />
+<definedValue name="init_ramfs_fs" value="442" color="mycolor" />
+<definedValue name="init_hugetlbfs_fs" value="443" color="mycolor" />
+<definedValue name="tomoyo_initerface_init" value="444" color="mycolor" />
+<definedValue name="aa_create_aafs" value="445" color="mycolor" />
+<definedValue name="blk_scsi_ioctl_init" value="446" color="mycolor" />
+<definedValue name="dynamic_debug_init_debugfs" value="447" color="mycolor" />
+<definedValue name="simplefb_init" value="448" color="mycolor" />
+<definedValue name="acpi_event_init" value="449" color="mycolor" />
+<definedValue name="pnp_system_init" value="450" color="mycolor" />
+<definedValue name="pnpacpi_init" value="451" color="mycolor" />
+<definedValue name="chr_dev_init" value="452" color="mycolor" />
+<definedValue name="firmware_class_init" value="453" color="mycolor" />
+<definedValue name="thermal_init" value="454" color="mycolor" />
+<definedValue name="cpufreq_gov_performance_init" value="455" color="mycolor" />
+<definedValue name="init_acpi_pm_clocksource" value="456" color="mycolor" />
+<definedValue name="pcibios_assign_resources" value="457" color="mycolor" />
+<definedValue name="sysctl_core_init" value="458" color="mycolor" />
+<definedValue name="eth_offload_init" value="459" color="mycolor" />
+<definedValue name="inet_init" value="460" color="mycolor" />
+<definedValue name="ipv4_offload_init" value="461" color="mycolor" />
+<definedValue name="af_unix_init" value="462" color="mycolor" />
+<definedValue name="ipv6_offload_init" value="463" color="mycolor" />
+<definedValue name="init_sunrpc" value="464" color="mycolor" />
+<definedValue name="trace_bootlevel_end_handler_fs" value="465" color="mycolor" />
+<definedValue name="trace_bootlevel_handler_sync_fs" value="466" color="mycolor" />
+<definedValue name="pci_apply_final_quirks" value="467" color="mycolor" />
+<definedValue name="acpi_reserve_resources" value="468" color="mycolor" />
+<definedValue name="trace_bootlevel_end_handler_sync_fs" value="469" color="mycolor" />
+<definedValue name="trace_bootlevel_handler_rootfs" value="470" color="mycolor" />
+<definedValue name="populate_rootfs" value="471" color="mycolor" />
+<definedValue name="pci_iommu_init" value="472" color="mycolor" />
+<definedValue name="calgary_fixup_tce_spaces" value="473" color="mycolor" />
+<definedValue name="ir_dev_scope_init" value="474" color="mycolor" />
+<definedValue name="trace_bootlevel_end_handler_rootfs" value="475" color="mycolor" />
+<definedValue name="trace_bootlevel_handler_device" value="476" color="mycolor" />
+<definedValue name="ia32_binfmt_init" value="477" color="mycolor" />
+<definedValue name="amd_uncore_init" value="478" color="mycolor" />
+<definedValue name="amd_ibs_init" value="479" color="mycolor" />
+<definedValue name="amd_iommu_pc_init" value="480" color="mycolor" />
+<definedValue name="msr_init" value="481" color="mycolor" />
+<definedValue name="rapl_pmu_init" value="482" color="mycolor" />
+<definedValue name="intel_uncore_init" value="483" color="mycolor" />
+<definedValue name="cstate_pmu_init" value="484" color="mycolor" />
+<definedValue name="vmx_init" value="485" color="mycolor" />
+<definedValue name="register_kernel_offset_dumper" value="486" color="mycolor" />
+<definedValue name="i8259A_init_ops" value="487" color="mycolor" />
+<definedValue name="init_tsc_clocksource" value="488" color="mycolor" />
+<definedValue name="add_rtc_cmos" value="489" color="mycolor" />
+<definedValue name="i8237A_init_ops" value="490" color="mycolor" />
+<definedValue name="thermal_throttle_init_device" value="491" color="mycolor" />
+<definedValue name="ioapic_init_ops" value="492" color="mycolor" />
+<definedValue name="register_e820_pmem" value="493" color="mycolor" />
+<definedValue name="add_pcspkr" value="494" color="mycolor" />
+<definedValue name="start_periodic_check_for_corruption" value="495" color="mycolor" />
+<definedValue name="sysfb_init" value="496" color="mycolor" />
+<definedValue name="audit_classes_init" value="497" color="mycolor" />
+<definedValue name="pt_dump_init" value="498" color="mycolor" />
+<definedValue name="aes_init" value="499" color="mycolor" />
+<definedValue name="ghash_pclmulqdqni_mod_init" value="500" color="mycolor" />
+<definedValue name="crc32c_intel_mod_init" value="501" color="mycolor" />
+<definedValue name="crc32_pclmul_mod_init" value="502" color="mycolor" />
+<definedValue name="crct10dif_intel_mod_init" value="503" color="mycolor" />
+<definedValue name="iosf_mbi_init" value="504" color="mycolor" />
+<definedValue name="proc_execdomains_init" value="505" color="mycolor" />
+<definedValue name="cpuhp_sysfs_init" value="506" color="mycolor" />
+<definedValue name="ioresources_init" value="507" color="mycolor" />
+<definedValue name="init_sched_debug_procfs" value="508" color="mycolor" />
+<definedValue name="snapshot_device_init" value="509" color="mycolor" />
+<definedValue name="irq_pm_init_ops" value="510" color="mycolor" />
+<definedValue name="klp_init" value="511" color="mycolor" />
+<definedValue name="timekeeping_init_ops" value="512" color="mycolor" />
+<definedValue name="init_clocksource_sysfs" value="513" color="mycolor" />
+<definedValue name="init_timer_list_procfs" value="514" color="mycolor" />
+<definedValue name="alarmtimer_init" value="515" color="mycolor" />
+<definedValue name="init_posix_timers" value="516" color="mycolor" />
+<definedValue name="clockevents_init_sysfs" value="517" color="mycolor" />
+<definedValue name="proc_dma_init" value="518" color="mycolor" />
+<definedValue name="proc_modules_init" value="519" color="mycolor" />
+<definedValue name="kallsyms_init" value="520" color="mycolor" />
+<definedValue name="pid_namespaces_init" value="521" color="mycolor" />
+<definedValue name="audit_init" value="522" color="mycolor" />
+<definedValue name="audit_watch_init" value="523" color="mycolor" />
+<definedValue name="audit_fsnotify_init" value="524" color="mycolor" />
+<definedValue name="audit_tree_init" value="525" color="mycolor" />
+<definedValue name="init_kprobes" value="526" color="mycolor" />
+<definedValue name="seccomp_sysctl_init" value="527" color="mycolor" />
+<definedValue name="utsname_sysctl_init" value="528" color="mycolor" />
+<definedValue name="init_tracepoints" value="529" color="mycolor" />
+<definedValue name="stack_trace_init" value="530" color="mycolor" />
+<definedValue name="init_mmio_trace" value="531" color="mycolor" />
+<definedValue name="init_blk_tracer" value="532" color="mycolor" />
+<definedValue name="perf_event_sysfs_init" value="533" color="mycolor" />
+<definedValue name="init_uprobes" value="534" color="mycolor" />
+<definedValue name="system_trusted_keyring_init" value="535" color="mycolor" />
+<definedValue name="kswapd_init" value="536" color="mycolor" />
+<definedValue name="extfrag_debug_init" value="537" color="mycolor" />
+<definedValue name="mm_compute_batch_init" value="538" color="mycolor" />
+<definedValue name="slab_proc_init" value="539" color="mycolor" />
+<definedValue name="workingset_init" value="540" color="mycolor" />
+<definedValue name="proc_vmalloc_init" value="541" color="mycolor" />
+<definedValue name="procswaps_init" value="542" color="mycolor" />
+<definedValue name="init_frontswap" value="543" color="mycolor" />
+<definedValue name="slab_sysfs_init" value="544" color="mycolor" />
+<definedValue name="init_cleancache" value="545" color="mycolor" />
+<definedValue name="init_zbud" value="546" color="mycolor" />
+<definedValue name="zs_init" value="547" color="mycolor" />
+<definedValue name="fcntl_init" value="548" color="mycolor" />
+<definedValue name="proc_filesystems_init" value="549" color="mycolor" />
+<definedValue name="start_dirtytime_writeback" value="550" color="mycolor" />
+<definedValue name="blkdev_init" value="551" color="mycolor" />
+<definedValue name="dio_init" value="552" color="mycolor" />
+<definedValue name="dnotify_init" value="553" color="mycolor" />
+<definedValue name="fanotify_user_setup" value="554" color="mycolor" />
+<definedValue name="userfaultfd_init" value="555" color="mycolor" />
+<definedValue name="aio_setup" value="556" color="mycolor" />
+<definedValue name="fscrypt_init" value="557" color="mycolor" />
+<definedValue name="init_sys32_ioctl" value="558" color="mycolor" />
+<definedValue name="mbcache_init" value="559" color="mycolor" />
+<definedValue name="init_grace" value="560" color="mycolor" />
+<definedValue name="init_devpts_fs" value="561" color="mycolor" />
+<definedValue name="init_reiserfs_fs" value="562" color="mycolor" />
+<definedValue name="ext4_init_fs" value="563" color="mycolor" />
+<definedValue name="journal_init" value="564" color="mycolor" />
+<definedValue name="init_squashfs_fs" value="565" color="mycolor" />
+<definedValue name="init_fat_fs" value="566" color="mycolor" />
+<definedValue name="init_vfat_fs" value="567" color="mycolor" />
+<definedValue name="ecryptfs_init" value="568" color="mycolor" />
+<definedValue name="init_nfs_fs" value="569" color="mycolor" />
+<definedValue name="init_nfs_v2" value="570" color="mycolor" />
+<definedValue name="init_nfs_v3" value="571" color="mycolor" />
+<definedValue name="init_nfs_v4" value="572" color="mycolor" />
+<definedValue name="init_nlm" value="573" color="mycolor" />
+<definedValue name="init_nls_cp437" value="574" color="mycolor" />
+<definedValue name="init_nls_iso8859_1" value="575" color="mycolor" />
+<definedValue name="init_autofs4_fs" value="576" color="mycolor" />
+<definedValue name="fuse_init" value="577" color="mycolor" />
+<definedValue name="ovl_init" value="578" color="mycolor" />
+<definedValue name="init_jfs_fs" value="579" color="mycolor" />
+<definedValue name="init_xfs_fs" value="580" color="mycolor" />
+<definedValue name="init_nilfs_fs" value="581" color="mycolor" />
+<definedValue name="init_gfs2_fs" value="582" color="mycolor" />
+<definedValue name="init_f2fs_fs" value="583" color="mycolor" />
+<definedValue name="init_ceph" value="584" color="mycolor" />
+<definedValue name="init_pstore_fs" value="585" color="mycolor" />
+<definedValue name="efivarfs_init" value="586" color="mycolor" />
+<definedValue name="ipc_init" value="587" color="mycolor" />
+<definedValue name="ipc_sysctl_init" value="588" color="mycolor" />
+<definedValue name="init_mqueue_fs" value="589" color="mycolor" />
+<definedValue name="key_proc_init" value="590" color="mycolor" />
+<definedValue name="selinux_nf_ip_init" value="591" color="mycolor" />
+<definedValue name="init_sel_fs" value="592" color="mycolor" />
+<definedValue name="selnl_init" value="593" color="mycolor" />
+<definedValue name="sel_netif_init" value="594" color="mycolor" />
+<definedValue name="sel_netnode_init" value="595" color="mycolor" />
+<definedValue name="sel_netport_init" value="596" color="mycolor" />
+<definedValue name="aurule_init" value="597" color="mycolor" />
+<definedValue name="init_smk_fs" value="598" color="mycolor" />
+<definedValue name="smack_nf_ip_init" value="599" color="mycolor" />
+<definedValue name="crypto_algapi_init" value="600" color="mycolor" />
+<definedValue name="seqiv_module_init" value="601" color="mycolor" />
+<definedValue name="rsa_init" value="602" color="mycolor" />
+<definedValue name="crypto_cmac_module_init" value="603" color="mycolor" />
+<definedValue name="hmac_module_init" value="604" color="mycolor" />
+<definedValue name="crypto_null_mod_init" value="605" color="mycolor" />
+<definedValue name="md5_mod_init" value="606" color="mycolor" />
+<definedValue name="sha1_generic_mod_init" value="607" color="mycolor" />
+<definedValue name="sha256_generic_mod_init" value="608" color="mycolor" />
+<definedValue name="sha512_generic_mod_init" value="609" color="mycolor" />
+<definedValue name="crypto_ecb_module_init" value="610" color="mycolor" />
+<definedValue name="crypto_cbc_module_init" value="611" color="mycolor" />
+<definedValue name="crypto_pcbc_module_init" value="612" color="mycolor" />
+<definedValue name="crypto_cts_module_init" value="613" color="mycolor" />
+<definedValue name="crypto_module_init" value="614" color="mycolor" />
+<definedValue name="crypto_ctr_module_init" value="615" color="mycolor" />
+<definedValue name="crypto_gcm_module_init" value="616" color="mycolor" />
+<definedValue name="aes_init" value="617" color="mycolor" />
+<definedValue name="crc32c_mod_init" value="618" color="mycolor" />
+<definedValue name="crc32_mod_init" value="619" color="mycolor" />
+<definedValue name="crct10dif_mod_init" value="620" color="mycolor" />
+<definedValue name="lzo_mod_init" value="621" color="mycolor" />
+<definedValue name="drbg_init" value="622" color="mycolor" />
+<definedValue name="jent_mod_init" value="623" color="mycolor" />
+<definedValue name="ghash_mod_init" value="624" color="mycolor" />
+<definedValue name="ecdh_init" value="625" color="mycolor" />
+<definedValue name="asymmetric_key_init" value="626" color="mycolor" />
+<definedValue name="x509_key_init" value="627" color="mycolor" />
+<definedValue name="proc_genhd_init" value="628" color="mycolor" />
+<definedValue name="bsg_init" value="629" color="mycolor" />
+<definedValue name="throtl_init" value="630" color="mycolor" />
+<definedValue name="noop_init" value="631" color="mycolor" />
+<definedValue name="deadline_init" value="632" color="mycolor" />
+<definedValue name="cfq_init" value="633" color="mycolor" />
+<definedValue name="deadline_init" value="634" color="mycolor" />
+<definedValue name="kyber_init" value="635" color="mycolor" />
+<definedValue name="crc_t10dif_mod_init" value="636" color="mycolor" />
+<definedValue name="libcrc32c_mod_init" value="637" color="mycolor" />
+<definedValue name="percpu_counter_startup" value="638" color="mycolor" />
+<definedValue name="digsig_init" value="639" color="mycolor" />
+<definedValue name="sg_pool_init" value="640" color="mycolor" />
+<definedValue name="phy_core_init" value="641" color="mycolor" />
+<definedValue name="amd_gpio_driver_init" value="642" color="mycolor" />
+<definedValue name="bt8xxgpio_pci_driver_init" value="643" color="mycolor" />
+<definedValue name="crystalcove_pwm_driver_init" value="644" color="mycolor" />
+<definedValue name="pci_proc_init" value="645" color="mycolor" />
+<definedValue name="pcie_portdrv_init" value="646" color="mycolor" />
+<definedValue name="aer_service_init" value="647" color="mycolor" />
+<definedValue name="pcie_pme_service_init" value="648" color="mycolor" />
+<definedValue name="pci_hotplug_init" value="649" color="mycolor" />
+<definedValue name="pcied_init" value="650" color="mycolor" />
+<definedValue name="shpcd_init" value="651" color="mycolor" />
+<definedValue name="imsttfb_init" value="652" color="mycolor" />
+<definedValue name="asiliantfb_init" value="653" color="mycolor" />
+<definedValue name="vesafb_driver_init" value="654" color="mycolor" />
+<definedValue name="efifb_driver_init" value="655" color="mycolor" />
+<definedValue name="intel_idle_init" value="656" color="mycolor" />
+<definedValue name="acpi_ac_init" value="657" color="mycolor" />
+<definedValue name="acpi_button_driver_init" value="658" color="mycolor" />
+<definedValue name="acpi_fan_driver_init" value="659" color="mycolor" />
+<definedValue name="acpi_video_init" value="660" color="mycolor" />
+<definedValue name="acpi_processor_driver_init" value="661" color="mycolor" />
+<definedValue name="acpi_thermal_init" value="662" color="mycolor" />
+<definedValue name="acpi_battery_init" value="663" color="mycolor" />
+<definedValue name="acpi_hed_driver_init" value="664" color="mycolor" />
+<definedValue name="bgrt_init" value="665" color="mycolor" />
+<definedValue name="acpi_pad_init" value="666" color="mycolor" />
+<definedValue name="erst_init" value="667" color="mycolor" />
+<definedValue name="ghes_init" value="668" color="mycolor" />
+<definedValue name="gpio_clk_driver_init" value="669" color="mycolor" />
+<definedValue name="plt_clk_driver_init" value="670" color="mycolor" />
+<definedValue name="dw_pci_driver_init" value="671" color="mycolor" />
+<definedValue name="virtio_mmio_init" value="672" color="mycolor" />
+<definedValue name="virtio_pci_driver_init" value="673" color="mycolor" />
+<definedValue name="virtio_balloon_driver_init" value="674" color="mycolor" />
+<definedValue name="xenbus_probe_initcall" value="675" color="mycolor" />
+<definedValue name="xenbus_init" value="676" color="mycolor" />
+<definedValue name="xenbus_backend_init" value="677" color="mycolor" />
+<definedValue name="hypervisor_subsys_init" value="678" color="mycolor" />
+<definedValue name="hyper_sysfs_init" value="679" color="mycolor" />
+<definedValue name="platform_driver_init" value="680" color="mycolor" />
+<definedValue name="xen_late_init_mcelog" value="681" color="mycolor" />
+<definedValue name="xen_acpi_processor_init" value="682" color="mycolor" />
+<definedValue name="n_null_init" value="683" color="mycolor" />
+<definedValue name="pty_init" value="684" color="mycolor" />
+<definedValue name="sysrq_init" value="685" color="mycolor" />
+<definedValue name="xen_hvc_init" value="686" color="mycolor" />
+<definedValue name="serial8250_init" value="687" color="mycolor" />
+<definedValue name="serial_pci_driver_init" value="688" color="mycolor" />
+<definedValue name="exar_pci_driver_init" value="689" color="mycolor" />
+<definedValue name="lpss8250_pci_driver_init" value="690" color="mycolor" />
+<definedValue name="max310x_uart_init" value="691" color="mycolor" />
+<definedValue name="sccnxp_uart_driver_init" value="692" color="mycolor" />
+<definedValue name="init_kgdboc" value="693" color="mycolor" />
+<definedValue name="ttyprintk_init" value="694" color="mycolor" />
+<definedValue name="init" value="695" color="mycolor" />
+<definedValue name="lp_init_module" value="696" color="mycolor" />
+<definedValue name="hpet_init" value="697" color="mycolor" />
+<definedValue name="hwrng_modinit" value="698" color="mycolor" />
+<definedValue name="ppdev_init" value="699" color="mycolor" />
+<definedValue name="agp_init" value="700" color="mycolor" />
+<definedValue name="agp_amd64_mod_init" value="701" color="mycolor" />
+<definedValue name="agp_intel_init" value="702" color="mycolor" />
+<definedValue name="agp_via_init" value="703" color="mycolor" />
+<definedValue name="init_tis" value="704" color="mycolor" />
+<definedValue name="latency_module_init" value="705" color="mycolor" />
+<definedValue name="drm_kms_helper_init" value="706" color="mycolor" />
+<definedValue name="drm_core_init" value="707" color="mycolor" />
+<definedValue name="i915_init" value="708" color="mycolor" />
+<definedValue name="cn_proc_init" value="709" color="mycolor" />
+<definedValue name="parport_pc_init" value="710" color="mycolor" />
+<definedValue name="_nvm_misc_init" value="711" color="mycolor" />
+<definedValue name="topology_sysfs_init" value="712" color="mycolor" />
+<definedValue name="cacheinfo_sysfs_init" value="713" color="mycolor" />
+<definedValue name="loop_init" value="714" color="mycolor" />
+<definedValue name="xlblk_init" value="715" color="mycolor" />
+<definedValue name="mei_init" value="716" color="mycolor" />
+<definedValue name="mei_me_driver_init" value="717" color="mycolor" />
+<definedValue name="htcpld_core_init" value="718" color="mycolor" />
+<definedValue name="tps65912_i2c_driver_init" value="719" color="mycolor" />
+<definedValue name="tps65912_spi_driver_init" value="720" color="mycolor" />
+<definedValue name="twl_driver_init" value="721" color="mycolor" />
+<definedValue name="twl4030_audio_driver_init" value="722" color="mycolor" />
+<definedValue name="twl6040_driver_init" value="723" color="mycolor" />
+<definedValue name="smsc_i2c_driver_init" value="724" color="mycolor" />
+<definedValue name="da9063_i2c_driver_init" value="725" color="mycolor" />
+<definedValue name="max14577_i2c_init" value="726" color="mycolor" />
+<definedValue name="max77693_i2c_driver_init" value="727" color="mycolor" />
+<definedValue name="adp5520_driver_init" value="728" color="mycolor" />
+<definedValue name="intel_lpss_init" value="729" color="mycolor" />
+<definedValue name="intel_lpss_acpi_driver_init" value="730" color="mycolor" />
+<definedValue name="intel_soc_pmic_i2c_driver_init" value="731" color="mycolor" />
+<definedValue name="e820_pmem_driver_init" value="732" color="mycolor" />
+<definedValue name="mac_hid_init" value="733" color="mycolor" />
+<definedValue name="init_sd" value="734" color="mycolor" />
+<definedValue name="init_sr" value="735" color="mycolor" />
+<definedValue name="init_sg" value="736" color="mycolor" />
+<definedValue name="ahci_pci_driver_init" value="737" color="mycolor" />
+<definedValue name="acard_ahci_pci_driver_init" value="738" color="mycolor" />
+<definedValue name="ahci_driver_init" value="739" color="mycolor" />
+<definedValue name="piix_init" value="740" color="mycolor" />
+<definedValue name="sis_pci_driver_init" value="741" color="mycolor" />
+<definedValue name="ata_generic_pci_driver_init" value="742" color="mycolor" />
+<definedValue name="net_olddevs_init" value="743" color="mycolor" />
+<definedValue name="fixed_mdio_bus_init" value="744" color="mycolor" />
+<definedValue name="tun_init" value="745" color="mycolor" />
+<definedValue name="e1000_init_module" value="746" color="mycolor" />
+<definedValue name="ppp_init" value="747" color="mycolor" />
+<definedValue name="netif_init" value="748" color="mycolor" />
+<definedValue name="cdrom_init" value="749" color="mycolor" />
+<definedValue name="dwc2_platform_driver_init" value="750" color="mycolor" />
+<definedValue name="ehci_hcd_init" value="751" color="mycolor" />
+<definedValue name="ehci_pci_init" value="752" color="mycolor" />
+<definedValue name="ehci_platform_init" value="753" color="mycolor" />
+<definedValue name="ohci_hcd_mod_init" value="754" color="mycolor" />
+<definedValue name="ohci_pci_init" value="755" color="mycolor" />
+<definedValue name="ohci_platform_init" value="756" color="mycolor" />
+<definedValue name="uhci_hcd_init" value="757" color="mycolor" />
+<definedValue name="xhci_hcd_init" value="758" color="mycolor" />
+<definedValue name="xhci_pci_init" value="759" color="mycolor" />
+<definedValue name="kgdbdbgp_start_thread" value="760" color="mycolor" />
+<definedValue name="ledtrig_usb_init" value="761" color="mycolor" />
+<definedValue name="i8042_init" value="762" color="mycolor" />
+<definedValue name="serio_raw_drv_init" value="763" color="mycolor" />
+<definedValue name="input_leds_init" value="764" color="mycolor" />
+<definedValue name="mousedev_init" value="765" color="mycolor" />
+<definedValue name="evdev_init" value="766" color="mycolor" />
+<definedValue name="atkbd_init" value="767" color="mycolor" />
+<definedValue name="psmouse_init" value="768" color="mycolor" />
+<definedValue name="elants_i2c_driver_init" value="769" color="mycolor" />
+<definedValue name="uinput_misc_init" value="770" color="mycolor" />
+<definedValue name="cmos_init" value="771" color="mycolor" />
+<definedValue name="i2c_dev_init" value="772" color="mycolor" />
+<definedValue name="init_rc_map_adstech_dvb_t_pci" value="773" color="mycolor" />
+<definedValue name="init_rc_map_alink_dtu_m" value="774" color="mycolor" />
+<definedValue name="init_rc_map_anysee" value="775" color="mycolor" />
+<definedValue name="init_rc_map_apac_viewcomp" value="776" color="mycolor" />
+<definedValue name="init_rc_map_asus_pc39" value="777" color="mycolor" />
+<definedValue name="init_rc_map_asus_ps3_100" value="778" color="mycolor" />
+<definedValue name="init_rc_map_ati_tv_wonder_hd_600" value="779" color="mycolor" />
+<definedValue name="init_rc_map_ati_x10" value="780" color="mycolor" />
+<definedValue name="init_rc_map_avermedia_a16d" value="781" color="mycolor" />
+<definedValue name="init_rc_map_avermedia" value="782" color="mycolor" />
+<definedValue name="init_rc_map_avermedia_cardbus" value="783" color="mycolor" />
+<definedValue name="init_rc_map_avermedia_dvbt" value="784" color="mycolor" />
+<definedValue name="init_rc_map_avermedia_m135a" value="785" color="mycolor" />
+<definedValue name="init_rc_map_avermedia_m733a_rm_k6" value="786" color="mycolor" />
+<definedValue name="init_rc_map_avermedia_rm_ks" value="787" color="mycolor" />
+<definedValue name="init_rc_map_avertv_303" value="788" color="mycolor" />
+<definedValue name="init_rc_map_azurewave_ad_tu700" value="789" color="mycolor" />
+<definedValue name="init_rc_map_behold" value="790" color="mycolor" />
+<definedValue name="init_rc_map_behold_columbus" value="791" color="mycolor" />
+<definedValue name="init_rc_map_budget_ci_old" value="792" color="mycolor" />
+<definedValue name="init_rc_map_cec" value="793" color="mycolor" />
+<definedValue name="init_rc_map_cinergy_1400" value="794" color="mycolor" />
+<definedValue name="init_rc_map_cinergy" value="795" color="mycolor" />
+<definedValue name="init_rc_map_d680_dmb" value="796" color="mycolor" />
+<definedValue name="init_rc_map_delock_61959" value="797" color="mycolor" />
+<definedValue name="init_rc_map" value="798" color="mycolor" />
+<definedValue name="init_rc_map" value="799" color="mycolor" />
+<definedValue name="init_rc_map_digitalnow_tinytwin" value="800" color="mycolor" />
+<definedValue name="init_rc_map_digittrade" value="801" color="mycolor" />
+<definedValue name="init_rc_map_dm1105_nec" value="802" color="mycolor" />
+<definedValue name="init_rc_map_dntv_live_dvb_t" value="803" color="mycolor" />
+<definedValue name="init_rc_map_dntv_live_dvbt_pro" value="804" color="mycolor" />
+<definedValue name="init_rc_map_dtt200u" value="805" color="mycolor" />
+<definedValue name="init_rc_map_rc5_dvbsky" value="806" color="mycolor" />
+<definedValue name="init_rc_map_dvico_mce" value="807" color="mycolor" />
+<definedValue name="init_rc_map_dvico_portable" value="808" color="mycolor" />
+<definedValue name="init_rc_map_em_terratec" value="809" color="mycolor" />
+<definedValue name="init_rc_map_encore_enltv2" value="810" color="mycolor" />
+<definedValue name="init_rc_map_encore_enltv" value="811" color="mycolor" />
+<definedValue name="init_rc_map_encore_enltv_fm53" value="812" color="mycolor" />
+<definedValue name="init_rc_map_evga_indtube" value="813" color="mycolor" />
+<definedValue name="init_rc_map_eztv" value="814" color="mycolor" />
+<definedValue name="init_rc_map_flydvb" value="815" color="mycolor" />
+<definedValue name="init_rc_map_flyvideo" value="816" color="mycolor" />
+<definedValue name="init_rc_map_fusionhdtv_mce" value="817" color="mycolor" />
+<definedValue name="init_rc_map_gadmei_rm008z" value="818" color="mycolor" />
+<definedValue name="init_rc_map_geekbox" value="819" color="mycolor" />
+<definedValue name="init_rc_map_genius_tvgo_a11mce" value="820" color="mycolor" />
+<definedValue name="init_rc_map_gotview7135" value="821" color="mycolor" />
+<definedValue name="init_rc_map_imon_mce" value="822" color="mycolor" />
+<definedValue name="init_rc_map_imon_pad" value="823" color="mycolor" />
+<definedValue name="init_rc_map_iodata_bctv7e" value="824" color="mycolor" />
+<definedValue name="init_rc_it913x_v1_map" value="825" color="mycolor" />
+<definedValue name="init_rc_it913x_v2_map" value="826" color="mycolor" />
+<definedValue name="init_rc_map_kaiomy" value="827" color="mycolor" />
+<definedValue name="init_rc_map_kworld_315u" value="828" color="mycolor" />
+<definedValue name="init_rc_map_kworld_pc150u" value="829" color="mycolor" />
+<definedValue name="init_rc_map_kworld_plus_tv_analog" value="830" color="mycolor" />
+<definedValue name="init_rc_map_leadtek_y04g0051" value="831" color="mycolor" />
+<definedValue name="init_rc_lme2510_map" value="832" color="mycolor" />
+<definedValue name="init_rc_map_manli" value="833" color="mycolor" />
+<definedValue name="init_rc_map_medion_x10" value="834" color="mycolor" />
+<definedValue name="init_rc_map_medion_x10_digitainer" value="835" color="mycolor" />
+<definedValue name="init_rc_map_medion_x10_or2x" value="836" color="mycolor" />
+<definedValue name="init_rc_map_msi_digivox_ii" value="837" color="mycolor" />
+<definedValue name="init_rc_map_msi_digivox_iii" value="838" color="mycolor" />
+<definedValue name="init_rc_map_msi_tvanywhere" value="839" color="mycolor" />
+<definedValue name="init_rc_map_msi_tvanywhere_plus" value="840" color="mycolor" />
+<definedValue name="init_rc_map_nebula" value="841" color="mycolor" />
+<definedValue name="init_rc_map_nec_terratec_cinergy_xs" value="842" color="mycolor" />
+<definedValue name="init_rc_map_norwood" value="843" color="mycolor" />
+<definedValue name="init_rc_map_npgtech" value="844" color="mycolor" />
+<definedValue name="init_rc_map_pctv_sedna" value="845" color="mycolor" />
+<definedValue name="init_rc_map_pinnacle_color" value="846" color="mycolor" />
+<definedValue name="init_rc_map_pinnacle_grey" value="847" color="mycolor" />
+<definedValue name="init_rc_map_pinnacle_pctv_hd" value="848" color="mycolor" />
+<definedValue name="init_rc_map_pixelview" value="849" color="mycolor" />
+<definedValue name="init_rc_map_pixelview" value="850" color="mycolor" />
+<definedValue name="init_rc_map_pixelview" value="851" color="mycolor" />
+<definedValue name="init_rc_map_pixelview_new" value="852" color="mycolor" />
+<definedValue name="init_rc_map_powercolor_real_angel" value="853" color="mycolor" />
+<definedValue name="init_rc_map_proteus_2309" value="854" color="mycolor" />
+<definedValue name="init_rc_map_purpletv" value="855" color="mycolor" />
+<definedValue name="init_rc_map_pv951" value="856" color="mycolor" />
+<definedValue name="init_rc_map_rc5_hauppauge_new" value="857" color="mycolor" />
+<definedValue name="init_rc_map_rc6_mce" value="858" color="mycolor" />
+<definedValue name="init_rc_map_real_audio_220_32_keys" value="859" color="mycolor" />
+<definedValue name="init_rc_map_reddo" value="860" color="mycolor" />
+<definedValue name="init_rc_map_snapstream_firefly" value="861" color="mycolor" />
+<definedValue name="init_rc_map_streamzap" value="862" color="mycolor" />
+<definedValue name="init_rc_map_tbs_nec" value="863" color="mycolor" />
+<definedValue name="init_rc_map" value="864" color="mycolor" />
+<definedValue name="init_rc_map" value="865" color="mycolor" />
+<definedValue name="init_rc_map_terratec_cinergy_c_pci" value="866" color="mycolor" />
+<definedValue name="init_rc_map_terratec_cinergy_s2_hd" value="867" color="mycolor" />
+<definedValue name="init_rc_map_terratec_cinergy_xs" value="868" color="mycolor" />
+<definedValue name="init_rc_map_terratec_slim" value="869" color="mycolor" />
+<definedValue name="init_rc_map_terratec_slim_2" value="870" color="mycolor" />
+<definedValue name="init_rc_map_tevii_nec" value="871" color="mycolor" />
+<definedValue name="init_rc_map_tivo" value="872" color="mycolor" />
+<definedValue name="init_rc_map_total_media_in_hand" value="873" color="mycolor" />
+<definedValue name="init_rc_map_total_media_in_hand_02" value="874" color="mycolor" />
+<definedValue name="init_rc_map_trekstor" value="875" color="mycolor" />
+<definedValue name="init_rc_map_tt_1500" value="876" color="mycolor" />
+<definedValue name="init_rc_map_twinhan_dtv_cab_ci" value="877" color="mycolor" />
+<definedValue name="init_rc_map_twinhan_vp1027" value="878" color="mycolor" />
+<definedValue name="init_rc_map_videomate_k100" value="879" color="mycolor" />
+<definedValue name="init_rc_map_videomate_s350" value="880" color="mycolor" />
+<definedValue name="init_rc_map_videomate_tv_pvr" value="881" color="mycolor" />
+<definedValue name="init_rc_map_winfast" value="882" color="mycolor" />
+<definedValue name="init_rc_map_winfast_usbii_deluxe" value="883" color="mycolor" />
+<definedValue name="init_rc_map_su3000" value="884" color="mycolor" />
+<definedValue name="init_rc_map_zx_irdec" value="885" color="mycolor" />
+<definedValue name="ir_nec_decode_init" value="886" color="mycolor" />
+<definedValue name="ir_rc5_decode_init" value="887" color="mycolor" />
+<definedValue name="ir_rc6_decode_init" value="888" color="mycolor" />
+<definedValue name="ir_jvc_decode_init" value="889" color="mycolor" />
+<definedValue name="ir_sony_decode_init" value="890" color="mycolor" />
+<definedValue name="ir_sanyo_decode_init" value="891" color="mycolor" />
+<definedValue name="ir_sharp_decode_init" value="892" color="mycolor" />
+<definedValue name="ir_mce_kbd_decode_init" value="893" color="mycolor" />
+<definedValue name="ir_xmp_decode_init" value="894" color="mycolor" />
+<definedValue name="restart_poweroff_driver_init" value="895" color="mycolor" />
+<definedValue name="coretemp_init" value="896" color="mycolor" />
+<definedValue name="powerclamp_init" value="897" color="mycolor" />
+<definedValue name="pkg_temp_thermal_init" value="898" color="mycolor" />
+<definedValue name="dm_init" value="899" color="mycolor" />
+<definedValue name="hci_uart_init" value="900" color="mycolor" />
+<definedValue name="cpufreq_gov_powersave_init" value="901" color="mycolor" />
+<definedValue name="cpufreq_gov_userspace_init" value="902" color="mycolor" />
+<definedValue name="cpufreq_gov_dbs_init" value="903" color="mycolor" />
+<definedValue name="cpufreq_gov_dbs_init" value="904" color="mycolor" />
+<definedValue name="intel_pstate_init" value="905" color="mycolor" />
+<definedValue name="ledtrig_cpu_init" value="906" color="mycolor" />
+<definedValue name="dcdrbu_init" value="907" color="mycolor" />
+<definedValue name="dcdbas_init" value="908" color="mycolor" />
+<definedValue name="ibft_init" value="909" color="mycolor" />
+<definedValue name="fw_cfg_sysfs_init" value="910" color="mycolor" />
+<definedValue name="efivars_sysfs_init" value="911" color="mycolor" />
+<definedValue name="esrt_sysfs_init" value="912" color="mycolor" />
+<definedValue name="hid_init" value="913" color="mycolor" />
+<definedValue name="hid_generic_init" value="914" color="mycolor" />
+<definedValue name="hid_init" value="915" color="mycolor" />
+<definedValue name="i2c_hid_driver_init" value="916" color="mycolor" />
+<definedValue name="vhost_net_init" value="917" color="mycolor" />
+<definedValue name="vhost_init" value="918" color="mycolor" />
+<definedValue name="skein_generic_init" value="919" color="mycolor" />
+<definedValue name="asus_wmi_init" value="920" color="mycolor" />
+<definedValue name="eeepc_wmi_init" value="921" color="mycolor" />
+<definedValue name="wmi_bmof_driver_init" value="922" color="mycolor" />
+<definedValue name="mxm_wmi_init" value="923" color="mycolor" />
+<definedValue name="pmc_atom_init" value="924" color="mycolor" />
+<definedValue name="extcon_class_init" value="925" color="mycolor" />
+<definedValue name="acpi_als_driver_init" value="926" color="mycolor" />
+<definedValue name="powercap_init" value="927" color="mycolor" />
+<definedValue name="rapl_init" value="928" color="mycolor" />
+<definedValue name="alsa_hwdep_init" value="929" color="mycolor" />
+<definedValue name="alsa_timer_init" value="930" color="mycolor" />
+<definedValue name="alsa_pcm_init" value="931" color="mycolor" />
+<definedValue name="alsa_rawmidi_init" value="932" color="mycolor" />
+<definedValue name="alsa_seq_init" value="933" color="mycolor" />
+<definedValue name="seq_midisynth_driver_init" value="934" color="mycolor" />
+<definedValue name="alsa_seq_midi_event_init" value="935" color="mycolor" />
+<definedValue name="alsa_virmidi_init" value="936" color="mycolor" />
+<definedValue name="alsa_card_virmidi_init" value="937" color="mycolor" />
+<definedValue name="generic_driver_init" value="938" color="mycolor" />
+<definedValue name="realtek_driver_init" value="939" color="mycolor" />
+<definedValue name="hdmi_driver_init" value="940" color="mycolor" />
+<definedValue name="azx_driver_init" value="941" color="mycolor" />
+<definedValue name="pm_check_save_msr" value="942" color="mycolor" />
+<definedValue name="sock_diag_init" value="943" color="mycolor" />
+<definedValue name="devlink_module_init" value="944" color="mycolor" />
+<definedValue name="llc_init" value="945" color="mycolor" />
+<definedValue name="snap_init" value="946" color="mycolor" />
+<definedValue name="blackhole_init" value="947" color="mycolor" />
+<definedValue name="nf_conntrack_standalone_init" value="948" color="mycolor" />
+<definedValue name="nf_log_common_init" value="949" color="mycolor" />
+<definedValue name="nf_log_netdev_init" value="950" color="mycolor" />
+<definedValue name="nf_nat_init" value="951" color="mycolor" />
+<definedValue name="xt_init" value="952" color="mycolor" />
+<definedValue name="tcpudp_mt_init" value="953" color="mycolor" />
+<definedValue name="xt_nat_init" value="954" color="mycolor" />
+<definedValue name="checksum_tg_init" value="955" color="mycolor" />
+<definedValue name="conntrack_mt_init" value="956" color="mycolor" />
+<definedValue name="gre_offload_init" value="957" color="mycolor" />
+<definedValue name="sysctl_ipv4_init" value="958" color="mycolor" />
+<definedValue name="nf_conntrack_l3proto_ipv4_init" value="959" color="mycolor" />
+<definedValue name="nf_nat_l3proto_ipv4_init" value="960" color="mycolor" />
+<definedValue name="nf_defrag_init" value="961" color="mycolor" />
+<definedValue name="ip_tables_init" value="962" color="mycolor" />
+<definedValue name="iptable_filter_init" value="963" color="mycolor" />
+<definedValue name="iptable_mangle_init" value="964" color="mycolor" />
+<definedValue name="iptable_nat_init" value="965" color="mycolor" />
+<definedValue name="masquerade_tg_init" value="966" color="mycolor" />
+<definedValue name="reject_tg_init" value="967" color="mycolor" />
+<definedValue name="bbr_register" value="968" color="mycolor" />
+<definedValue name="cubictcp_register" value="969" color="mycolor" />
+<definedValue name="inet6_init" value="970" color="mycolor" />
+<definedValue name="ip6_tables_init" value="971" color="mycolor" />
+<definedValue name="ip6table_filter_init" value="972" color="mycolor" />
+<definedValue name="ip6table_mangle_init" value="973" color="mycolor" />
+<definedValue name="packet_init" value="974" color="mycolor" />
+<definedValue name="br_init" value="975" color="mycolor" />
+<definedValue name="ebtables_init" value="976" color="mycolor" />
+<definedValue name="ebtable_filter_init" value="977" color="mycolor" />
+<definedValue name="bnep_init" value="978" color="mycolor" />
+<definedValue name="init_rpcsec_gss" value="979" color="mycolor" />
+<definedValue name="af_rxrpc_init" value="980" color="mycolor" />
+<definedValue name="caif_device_init" value="981" color="mycolor" />
+<definedValue name="chnl_init_module" value="982" color="mycolor" />
+<definedValue name="caif_sktinit_module" value="983" color="mycolor" />
+<definedValue name="dcbnl_init" value="984" color="mycolor" />
+<definedValue name="wimax_subsys_init" value="985" color="mycolor" />
+<definedValue name="init_dns_resolver" value="986" color="mycolor" />
+<definedValue name="init_ceph_lib" value="987" color="mycolor" />
+<definedValue name="psample_module_init" value="988" color="mycolor" />
+<definedValue name="trace_bootlevel_end_handler_device" value="989" color="mycolor" />
+<definedValue name="trace_bootlevel_handler_sync_device" value="990" color="mycolor" />
+<definedValue name="mcheck_init_device" value="991" color="mycolor" />
+<definedValue name="trace_bootlevel_end_handler_sync_device" value="992" color="mycolor" />
+<definedValue name="trace_bootlevel_handler_late" value="993" color="mycolor" />
+<definedValue name="tboot_late_init" value="994" color="mycolor" />
+<definedValue name="mcheck_late_init" value="995" color="mycolor" />
+<definedValue name="severities_debugfs_init" value="996" color="mycolor" />
+<definedValue name="threshold_init_device" value="997" color="mycolor" />
+<definedValue name="microcode_init" value="998" color="mycolor" />
+<definedValue name="hpet_insert_resource" value="999" color="mycolor" />
+<definedValue name="update_mp_table" value="1000" color="mycolor" />
+<definedValue name="lapic_insert_resource" value="1001" color="mycolor" />
+<definedValue name="print_ICs" value="1002" color="mycolor" />
+<definedValue name="pat_memtype_list_init" value="1003" color="mycolor" />
+<definedValue name="create_tlb_single_page_flush_ceiling" value="1004" color="mycolor" />
+<definedValue name="create_init_pkru_value" value="1005" color="mycolor" />
+<definedValue name="aesni_init" value="1006" color="mycolor" />
+<definedValue name="init_oops_id" value="1007" color="mycolor" />
+<definedValue name="sched_clock_init_late" value="1008" color="mycolor" />
+<definedValue name="sched_init_debug" value="1009" color="mycolor" />
+<definedValue name="pm_qos_power_init" value="1010" color="mycolor" />
+<definedValue name="pm_debugfs_init" value="1011" color="mycolor" />
+<definedValue name="printk_late_init" value="1012" color="mycolor" />
+<definedValue name="tk_debug_sleep_time_init" value="1013" color="mycolor" />
+<definedValue name="debugfs_kprobe_init" value="1014" color="mycolor" />
+<definedValue name="taskstats_init" value="1015" color="mycolor" />
+<definedValue name="kdb_ftrace_register" value="1016" color="mycolor" />
+<definedValue name="load_system_certificate_list" value="1017" color="mycolor" />
+<definedValue name="fault_around_debugfs" value="1018" color="mycolor" />
+<definedValue name="max_swapfiles_check" value="1019" color="mycolor" />
+<definedValue name="init_zswap" value="1020" color="mycolor" />
+<definedValue name="split_huge_pages_debugfs" value="1021" color="mycolor" />
+<definedValue name="check_early_ioremap_leak" value="1022" color="mycolor" />
+<definedValue name="afs_init" value="1023" color="mycolor" />
+<definedValue name="init_root_keyring" value="1024" color="mycolor" />
+<definedValue name="big_key_init" value="1025" color="mycolor" />
+<definedValue name="init_trusted" value="1026" color="mycolor" />
+<definedValue name="init_encrypted" value="1027" color="mycolor" />
+<definedValue name="init_profile_hash" value="1028" color="mycolor" />
+<definedValue name="init_ima" value="1029" color="mycolor" />
+<definedValue name="init_evm" value="1030" color="mycolor" />
+<definedValue name="prandom_reseed" value="1031" color="mycolor" />
+<definedValue name="pci_resource_alignment_sysfs_init" value="1032" color="mycolor" />
+<definedValue name="pci_sysfs_init" value="1033" color="mycolor" />
+<definedValue name="bert_init" value="1034" color="mycolor" />
+<definedValue name="clk_debug_init" value="1035" color="mycolor" />
+<definedValue name="boot_wait_for_devices" value="1036" color="mycolor" />
+<definedValue name="dmar_free_unused_resources" value="1037" color="mycolor" />
+<definedValue name="deferred_probe_initcall" value="1038" color="mycolor" />
+<definedValue name="late_resume_init" value="1039" color="mycolor" />
+<definedValue name="rtc_hctosys" value="1040" color="mycolor" />
+<definedValue name="charger_manager_init" value="1041" color="mycolor" />
+<definedValue name="acpi_cpufreq_init" value="1042" color="mycolor" />
+<definedValue name="powernowk8_init" value="1043" color="mycolor" />
+<definedValue name="pcc_cpufreq_init" value="1044" color="mycolor" />
+<definedValue name="centrino_init" value="1045" color="mycolor" />
+<definedValue name="edd_init" value="1046" color="mycolor" />
+<definedValue name="firmware_memmap_init" value="1047" color="mycolor" />
+<definedValue name="register_update_efi_random_seed" value="1048" color="mycolor" />
+<definedValue name="efi_shutdown_init" value="1049" color="mycolor" />
+<definedValue name="pci_mmcfg_late_insert_resources" value="1050" color="mycolor" />
+<definedValue name="tcp_congestion_default" value="1051" color="mycolor" />
+<definedValue name="trace_bootlevel_end_handler_late" value="1052" color="mycolor" />
+<definedValue name="trace_bootlevel_handler_sync_late" value="1053" color="mycolor" />
+<definedValue name="software_resume" value="1054" color="mycolor" />
+<definedValue name="clear_boot_tracer" value="1055" color="mycolor" />
+<definedValue name="clk_disable_unused" value="1056" color="mycolor" />
+<definedValue name="regulator_init_complete" value="1057" color="mycolor" />
+<definedValue name="alsa_sound_last_init" value="1058" color="mycolor" />
+<definedValue name="trace_bootlevel_end_handler_sync_late" value="1059" color="mycolor" />
+
+
+		<entry path="CPUs/*" displayText="true">
+			<display type="self" />
+			<name type="self" />
+			<entry path="VMs/*">
+				<display type="self" />
+				<name type="self" />
+				<entry path="Boot levels" displayText="true">
+					<display type="self" />
+				</entry>
+				<entry path="Modules"  displayText="true">
+					<display type="self" />
+				</entry>
+			</entry>
+		</entry>
+    </timeGraphView>
+
+</tmfxml>

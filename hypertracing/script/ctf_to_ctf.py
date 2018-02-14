@@ -18,7 +18,7 @@ per_cpu_streams = {}
 
 
 def main(argv):
-    path = "/home/abder/lttng-traces/oneos-bootup/guest"
+    path = "/home/abder/lttng-traces/bootevel-20180208-184457"
     output = None
     try:
         if len(argv) > 0:
@@ -73,9 +73,7 @@ def main(argv):
     kernel_event_classes['guest'] = babeltrace_create_writer("guest-kernel", trace_path, per_cpu_streams)
     # ust_event_classes['guest'] = create_writer("guest-ust", trace_path)
 
-    count = 0
-    for index in range(traces.events):
-        event = traces.events[index]
+    for event in traces.events:
         events = []
         cpu_id = event['cpu_id']
         is_guest_event = is_hypercall_event(event.name)
@@ -150,13 +148,12 @@ def main(argv):
                                 new_event.payload(name).value = value
                         except Exception as ex:
                             print(ex)
-                    if index > 50000:
+
                         per_cpu_streams[stream_name][cpu_id].append_event(new_event)
                 except Exception as ex:
-                    print(event.timestamp, myevent, ex)
+                    event.timestamp
+                    # print(event.timestamp, myevent, ex)
 
-        if index > 100000*3:
-           break
 
     # flush the streams
     for domain, streams in per_cpu_streams.items():

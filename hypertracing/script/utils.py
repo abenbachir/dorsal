@@ -12,6 +12,10 @@ KERNEL_MODE = "kernel"
 USER_MODE = "ust"
 CONFIG_ARCH_HYPERCALL_NR = 0
 BOOTLEVEL_HYPERCALL_NR = 3000
+BOOTLEVEL_ENTRY_HYPERCALL_NR = 3001
+BOOTLEVEL_EXIT_HYPERCALL_NR = 3002
+INITCALL_ENTRY_HYPERCALL_NR = 4001
+INITCALL_EXIT_HYPERCALL_NR = 4002
 USERSPACE_HYPERCALL_NR = 2000
 FUNCTION_TRACING_HYPERCALL_NR = 1000
 SCHED_SWITCH_HYPERCALL_NR = 1001
@@ -64,6 +68,13 @@ HYPERGRAPH_HOST_EVENT_NAME = "hypergraph_host"
 KVM_ENTRY_EVENT_NAME = "kvm_x86_entry"
 KVM_EXIT_EVENT_NAME = "kvm_x86_exit"
 MARKER_EVENT_NAME = "marker"
+BOOTLEVEL_ENTRY_EVENT_NAME = "bootlevel_entry"
+BOOTLEVEL_EXIT_EVENT_NAME = "bootlevel_exit"
+
+INITCALL_ENTRY_EVENT_NAME = "initcall_entry"
+INITCALL_EXIT_EVENT_NAME = "initcall_exit"
+BOOTLEVEL_ENTRY_EVENT_NAME = "bootlevel_entry"
+BOOTLEVEL_EXIT_EVENT_NAME = "bootlevel_exit"
 
 HRTIMER_INIT_EVENT_NAME = "timer_hrtimer_init"
 HRTIMER_START_EVENT_NAME = "timer_hrtimer_start"
@@ -85,8 +96,15 @@ initcall_types = {
     10: 'console',
     11: 'security'
 }
+
 event_types_map = {
     BOOTLEVEL_HYPERCALL_NR : MARKER_EVENT_NAME,
+    BOOTLEVEL_ENTRY_HYPERCALL_NR : BOOTLEVEL_ENTRY_EVENT_NAME,
+    BOOTLEVEL_EXIT_HYPERCALL_NR : BOOTLEVEL_EXIT_EVENT_NAME,
+
+    INITCALL_ENTRY_HYPERCALL_NR : INITCALL_ENTRY_EVENT_NAME,
+    INITCALL_EXIT_HYPERCALL_NR : INITCALL_EXIT_EVENT_NAME,
+
     SCHED_SWITCH_HYPERCALL_NR : SCHED_SWITCH_EVENT_NAME,
     SCHED_WAKING_HYPERCALL_NR : SCHED_WAKING_EVENT_NAME,
     SCHED_WAKEUP_HYPERCALL_NR : SCHED_WAKING_EVENT_NAME,
@@ -444,6 +462,21 @@ def handle_l1_event(event):
             }})
         previous_bootlevel = {'label':label, 'timestamp':timestamp}
 
+    if nr == BOOTLEVEL_ENTRY_HYPERCALL_NR or nr == BOOTLEVEL_EXIT_HYPERCALL_NR:
+        nr_level, is_sync = fields['a0'], fields['a1']
+        label = "%s%s" % (initcall_types[nr_level-is_sync*10], ('_sync' if is_sync else ''))
+        events.append({"type": event_types_map[nr], "payload": {
+            'name': label,
+            'level': nr_level
+        }})
+
+    if nr == INITCALL_ENTRY_HYPERCALL_NR or nr == INITCALL_EXIT_HYPERCALL_NR:
+        name = get_comm([fields['a1'], fields['a2'], fields['a3']])
+        if not name.startswith('trace_bootlevel'):
+            print('<definedValue name="%s" value="%s" color="mycolor" />' % (name, fields['a0']))
+            events.append({"type": event_types_map[nr], "payload": {
+                'name': name
+            }})
     if is_sched_switch:
         prev_state, prev_prio, next_prio, prev_comm = 0, 0, 0, ""
         if is_32b():
@@ -595,6 +628,12 @@ def babeltrace_create_writer(stream_name, path, per_cpu_streams):
 
         events_fields = {
             # marker
+            INITCALL_ENTRY_EVENT_NAME: {'name': string_type},
+            INITCALL_EXIT_EVENT_NAME: {'name': string_type},
+
+            BOOTLEVEL_ENTRY_EVENT_NAME: {'name': string_type, 'level': int32_type },
+            BOOTLEVEL_EXIT_EVENT_NAME: {'name': string_type, 'level': int32_type },
+
             MARKER_EVENT_NAME: {'start':int64_type, 'end':int64_type, 'category':string_type, 'label':string_type},
             # sched
             SCHED_SWITCH_EVENT_NAME: {'prev_tid':int32_type, 'prev_prio':int32_type, 'prev_state':int32_type,

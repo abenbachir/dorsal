@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmfxml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="xmldefinition.xsd">
+
+<!-- This is the definition of the time-graph view -->
+    <timeGraphView id="org.eclipse.linuxtools.tmf.analysis.xml.ui.views.statesystem">
+        <head>
+            <analysis id="vgpus.state.provider" />
+            <label value="Scheduler Context Switch Analysis View" />
+        </head>
+
+        <!-- StateValues-->
+        <definedValue name="vGPU is running" value="1" color="#01DF3A" />
+        <definedValue name="vGPU is idle" value="2" color="#D8D8D8" /> 
+
+        <!-- Control Flow View -->
+        <entry path="GPUS/*">
+			<display type="self" />
+			<name type="self" />
+			<entry path="1">
+				<display type="self" />
+			</entry>
+			<entry path="2">
+				<display type="self" />
+			</entry>			
+		</entry>
+    </timeGraphView>
+
+
+<!-- The state provider assigns states from events -->
+    <stateProvider version="0" id="vgpus.state.provider">
+		<head>
+            <traceType id="org.eclipse.linuxtools.lttng2.kernel.tracetype" />
+            <label value="KVMGT -- Scheduler Context Switch Analysis" />
+        </head>
+        		<!-- Convenience names for the state values -->
+		<definedValue name="RUNNING" value="1" />
+        <definedValue name="WAITING" value="2" />
+
+			<!-- Event handlers -->        
+		<eventHandler eventName="vgpu_sched_switch">
+			<stateChange>
+				<stateAttribute type="constant" value="GPUS" />
+			        <stateAttribute type="constant" value="vGPUS" />
+				<stateAttribute type="eventField" value="previous_vgpu_id" />
+				<stateValue type="int" value="$WAITING" />
+			</stateChange>
+
+			<stateChange>
+				<stateAttribute type="constant" value="GPUS" />
+			        <stateAttribute type="constant" value="vGPUS" />
+				<stateAttribute type="eventField" value="next_vgpu_id" /> 
+				<stateValue type="int" value="$RUNNING" />
+			</stateChange>
+			<stateChange>
+				<if>
+					<condition>
+						<stateValue type="int" value="$WAITING" />
+						<stateValue type="query">
+							<stateAttribute type="constant" value="GPUS" />
+							<stateAttribute type="constant" value="vGPUS" />
+							<stateAttribute type="constant" value="0" />
+						</stateValue>
+					</condition>
+				</if>
+				<then>
+					<stateAttribute type="constant" value="GPUS" />
+					<stateAttribute type="constant" value="intel_GPU" />
+					<stateAttribute type="constant" value="1" />
+					<stateValue type="int" value="$RUNNING" />
+				</then>
+				<else>
+					<stateAttribute type="constant" value="GPUS" />
+					<stateAttribute type="constant" value="intel_GPU" />
+					<stateAttribute type="constant" value="1" />
+					<stateValue type="int" value="$WAITING" />
+				</else>
+			</stateChange>
+		</eventHandler>
+
+
+    </stateProvider>
+
+</tmfxml>
