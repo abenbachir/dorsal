@@ -5,7 +5,7 @@ import babeltrace.writer as btw
 import babeltrace.reader
 import multiprocessing
 
-syscall_list_filepath = "/home/abder/utils/hypertracing/script/syscall_32.tbl"
+syscall_list_filepath = "/home/abder/utils/hypertracing/script/syscall_64.tbl"
 HELP = "Usage: python FILE.py path/to/directory -o <outputfile>"
 COMM_LENGTH = 16
 KERNEL_MODE = "kernel"
@@ -462,21 +462,21 @@ def handle_l1_event(event):
             }})
         previous_bootlevel = {'label':label, 'timestamp':timestamp}
 
-    if nr == BOOTLEVEL_ENTRY_HYPERCALL_NR or nr == BOOTLEVEL_EXIT_HYPERCALL_NR:
-        nr_level, is_sync = fields['a0'], fields['a1']
-        label = "%s%s" % (initcall_types[nr_level-is_sync*10], ('_sync' if is_sync else ''))
-        events.append({"type": event_types_map[nr], "payload": {
-            'name': label,
-            'level': nr_level
-        }})
-
-    if nr == INITCALL_ENTRY_HYPERCALL_NR or nr == INITCALL_EXIT_HYPERCALL_NR:
-        name = get_comm([fields['a1'], fields['a2'], fields['a3']])
-        if not name.startswith('trace_bootlevel'):
-            print('<definedValue name="%s" value="%s" color="mycolor" />' % (name, fields['a0']))
-            events.append({"type": event_types_map[nr], "payload": {
-                'name': name
-            }})
+    # if nr == BOOTLEVEL_ENTRY_HYPERCALL_NR or nr == BOOTLEVEL_EXIT_HYPERCALL_NR:
+    #     nr_level, is_sync = fields['a0'], fields['a1']
+    #     label = "%s%s" % (initcall_types[nr_level-is_sync*10], ('_sync' if is_sync else ''))
+    #     events.append({"type": event_types_map[nr], "payload": {
+    #         'name': label,
+    #         'level': nr_level
+    #     }})
+    #
+    # if nr == INITCALL_ENTRY_HYPERCALL_NR or nr == INITCALL_EXIT_HYPERCALL_NR:
+    #     name = get_comm([fields['a1'], fields['a2'], fields['a3']])
+    #     if not name.startswith('trace_bootlevel'):
+    #         print('<definedValue name="%s" value="%s" color="mycolor" />' % (name, fields['a0']))
+    #         events.append({"type": event_types_map[nr], "payload": {
+    #             'name': name
+    #         }})
     if is_sched_switch:
         prev_state, prev_prio, next_prio, prev_comm = 0, 0, 0, ""
         if is_32b():
