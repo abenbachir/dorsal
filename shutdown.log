@@ -1,0 +1,112 @@
+abder@vm:~$ sudo shutdown now
+[  OK  ] Closed Load/Save RF Kill Switch Status /dev/rfkill Watch.
+[  OK  ] Stopped target Graphical Interface.
+[  OK  ] Stopped target Multi-User System.
+         Stopping LSB: automatic crash report generation...
+         Stopping LSB: Record successful boot for GRUB...
+         Stopping Authorization Manager...
+         Stopping D-Bus System Message Bus...
+         Stopping User Manager for UID 1000...
+         Stopping LSB: daemon to balance interrupts for SMP systems...
+         Stopping OpenBSD Secure Shell server...
+         Stopping Snappy daemon...
+         Stopping System Logging Service...
+         Stopping FUSE filesystem for LXC...
+         Stopping Session 1 of user abder.
+         Stopping Regular background program processing daemon...
+         Stopping Unattended Upgrades Shutdown...
+[  OK  ] Stopped target Timers.
+[  OK  ] Stopped Daily Cleanup of Temporary Directories.
+[  OK  ] Stopped Daily apt activities.
+[  OK  ] Stopped Timer to automatically refresh installed snaps.
+[  OK  ] Stopped Message of the Day.
+         Stopping Accounts Service...
+[  OK  ] Stopped target Sound Card.
+         Stopping Deferred execution scheduler...
+         Stopping ACPI event daemon...
+         Stopping LXD - container startup/shutdown...
+[  OK  ] Stopped target Login Prompts.
+         Stopping Getty on tty1...
+         Stopping Serial Getty on ttyS0...
+[  OK  ] Stopped target System Time Synchronized.
+[  OK  ] Unmounted /var/lib/lxcfs.
+[  OK  ] Stopped Regular background program processing daemon.
+[  OK  ] Stopped Deferred execution scheduler.
+[  OK  ] Stopped ACPI event daemon.
+[  OK  ] Stopped Accounts Service.
+[  OK  ] Stopped System Logging Service.
+[  OK  ] Stopped Snappy daemon.
+[  OK  ] Stopped Authorization Manager.
+[  OK  ] Stopped OpenBSD Secure Shell server.
+[  OK  ] Stopped Serial Getty on ttyS0.
+[  OK  ] Stopped Getty on tty1.
+[  OK  ] Stopped User Manager for UID 1000.
+[  OK  ] Stopped D-Bus System Message Bus.
+[  OK  ] Stopped Session 1 of user abder.
+[  OK  ] Stopped FUSE filesystem for LXC.
+[  OK  ] Removed slice User Slice of abder.
+         Stopping Login Service...
+[  OK  ] Removed slice system-getty.slice.
+[  OK  ] Removed slice system-serial\x2dgetty.slice.
+         Stopping Permit User Sessions...
+[  OK  ] Stopped Login Service.
+[  OK  ] Stopped LXD - container startup/shutdown.
+[  OK  ] Stopped Permit User Sessions.
+[  OK  ] Stopped target User and Group Name Lookups.
+[  OK  ] Stopped LSB: Record successful boot for GRUB.
+[  OK  ] Stopped LSB: daemon to balance interrupts for SMP systems.
+[  OK  ] Stopped LSB: automatic crash report generation.
+[  OK  ] Stopped target Remote File Systems.
+[  OK  ] Stopped target Remote File Systems (Pre).
+         Stopping Login to default iSCSI targets...
+[  OK  ] Stopped Login to default iSCSI targets.
+         Stopping iSCSI initiator daemon (iscsid)...
+[  OK  ] Stopped iSCSI initiator daemon (iscsid).
+[  OK  ] Stopped target Network is Online.
+         Stopping Network Name Resolution...
+[  OK  ] Stopped Network Name Resolution.
+[  OK  ] Stopped Unattended Upgrades Shutdown.
+[  OK  ] Stopped target Network.
+         Stopping Raise network interfaces...
+         Stopping ifup for ens3...
+[  OK  ] Stopped target Basic System.
+[  OK  ] Stopped target Slices.
+[  OK  ] Removed slice User and Session Slice.
+[  OK  ] Stopped target Sockets.
+[  OK  ] Closed UUID daemon activation socket.
+[  OK  ] Closed ACPID Listen Socket.
+[  OK  ] Closed Socket activation for snappy daemon.
+[  OK  ] Closed D-Bus System Message Bus Socket.
+[  OK  ] Closed LXD - unix socket.
+[  OK  ] Closed Syslog Socket.
+[  OK  ] Stopped target Paths.
+[  OK  ] Stopped ACPI Events Check.
+[  OK  ] Stopped target System Initialization.
+         Stopping Network Time Synchronization...
+[  OK  ] Stopped target Encrypted Volumes.
+[  OK  ] Stopped Forward Password Requests to Wall Directory Watch.
+[  OK  ] Stopped Dispatch Password Requests to Console Directory Watch.
+         Stopping Load/Save Random Seed...
+         Stopping Update UTMP about System Boot/Shutdown...
+[  OK  ] Stopped target Swap.
+         Deactivating swap /swapfile...
+[  OK  ] Stopped Network Time Synchronization.
+[  OK  ] Deactivated swap /swapfile.
+[  OK  ] Stopped Load/Save Random Seed.
+[  OK  ] Stopped Update UTMP about System Boot/Shutdown.
+[  OK  ] Stopped Create Volatile Files and Directories.
+[  OK  ] Stopped Raise network interfaces.
+[  OK  ] Stopped ifup for ens3.
+[  OK  ] Stopped target Network (Pre).
+[  OK  ] Stopped target Local File Systems.
+         Unmounting /run/user/1000...
+[  OK  ] Stopped Apply Kernel Variables.
+[  OK  ] Stopped Load Kernel Modules.
+[  OK  ] Unmounted /run/user/1000.
+[  OK  ] Reached target Unmount All Filesystems.
+[  OK  ] Stopped target Local File Systems (Pre).
+[  OK  ] Stopped Remount Root and Kernel File Systems.
+         Stopping Monitoring of LVM2 mirrors…ng dmeventd or progress polling...
+[  OK  ] Stopped Create Static Device Nodes in /dev.
+[  OK  ] Reached target Shutdown.
+[   57.838675] reboot: Power down

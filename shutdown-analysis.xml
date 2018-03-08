@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmfxml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="xmldefinition.xsd">
+
+<!-- The state provider assigns states from events -->
+    <stateProvider version="0" id="abder.state.provider">
+		<head>
+            <traceType id="org.eclipse.linuxtools.lttng2.kernel.tracetype" />
+            <label value="Hypertracing Analysis" />
+        </head>
+        		<!-- Convenience names for the state values -->
+        <definedValue name="DEVICE_NOT_RUNNING" value="11111" />
+        <definedValue name="SHUTDOWN_LEVELS_NOT_RUNNING" value="22222" />
+        
+        <definedValue name="SHUTDOWN_LEVEL_HYPERCALL_NR" value="10000" />
+        <definedValue name="SHUTDOWN_LEVEL_ENTRY_HYPERCALL_NR" value="10001" />
+        <definedValue name="SHUTDOWN_LEVEL_EXIT_HYPERCALL_NR" value="10002" />
+
+        <definedValue name="DEVICE_ENTRY_HYPERCALL_NR" value="11001" />
+        <definedValue name="DEVICE_EXIT_HYPERCALL_NR" value="11002" />
+
+        <definedValue name="NOTIFIER_ENTRY_HYPERCALL_NR" value="12001" />
+        <definedValue name="NOTIFIER_EXIT_HYPERCALL_NR" value="12002" />
+
+        <location id="ShutdownLevel">
+			<stateAttribute type="constant" value="VMs" />
+			<stateAttribute type="eventField" value="context._tid" />
+			<stateAttribute type="constant" value="Shutdown levels" />
+		</location>
+		<location id="Devices">
+			<stateAttribute type="constant" value="VMs" />
+			<stateAttribute type="eventField" value="context._tid" />
+			<stateAttribute type="constant" value="Devices" />
+		</location>
+		<!-- Event handlers -->        
+		<eventHandler eventName="kvm_x86_hypercall">
+			<stateChange>
+				<if>
+					<condition>
+						<field name="nr" />
+						<stateValue type="int" value="$SHUTDOWN_LEVEL_HYPERCALL_NR" />
+					</condition>
+				</if>
+				<then>
+					<stateAttribute type="location" value="ShutdownLevel" />
+					<stateValue type="eventField" value="a0" forcedType="long"/>
+				</then>
+			</stateChange>
+
+			<stateChange>
+				<if>
+					<condition>
+						<field name="nr" />
+						<stateValue type="int" value="$DEVICE_ENTRY_HYPERCALL_NR" />
+					</condition>
+				</if>
+				<then>
+					<stateAttribute type="location" value="Devices" />
+					<stateValue type="eventField" value="a0" forcedType="long" />
+				</then>
+			</stateChange>
+			<stateChange>
+				<if>
+					<condition>
+						<field name="nr" />
+						<stateValue type="int" value="$DEVICE_EXIT_HYPERCALL_NR" />
+					</condition>
+				</if>
+				<then>
+					<stateAttribute type="location" value="Devices" />
+					<stateValue type="long" value="$DEVICE_NOT_RUNNING" />
+				</then>
+			</stateChange>
+
+			<stateChange>
+				<if>
+					<condition>
+						<field name="nr" />
+						<stateValue type="int" value="$NOTIFIER_ENTRY_HYPERCALL_NR" />
+					</condition>
+				</if>
+				<then>
+					<stateAttribute type="location" value="Devices" />
+					<stateValue type="eventField" value="a0" forcedType="long" />
+				</then>
+			</stateChange>
+			<stateChange>
+				<if>
+					<condition>
+						<field name="nr" />
+						<stateValue type="int" value="$NOTIFIER_EXIT_HYPERCALL_NR" />
+					</condition>
+				</if>
+				<then>
+					<stateAttribute type="location" value="Devices" />
+					<stateValue type="long" value="$DEVICE_NOT_RUNNING" />
+				</then>
+			</stateChange>
+		</eventHandler>
+
+    </stateProvider>
+
+    <!-- This is the definition of the time-graph view -->
+    <timeGraphView id="org.eclipse.linuxtools.tmf.analysis.xml.ui.views.statesystem">
+        <head>
+            <analysis id="abder.state.provider" />
+            <label value="Shutdown levels Analysis View" />
+        </head>
+
+        <!-- StateValues-->
+		 <!-- black -->
+		<definedValue name="" value="11111" color="#cdcdcd" />
+		<definedValue name="" value="22222" color="#bdbdbd" /> <!-- light gray -->
+		<definedValue name="Power off notifiers" value="104" color="#000000" />
+		<definedValue name="Usermode helper disable" value="105" color="#88419d" />
+		<definedValue name="Device shutdown" value="106" color="#993404" /> <!-- #fe9929 -->
+		<definedValue name="Migrate to reboot cpu" value="107" color="#41ab5d" /> 
+		<definedValue name="Syscore shutdown" value="108" color="#800026" /> 
+
+		<definedValue name="Security" value="11" color="#960001" /> <!-- red -->
+		<definedValue name="Early" value="0" color="#225ea8" /> <!-- violet -->
+		<definedValue name="Pure" value="1" color="#74a9cf" /> <!-- green -->
+		<definedValue name="Core" value="2" color="#4dac26" /> <!-- orange -->
+		<definedValue name="Core sync" value="12" color="#fe9929" />
+		<definedValue name="Postcore" value="3" color="#78c679" /> <!-- light green -->
+		<definedValue name="Postcore sync" value="13" color="#d9f0a3" />
+		<definedValue name="Arch" value="4" color="#a8ddb5" /> <!-- blue ocean -->
+		<definedValue name="Arch sync" value="14" color="#1d91c0" />
+		<definedValue name="Subsys" value="5" color="#ffd700" /> <!-- violet -->
+		<definedValue name="Subsys sync" value="15" color="#fe9929" />
+		<definedValue name="Filesystem" value="6" color="#cc4c02" /> <!--  -->
+		<definedValue name="Filesystem sync" value="16" color="#8c2d04" />
+		<definedValue name="Rootfs" value="7" color="#2a9088" /> <!--   -->
+		<definedValue name="Device" value="8" color="#0570b0" /> <!--  -->
+		<definedValue name="Device sync" value="18" color="#fcc5c0" />
+		<definedValue name="Late" value="9" color="#0c2c84" /> <!--  -->
+		<definedValue name="Late sync" value="19" color="#bf812d" />
+
+<definedValue name="md_notify_reboot" value="12101" color="notifier_color" />
+<definedValue name="kvm_pv_reboot_notify" value="12102" color="notifier_color" />
+<definedValue name="capsule_reboot_notify" value="12103" color="notifier_color" />
+<definedValue name="tts_notify_reboot" value="12104" color="notifier_color" />
+<definedValue name="fw_shutdown_notify" value="12105" color="notifier_color" />
+<definedValue name="perf_reboot" value="12106" color="notifier_color" />
+
+<definedValue name="serio" value="5001" color="bus_color" />
+<definedValue name="disk" value="5012" color="type_color" />
+<definedValue name="disk" value="5017" color="type_color" />
+<definedValue name="scsi_device" value="5019" color="type_color" />
+<definedValue name="scsi_target" value="5020" color="type_color" />
+<definedValue name="partition" value="5021" color="type_color" />
+<definedValue name="disk" value="5022" color="type_color" />
+<definedValue name="scsi_device" value="5028" color="type_color" />
+<definedValue name="sd" value="5028" color="driver_color" />
+<definedValue name="scsi_target" value="5029" color="type_color" />
+<definedValue name="pnp" value="5039" color="bus_color" />
+<definedValue name="serio" value="5043" color="bus_color" />
+<definedValue name="i8042" value="5047" color="driver_color" />
+<definedValue name="pnp" value="5048" color="bus_color" />
+<definedValue name="pnp" value="5049" color="bus_color" />
+<definedValue name="scsi_host" value="5055" color="type_color" />
+<definedValue name="scsi_host" value="5057" color="type_color" />
+<definedValue name="ata_port" value="5065" color="type_color" />
+<definedValue name="ata_port" value="5073" color="type_color" />
+<definedValue name="pci" value="5074" color="bus_color" />
+<definedValue name="disk" value="5075" color="type_color" />
+<definedValue name="disk" value="5077" color="type_color" />
+<definedValue name="disk" value="5079" color="type_color" />
+<definedValue name="disk" value="5081" color="type_color" />
+<definedValue name="disk" value="5083" color="type_color" />
+<definedValue name="disk" value="5085" color="type_color" />
+<definedValue name="disk" value="5087" color="type_color" />
+<definedValue name="disk" value="5089" color="type_color" />
+<definedValue name="pci" value="5098" color="bus_color" />
+<definedValue name="serial8250" value="5103" color="driver_color" />
+<definedValue name="pnp" value="5136" color="bus_color" />
+<definedValue name="alarmtimer" value="5151" color="driver_color" />
+<definedValue name="pnp" value="5235" color="bus_color" />
+<definedValue name="pnp" value="5236" color="bus_color" />
+<definedValue name="pci" value="5248" color="bus_color" />
+<definedValue name="pci" value="5249" color="bus_color" />
+<definedValue name="pci" value="5250" color="bus_color" />
+<definedValue name="pci" value="5251" color="bus_color" />
+<definedValue name="reg-dummy" value="5318" color="driver_color" />
+
+		<entry path="VMs/*" displayText="true">
+			<display type="self" />
+			<name type="self" />
+			<entry path="Shutdown levels" displayText="true">
+				<display type="self" />
+			</entry>
+			<entry path="Devices"  displayText="true">
+				<display type="self" />
+			</entry>
+		</entry>
+    </timeGraphView>
+
+</tmfxml>
