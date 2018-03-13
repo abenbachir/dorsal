@@ -1,5 +1,6 @@
 
 bzImage=/home/abder/linux-vm/arch/x86/boot/bzImage
+bzImage_baseline=/home/abder/linux-baseline/arch/x86/boot/bzImage
 bzImage_full_config=/home/abder/linux-vm-full-config/arch/x86/boot/bzImage
 bzImage_from_hdd=/media/abder/external-drive/linux-vm/arch/x86/boot/bzImage
 bzImage_shutdown=/home/abder/linux-vm-shutdown/arch/x86/boot/bzImage
@@ -14,7 +15,7 @@ param="trace_bootlevel=1 trace_bootlevel_end=1 trace_initcall print_initcall"
 #param="trace_bootlevel=1 trace_bootlevel_end=1"
 
 # 	-serial stdio -hda $qcow2 \
-
+# 
 run_qemu()
 {
 	p1=$1
@@ -26,7 +27,6 @@ run_qemu()
 	-enable-kvm -append "root=/dev/sda1 console=tty0 console=ttyS0 rw $p1" \
 	--kernel $image \
 	-hda $qcow2 \
-	-serial stdio \
 	&
 }
 run_qemu_2()
@@ -127,26 +127,38 @@ trace_use_cases()
 
 lttng_start()
 {
-	lttng create bootlevel
-	lttng enable-channel -k --subbuf-size=128K --num-subbuf=256 vm_channel
+	output="/home/abder/lttng-traces/bootup-benchmark"
+	rm -rf $output
+	lttng create bootup-benchmark --output="$output"
+	lttng enable-channel -k --subbuf-size=128K --num-subbuf=64 vm_channel
 	# lttng enable-event -k "kvm_x86_entry,kvm_x86_exit,kvm_x86_hypercall" -c vm_channel
 	lttng enable-event -k "kvm_x86_write_tsc_offset,kvm_x86_hypercall" -c vm_channel
-	lttng add-context -k -t pid -t tid -t procname -c vm_channel
+	# lttng add-context -k -t pid -t tid -t procname -c vm_channel
 	lttng start 
 
+	# param="trace_bootlevel=1 trace_bootlevel_end=1 trace_initcall"
+	# param="trace_bootlevel=1 trace_bootlevel_end=1"
+	# param="initcall_debug"
+	# param="ftrace=function_graph ftrace_dump_on_oops ftrace_graph_filter=do_one_initcall ftrace_notrace=debugfs*,kmem_*,*initcall* ftrace_graph_max_depth=2"
+	param=""
 
-	run_qemu "${param}" 1 "${bzImage_shutdown}"
+	#run_qemu "${param}" 7 "${bzImage_baseline}"
+	run_qemu "" 5 "${bzImage_baseline}"
 
 	#taskset -c 5 virsh start VM1
 
-	sleep 10
+	sleep 2
 
 	lttng stop
 	lttng view | wc -l
 	lttng destroy
+
+	./boot-time.py $output
 }
 
-run_qemu "" 1 "${bzImage}"
+# run_qemu "" 1 "${bzImage}"
+
+lttng_start
 
 # ─────────────────────────────────────────────────────────────────────────────────────────────┐ │  
 #   │ │                       --- Tracers                                                                                  │ │  
