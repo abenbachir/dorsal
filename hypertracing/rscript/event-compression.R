@@ -101,15 +101,15 @@ plot <- ggplot(data_filtered, aes(compressed_event, time)) +
   #           position=position_dodge(width=0.9), vjust=-0.15) +
   # 
   # annotate("text", x = 1, y = baseline+baseline*0.2, label = "Baseline                     ") +
-  annotate("label", x = max(data_filtered$compressed_event)-1, y = lttng_overhead, label = "      Lttng      ", color="white", fill=lttng_color,
+  annotate("label", x = max(data_filtered$compressed_event)-1, y = lttng_overhead, label = "    Lttng      ", color="white", fill=lttng_color,
              label.padding = unit(0.3, "lines"),size = 3) +
-  annotate("label", x = max(data_filtered$compressed_event)-1, y = ftrace_overhead, label = "     Ftrace     ", color="white", fill=ftrace_color,
+  annotate("label", x = max(data_filtered$compressed_event)-1, y = ftrace_overhead, label = "   Ftrace    ", color="white", fill=ftrace_color,
            label.padding = unit(0.3, "lines"),size = 3) +
-  annotate("label", x = max(data_filtered$compressed_event)-1, y = perf_overhead, label = "      Perf      ", color="white", fill=perf_color,
+  annotate("label", x = max(data_filtered$compressed_event)-1, y = perf_overhead, label = "     Perf     ", color="white", fill=perf_color,
            label.padding = unit(0.3, "lines"),size = 3) +
-  annotate("label", x = max(data_filtered$compressed_event)-1, y = compression_overhead, label = "Compression", color="white", fill=compression_color,  
+  annotate("label", x = max(data_filtered$compressed_event)-1, y = compression_overhead, label = " Batching ", color="white", fill=compression_color,  
            label.padding = unit(0.3, "lines"),size = 3) +
-  labs(title = "",x ="Number of compressed events", y ="Latency (ns)", fill="Cost of") +
+  labs(title = "",x ="Number of batched events", y ="Latency (ns)", fill="Cost of") +
   # scale_fill_manual(values = colors) +
   theme_light() +
   theme(
@@ -119,7 +119,7 @@ plot <- ggplot(data_filtered, aes(compressed_event, time)) +
     # axis.text.y = element_text(margin = margin(t=2,b=1))
   )
 # pdf(file="./plots/event-compression.pdf", width=7.8, height=5.5)
-pdf(file="./plots/event-compression.pdf", width=5.16, height=4.3)
+pdf(file="./plots/event-batching.pdf", width=5.16, height=4.3)
 plot(plot)
 
 dev.off()
