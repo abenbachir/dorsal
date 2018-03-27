@@ -9,7 +9,7 @@ data3 <- read.table("./interVM-benchmark/data-nahanni.csv", header=T, sep=",")
 data4 <- read.table("./interVM-benchmark/data-nahanni-warmup.csv", header=T, sep=",")
 
 
-colors <- c( "#af2054", "dodgerblue2", "darkorange2", "#3faf1f")
+colors <- c( "#af2054", "dodgerblue2", "#00af1f", "#3faf1f")
 data1$transport <- 'Hypercall'
 data2$transport <- 'Virtio-serial'
 data3$transport <- 'Nahanni'
@@ -52,13 +52,22 @@ for(i in 1:nrow(unique_data)) {
 p <- ggplot(unique_data, aes(x=reorder(buffer_size_label, buffer_size), y=througthput, group=transport)) +
   scale_y_continuous(breaks = seq(0, max(unique_data$througthput), 10)) +
   geom_point(aes(shape=transport, color=transport), size=3) +
-  geom_line(aes(color=transport)) +
-  geom_label_repel(aes(y=througthput, label=label),
-                   size = 2.5, segment.size = 0.5, colour="white", segment.color="#7f2054",  fill = "#7f2054",
-                   min.segment.length = unit(0, "lines"), nudge_x = -0.25, nudge_y = 5
-  ) +
+  geom_line(aes(linetype=transport,color=transport)) +
+  # geom_label_repel(aes(y=througthput, label=label),
+  #                  size = 2.5, segment.size = 0.5, colour="white", segment.color="#7f2054",  fill = "#7f2054",
+  #                  min.segment.length = unit(0, "lines"), nudge_x = -0.25, nudge_y = 5
+  # ) +
+  
+  geom_segment(aes(x=1,xend=11,y=8.92,yend=8.92), linetype="solid", color="#af2054", size=0.28) +
+  geom_segment(aes(x=1,xend=11,y=17.92,yend=17.92), linetype="solid", color="#af2054", size=0.28) +
+  
+  annotate("label", x = 10, y = 2.25, label = " 1 CPU ", color="white",fill="#af2054", label.padding = unit(0.3, "lines"),size = 2.5) +
+  annotate("label", x = 10, y = 8.92, label = " Hypercall: 4 CPUs ", color="white",fill="#af2054", label.padding = unit(0.3, "lines"),size = 2.5) +
+  annotate("label", x = 10, y = 17.92, label = " Hypercall: 8 CPUs ", color="white", fill="#af2054", label.padding = unit(0.3, "lines"),size = 2.5) +
+  
   scale_color_manual(values = colors, name = "Transport") +
   scale_shape_manual(values=c(4, 15, 17,16), name = "Transport")+
+  scale_linetype_manual(values=c( "solid", "dashed", "twodash"), name = "Transport")+
   # geom_hline(yintercept = c(2.24), linetype="dotted") +
   labs(x ="Message size", y ="Throughput (Gbps)") +
   
