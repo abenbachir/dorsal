@@ -1,0 +1,1614 @@
+# tracer: nop
+#
+#                              _-----=> irqs-off
+#                             / _----=> need-resched
+#                            | / _---=> hardirq/softirq
+#                            || / _--=> preempt-depth
+#                            ||| /     delay
+#           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
+#              | |       |   ||||       |         |
+          <idle>-0     [000] ....     0.000000: initcall_level: level=console
+          <idle>-0     [000] ....     0.000000: initcall_start: func=con_init+0x0/0x227
+          <idle>-0     [000] ....     0.000000: initcall_finish: func=con_init+0x0/0x227 ret=0
+          <idle>-0     [000] ....     0.000000: initcall_start: func=hvc_console_init+0x0/0x19
+          <idle>-0     [000] ....     0.000000: initcall_finish: func=hvc_console_init+0x0/0x19 ret=0
+          <idle>-0     [000] ....     0.000000: initcall_start: func=xen_cons_init+0x0/0x60
+          <idle>-0     [000] ....     0.000000: initcall_finish: func=xen_cons_init+0x0/0x60 ret=0
+          <idle>-0     [000] ....     0.000000: initcall_start: func=univ8250_console_init+0x0/0x2d
+          <idle>-0     [000] ....     0.000000: initcall_finish: func=univ8250_console_init+0x0/0x2d ret=0
+          <idle>-0     [000] ....     0.000615: initcall_level: level=security
+          <idle>-0     [000] ....     0.000617: initcall_start: func=selinux_init+0x0/0x1cf
+          <idle>-0     [000] ....     0.000617: initcall_finish: func=selinux_init+0x0/0x1cf ret=0
+          <idle>-0     [000] ....     0.000617: initcall_start: func=smack_init+0x0/0x209
+          <idle>-0     [000] ....     0.000618: initcall_finish: func=smack_init+0x0/0x209 ret=0
+          <idle>-0     [000] ....     0.000618: initcall_start: func=tomoyo_init+0x0/0x60
+          <idle>-0     [000] ....     0.000618: initcall_finish: func=tomoyo_init+0x0/0x60 ret=0
+          <idle>-0     [000] ....     0.000618: initcall_start: func=apparmor_init+0x0/0x2fa
+          <idle>-0     [000] ....     0.000633: initcall_finish: func=apparmor_init+0x0/0x2fa ret=0
+          <idle>-0     [000] ....     0.000633: initcall_start: func=integrity_iintcache_init+0x0/0x33
+          <idle>-0     [000] ....     0.000635: initcall_finish: func=integrity_iintcache_init+0x0/0x33 ret=0
+         systemd-1     [000] ....     0.005810: initcall_level: level=early
+         systemd-1     [000] ....     0.005811: initcall_start: func=trace_init_flags_sys_exit+0x0/0x14
+         systemd-1     [000] ....     0.005812: initcall_finish: func=trace_init_flags_sys_exit+0x0/0x14 ret=0
+         systemd-1     [000] ....     0.005812: initcall_start: func=trace_init_flags_sys_enter+0x0/0x14
+         systemd-1     [000] ....     0.005812: initcall_finish: func=trace_init_flags_sys_enter+0x0/0x14 ret=0
+         systemd-1     [000] ....     0.005813: initcall_start: func=init_hw_perf_events+0x0/0x5d5
+         systemd-1     [000] ....     0.005845: initcall_finish: func=init_hw_perf_events+0x0/0x5d5 ret=0
+         systemd-1     [000] ....     0.005846: initcall_start: func=init_real_mode+0x0/0x1d3
+         systemd-1     [000] ....     0.005861: initcall_finish: func=init_real_mode+0x0/0x1d3 ret=0
+         systemd-1     [000] ....     0.005862: initcall_start: func=trace_init_perf_perm_irq_work_exit+0x0/0x18
+         systemd-1     [000] ....     0.005862: initcall_finish: func=trace_init_perf_perm_irq_work_exit+0x0/0x18 ret=0
+         systemd-1     [000] ....     0.005862: initcall_start: func=register_nmi_cpu_backtrace_handler+0x0/0x1b
+         systemd-1     [000] ....     0.005862: initcall_finish: func=register_nmi_cpu_backtrace_handler+0x0/0x1b ret=0
+         systemd-1     [000] ....     0.005862: initcall_start: func=numachip_system_init+0x0/0x6c
+         systemd-1     [000] ....     0.005863: initcall_finish: func=numachip_system_init+0x0/0x6c ret=0
+         systemd-1     [000] ....     0.005863: initcall_start: func=early_efi_map_fb+0x0/0x3d
+         systemd-1     [000] ....     0.005863: initcall_finish: func=early_efi_map_fb+0x0/0x3d ret=0
+         systemd-1     [000] ....     0.005864: initcall_start: func=spawn_ksoftirqd+0x0/0x45
+         systemd-1     [000] ....     0.005880: initcall_finish: func=spawn_ksoftirqd+0x0/0x45 ret=0
+         systemd-1     [000] ....     0.005880: initcall_start: func=migration_init+0x0/0x39
+         systemd-1     [000] ....     0.005880: initcall_finish: func=migration_init+0x0/0x39 ret=0
+         systemd-1     [000] ....     0.005880: initcall_start: func=check_cpu_stall_init+0x0/0x20
+         systemd-1     [000] ....     0.005881: initcall_finish: func=check_cpu_stall_init+0x0/0x20 ret=0
+         systemd-1     [000] ....     0.005881: initcall_start: func=srcu_bootup_announce+0x0/0x35
+         systemd-1     [000] ....     0.005882: initcall_finish: func=srcu_bootup_announce+0x0/0x35 ret=0
+         systemd-1     [000] ....     0.005882: initcall_start: func=rcu_spawn_gp_kthread+0x0/0x129
+         systemd-1     [000] ....     0.005903: initcall_finish: func=rcu_spawn_gp_kthread+0x0/0x129 ret=0
+         systemd-1     [000] ....     0.005904: initcall_start: func=cpu_stop_init+0x0/0x92
+         systemd-1     [000] .N..     0.005918: initcall_finish: func=cpu_stop_init+0x0/0x92 ret=0
+         systemd-1     [000] .N..     0.005918: initcall_start: func=init_events+0x0/0x49
+         systemd-1     [000] ....     0.005927: initcall_finish: func=init_events+0x0/0x49 ret=0
+         systemd-1     [000] ....     0.005927: initcall_start: func=init_trace_printk+0x0/0x12
+         systemd-1     [000] ....     0.005928: initcall_finish: func=init_trace_printk+0x0/0x12 ret=0
+         systemd-1     [000] ....     0.005928: initcall_start: func=event_trace_enable_again+0x0/0x26
+         systemd-1     [000] ....     0.006113: initcall_finish: func=event_trace_enable_again+0x0/0x26 ret=0
+         systemd-1     [000] ....     0.006113: initcall_start: func=jump_label_init_module+0x0/0x17
+         systemd-1     [000] ....     0.006113: initcall_finish: func=jump_label_init_module+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.006113: initcall_start: func=dynamic_debug_init+0x0/0x26b
+         systemd-1     [000] ....     0.006563: initcall_finish: func=dynamic_debug_init+0x0/0x26b ret=0
+         systemd-1     [000] ....     0.006563: initcall_start: func=rand_initialize+0x0/0x60
+         systemd-1     [000] ....     0.006587: initcall_finish: func=rand_initialize+0x0/0x60 ret=0
+         systemd-1     [000] ....     0.006587: initcall_start: func=initialize_ptr_random+0x0/0x3b
+         systemd-1     [000] ....     0.006587: initcall_finish: func=initialize_ptr_random+0x0/0x3b ret=0
+         systemd-1     [000] ....     0.018933: initcall_level: level=pure
+         systemd-1     [000] ....     0.018935: initcall_start: func=cma_init_reserved_areas+0x0/0x29d
+         systemd-1     [000] ....     0.018936: initcall_finish: func=cma_init_reserved_areas+0x0/0x29d ret=0
+         systemd-1     [000] ....     0.018936: initcall_start: func=ipc_ns_init+0x0/0x5c
+         systemd-1     [000] ....     0.018937: initcall_finish: func=ipc_ns_init+0x0/0x5c ret=0
+         systemd-1     [000] ....     0.018937: initcall_start: func=init_mmap_min_addr+0x0/0x1b
+         systemd-1     [000] ....     0.018938: initcall_finish: func=init_mmap_min_addr+0x0/0x1b ret=0
+         systemd-1     [000] ....     0.018938: initcall_start: func=evm_display_config+0x0/0x37
+         systemd-1     [000] ....     0.018942: initcall_finish: func=evm_display_config+0x0/0x37 ret=0
+         systemd-1     [000] ....     0.018942: initcall_start: func=init_cpufreq_transition_notifier_list+0x0/0x20
+         systemd-1     [000] ....     0.018945: initcall_finish: func=init_cpufreq_transition_notifier_list+0x0/0x20 ret=0
+         systemd-1     [000] ....     0.018945: initcall_start: func=net_ns_init+0x0/0x10b
+         systemd-1     [000] ....     0.018989: initcall_finish: func=net_ns_init+0x0/0x10b ret=0
+         systemd-1     [000] ....     0.019019: initcall_level: level=core
+         systemd-1     [000] ....     0.019019: initcall_start: func=xen_pvh_gnttab_setup+0x0/0x3a
+         systemd-1     [000] ....     0.019020: initcall_finish: func=xen_pvh_gnttab_setup+0x0/0x3a ret=-19
+         systemd-1     [000] ....     0.019020: initcall_start: func=e820__register_nvs_regions+0x0/0x3d
+         systemd-1     [000] ....     0.019036: initcall_finish: func=e820__register_nvs_regions+0x0/0x3d ret=0
+         systemd-1     [000] ....     0.019036: initcall_start: func=cpufreq_register_tsc_scaling+0x0/0x32
+         systemd-1     [000] ....     0.019036: initcall_finish: func=cpufreq_register_tsc_scaling+0x0/0x32 ret=0
+         systemd-1     [000] ....     0.019036: initcall_start: func=init_cpu_syscore+0x0/0x14
+         systemd-1     [000] ....     0.019037: initcall_finish: func=init_cpu_syscore+0x0/0x14 ret=0
+         systemd-1     [000] ....     0.019037: initcall_start: func=reboot_init+0x0/0x45
+         systemd-1     [000] ....     0.019039: initcall_finish: func=reboot_init+0x0/0x45 ret=0
+         systemd-1     [000] ....     0.019039: initcall_start: func=init_lapic_sysfs+0x0/0x29
+         systemd-1     [000] ....     0.019040: initcall_finish: func=init_lapic_sysfs+0x0/0x29 ret=0
+         systemd-1     [000] ....     0.019040: initcall_start: func=cpu_hotplug_pm_sync_init+0x0/0x19
+         systemd-1     [000] ....     0.019040: initcall_finish: func=cpu_hotplug_pm_sync_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.019040: initcall_start: func=alloc_frozen_cpus+0x0/0x23
+         systemd-1     [000] ....     0.019041: initcall_finish: func=alloc_frozen_cpus+0x0/0x23 ret=0
+         systemd-1     [000] ....     0.019041: initcall_start: func=wq_sysfs_init+0x0/0x30
+         systemd-1     [000] ....     0.019052: initcall_finish: func=wq_sysfs_init+0x0/0x30 ret=0
+         systemd-1     [000] ....     0.019052: initcall_start: func=ksysfs_init+0x0/0x9c
+         systemd-1     [000] ....     0.019058: initcall_finish: func=ksysfs_init+0x0/0x9c ret=0
+         systemd-1     [000] ....     0.019058: initcall_start: func=pm_init+0x0/0x7e
+         systemd-1     [000] ....     0.019078: initcall_finish: func=pm_init+0x0/0x7e ret=0
+         systemd-1     [000] ....     0.019079: initcall_start: func=pm_disk_init+0x0/0x1e
+         systemd-1     [000] ....     0.019081: initcall_finish: func=pm_disk_init+0x0/0x1e ret=0
+         systemd-1     [000] ....     0.019081: initcall_start: func=swsusp_header_init+0x0/0x40
+         systemd-1     [000] ....     0.019081: initcall_finish: func=swsusp_header_init+0x0/0x40 ret=0
+         systemd-1     [000] ....     0.019082: initcall_start: func=rcu_set_runtime_mode+0x0/0x17
+         systemd-1     [000] ....     0.019082: initcall_finish: func=rcu_set_runtime_mode+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.019082: initcall_start: func=init_jiffies_clocksource+0x0/0x1e
+         systemd-1     [000] ....     0.019085: initcall_finish: func=init_jiffies_clocksource+0x0/0x1e ret=0
+         systemd-1     [000] ....     0.019085: initcall_start: func=futex_init+0x0/0xfd
+         systemd-1     [000] ....     0.019105: initcall_finish: func=futex_init+0x0/0xfd ret=0
+         systemd-1     [000] ....     0.019105: initcall_start: func=cgroup_wq_init+0x0/0x33
+         systemd-1     [000] ....     0.019111: initcall_finish: func=cgroup_wq_init+0x0/0x33 ret=0
+         systemd-1     [000] ....     0.019112: initcall_start: func=cgroup1_wq_init+0x0/0x33
+         systemd-1     [000] ....     0.019117: initcall_finish: func=cgroup1_wq_init+0x0/0x33 ret=0
+         systemd-1     [000] ....     0.019117: initcall_start: func=ftrace_mod_cmd_init+0x0/0x12
+         systemd-1     [000] ....     0.019118: initcall_finish: func=ftrace_mod_cmd_init+0x0/0x12 ret=0
+         systemd-1     [000] ....     0.019119: initcall_start: func=init_wakeup_tracer+0x0/0x32
+         systemd-1     [000] ....     0.019120: initcall_finish: func=init_wakeup_tracer+0x0/0x32 ret=0
+         systemd-1     [000] ....     0.019120: initcall_start: func=init_graph_trace+0x0/0x64
+         systemd-1     [000] ....     0.019123: initcall_finish: func=init_graph_trace+0x0/0x64 ret=0
+         systemd-1     [000] ....     0.019123: initcall_start: func=init_per_zone_wmark_min+0x0/0x75
+         systemd-1     [000] ....     0.019126: initcall_finish: func=init_per_zone_wmark_min+0x0/0x75 ret=0
+         systemd-1     [000] ....     0.019126: initcall_start: func=init_zero_pfn+0x0/0x3d
+         systemd-1     [000] ....     0.019126: initcall_finish: func=init_zero_pfn+0x0/0x3d ret=0
+         systemd-1     [000] ....     0.019127: initcall_start: func=memory_failure_init+0x0/0xa6
+         systemd-1     [000] ....     0.019127: initcall_finish: func=memory_failure_init+0x0/0xa6 ret=0
+         systemd-1     [000] ....     0.019127: initcall_start: func=fsnotify_init+0x0/0x4e
+         systemd-1     [000] ....     0.019135: initcall_finish: func=fsnotify_init+0x0/0x4e ret=0
+         systemd-1     [000] ....     0.019135: initcall_start: func=filelock_init+0x0/0x91
+         systemd-1     [000] ....     0.019138: initcall_finish: func=filelock_init+0x0/0x91 ret=0
+         systemd-1     [000] ....     0.019138: initcall_start: func=init_script_binfmt+0x0/0x1b
+         systemd-1     [000] ....     0.019139: initcall_finish: func=init_script_binfmt+0x0/0x1b ret=0
+         systemd-1     [000] ....     0.019139: initcall_start: func=init_elf_binfmt+0x0/0x1b
+         systemd-1     [000] ....     0.019139: initcall_finish: func=init_elf_binfmt+0x0/0x1b ret=0
+         systemd-1     [000] ....     0.019140: initcall_start: func=init_compat_elf_binfmt+0x0/0x1b
+         systemd-1     [000] ....     0.019140: initcall_finish: func=init_compat_elf_binfmt+0x0/0x1b ret=0
+         systemd-1     [000] ....     0.019140: initcall_start: func=configfs_init+0x0/0x99
+         systemd-1     [000] ....     0.019142: initcall_finish: func=configfs_init+0x0/0x99 ret=0
+         systemd-1     [000] ....     0.019142: initcall_start: func=debugfs_init+0x0/0x55
+         systemd-1     [000] ....     0.019144: initcall_finish: func=debugfs_init+0x0/0x55 ret=0
+         systemd-1     [000] ....     0.019144: initcall_start: func=tracefs_init+0x0/0x40
+         systemd-1     [000] ....     0.019145: initcall_finish: func=tracefs_init+0x0/0x40 ret=0
+         systemd-1     [000] ....     0.019145: initcall_start: func=securityfs_init+0x0/0x6e
+         systemd-1     [000] ....     0.019154: initcall_finish: func=securityfs_init+0x0/0x6e ret=0
+         systemd-1     [000] ....     0.019155: initcall_start: func=prandom_init+0x0/0xbb
+         systemd-1     [000] ....     0.019156: initcall_finish: func=prandom_init+0x0/0xbb ret=0
+         systemd-1     [000] ....     0.019156: initcall_start: func=pinctrl_init+0x0/0xb3
+         systemd-1     [000] ....     0.019167: initcall_finish: func=pinctrl_init+0x0/0xb3 ret=0
+         systemd-1     [000] ....     0.019167: initcall_start: func=gpiolib_dev_init+0x0/0xd5
+         systemd-1     [000] ....     0.019172: initcall_finish: func=gpiolib_dev_init+0x0/0xd5 ret=0
+         systemd-1     [000] ....     0.019173: initcall_start: func=sfi_sysfs_init+0x0/0xd8
+         systemd-1     [000] ....     0.019173: initcall_finish: func=sfi_sysfs_init+0x0/0xd8 ret=0
+         systemd-1     [000] ....     0.019173: initcall_start: func=virtio_init+0x0/0x30
+         systemd-1     [000] ....     0.019177: initcall_finish: func=virtio_init+0x0/0x30 ret=0
+         systemd-1     [000] ....     0.019177: initcall_start: func=regulator_init+0x0/0x91
+         systemd-1     [000] ....     0.019224: initcall_finish: func=regulator_init+0x0/0x91 ret=0
+         systemd-1     [000] ....     0.019224: initcall_start: func=iommu_init+0x0/0x30
+         systemd-1     [000] ....     0.019226: initcall_finish: func=iommu_init+0x0/0x30 ret=0
+         systemd-1     [000] ....     0.019227: initcall_start: func=component_debug_init+0x0/0x22
+         systemd-1     [000] ....     0.019229: initcall_finish: func=component_debug_init+0x0/0x22 ret=0
+         systemd-1     [000] ....     0.019229: initcall_start: func=early_resume_init+0x0/0xd0
+         systemd-1     [000] ....     0.019253: initcall_finish: func=early_resume_init+0x0/0xd0 ret=0
+         systemd-1     [000] ....     0.019253: initcall_start: func=opp_debug_init+0x0/0x41
+         systemd-1     [000] ....     0.019254: initcall_finish: func=opp_debug_init+0x0/0x41 ret=0
+         systemd-1     [000] ....     0.019254: initcall_start: func=cpufreq_core_init+0x0/0x51
+         systemd-1     [000] ....     0.019256: initcall_finish: func=cpufreq_core_init+0x0/0x51 ret=0
+         systemd-1     [000] ....     0.019256: initcall_start: func=cpuidle_init+0x0/0x40
+         systemd-1     [000] ....     0.019257: initcall_finish: func=cpuidle_init+0x0/0x40 ret=0
+         systemd-1     [000] ....     0.019258: initcall_start: func=capsule_reboot_register+0x0/0x17
+         systemd-1     [000] ....     0.019258: initcall_finish: func=capsule_reboot_register+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.019258: initcall_start: func=bsp_pm_check_init+0x0/0x19
+         systemd-1     [000] ....     0.019259: initcall_finish: func=bsp_pm_check_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.019259: initcall_start: func=sock_init+0x0/0x9f
+         systemd-1     [000] ....     0.019327: initcall_finish: func=sock_init+0x0/0x9f ret=0
+         systemd-1     [000] ....     0.019328: initcall_start: func=net_inuse_init+0x0/0x29
+         systemd-1     [000] ....     0.019329: initcall_finish: func=net_inuse_init+0x0/0x29 ret=0
+         systemd-1     [000] ....     0.019330: initcall_start: func=net_defaults_init+0x0/0x29
+         systemd-1     [000] ....     0.019330: initcall_finish: func=net_defaults_init+0x0/0x29 ret=0
+         systemd-1     [000] ....     0.019330: initcall_start: func=init_default_flow_dissectors+0x0/0x55
+         systemd-1     [000] ....     0.019331: initcall_finish: func=init_default_flow_dissectors+0x0/0x55 ret=0
+         systemd-1     [000] ....     0.019331: initcall_start: func=netlink_proto_init+0x0/0x16a
+         systemd-1     [000] ....     0.019355: initcall_finish: func=netlink_proto_init+0x0/0x16a ret=0
+         systemd-1     [000] ....     0.019355: initcall_start: func=__gnttab_init+0x0/0x40
+         systemd-1     [000] ....     0.019356: initcall_finish: func=__gnttab_init+0x0/0x40 ret=-19
+         systemd-1     [000] ....     0.019386: initcall_level: level=postcore
+         systemd-1     [000] ....     0.019386: initcall_start: func=irq_sysfs_init+0x0/0x9b
+         systemd-1     [000] ....     0.019438: initcall_finish: func=irq_sysfs_init+0x0/0x9b ret=0
+         systemd-1     [000] ....     0.019439: initcall_start: func=audit_init+0x0/0x172
+         systemd-1     [000] ....     0.019468: initcall_finish: func=audit_init+0x0/0x172 ret=0
+         systemd-1     [000] ....     0.019469: initcall_start: func=bdi_class_init+0x0/0x4e
+         systemd-1     [000] ....     0.019476: initcall_finish: func=bdi_class_init+0x0/0x4e ret=0
+         systemd-1     [000] ....     0.019476: initcall_start: func=mm_sysfs_init+0x0/0x2e
+         systemd-1     [000] ....     0.019477: initcall_finish: func=mm_sysfs_init+0x0/0x2e ret=0
+         systemd-1     [000] ....     0.019477: initcall_start: func=gpiolib_sysfs_init+0x0/0xaa
+         systemd-1     [000] ....     0.019481: initcall_finish: func=gpiolib_sysfs_init+0x0/0xaa ret=0
+         systemd-1     [000] ....     0.019481: initcall_start: func=pcibus_class_init+0x0/0x1e
+         systemd-1     [000] ....     0.019483: initcall_finish: func=pcibus_class_init+0x0/0x1e ret=0
+         systemd-1     [000] ....     0.019483: initcall_start: func=pci_driver_init+0x0/0x27
+         systemd-1     [000] ....     0.019490: initcall_finish: func=pci_driver_init+0x0/0x27 ret=0
+         systemd-1     [000] ....     0.019490: initcall_start: func=rio_bus_init+0x0/0x45
+         systemd-1     [000] ....     0.019496: initcall_finish: func=rio_bus_init+0x0/0x45 ret=0
+         systemd-1     [000] ....     0.019496: initcall_start: func=backlight_class_init+0x0/0xac
+         systemd-1     [000] ....     0.019498: initcall_finish: func=backlight_class_init+0x0/0xac ret=0
+         systemd-1     [000] ....     0.019498: initcall_start: func=xenbus_init+0x0/0x2c5
+         systemd-1     [000] ....     0.019498: initcall_finish: func=xenbus_init+0x0/0x2c5 ret=-19
+         systemd-1     [000] ....     0.019498: initcall_start: func=tty_class_init+0x0/0x39
+         systemd-1     [000] ....     0.019500: initcall_finish: func=tty_class_init+0x0/0x39 ret=0
+         systemd-1     [000] ....     0.019500: initcall_start: func=vtconsole_class_init+0x0/0xe3
+         systemd-1     [000] ....     0.019512: initcall_finish: func=vtconsole_class_init+0x0/0xe3 ret=0
+         systemd-1     [000] ....     0.019512: initcall_start: func=serdev_init+0x0/0x22
+         systemd-1     [000] ....     0.019515: initcall_finish: func=serdev_init+0x0/0x22 ret=0
+         systemd-1     [000] ....     0.019515: initcall_start: func=iommu_dev_init+0x0/0x1e
+         systemd-1     [000] ....     0.019517: initcall_finish: func=iommu_dev_init+0x0/0x1e ret=0
+         systemd-1     [000] ....     0.019517: initcall_start: func=mipi_dsi_bus_init+0x0/0x17
+         systemd-1     [000] ....     0.019521: initcall_finish: func=mipi_dsi_bus_init+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.019521: initcall_start: func=wakeup_sources_debugfs_init+0x0/0x29
+         systemd-1     [000] ....     0.019522: initcall_finish: func=wakeup_sources_debugfs_init+0x0/0x29 ret=0
+         systemd-1     [000] ....     0.019522: initcall_start: func=register_node_type+0x0/0x34
+         systemd-1     [000] ....     0.019533: initcall_finish: func=register_node_type+0x0/0x34 ret=0
+         systemd-1     [000] ....     0.019533: initcall_start: func=regmap_initcall+0x0/0x12
+         systemd-1     [000] ....     0.019534: initcall_finish: func=regmap_initcall+0x0/0x12 ret=0
+         systemd-1     [000] ....     0.019534: initcall_start: func=sram_init+0x0/0x19
+         systemd-1     [000] ....     0.019538: initcall_finish: func=sram_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.019538: initcall_start: func=syscon_init+0x0/0x19
+         systemd-1     [000] ....     0.019542: initcall_finish: func=syscon_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.019543: initcall_start: func=spi_init+0x0/0xc5
+         systemd-1     [000] ....     0.019549: initcall_finish: func=spi_init+0x0/0xc5 ret=0
+         systemd-1     [000] ....     0.019549: initcall_start: func=i2c_init+0x0/0xb9
+         systemd-1     [000] ....     0.019556: initcall_finish: func=i2c_init+0x0/0xb9 ret=0
+         systemd-1     [000] ....     0.019556: initcall_start: func=init_ladder+0x0/0x2a
+         systemd-1     [002] ....     0.019583: initcall_finish: func=init_ladder+0x0/0x2a ret=0
+         systemd-1     [002] ....     0.019584: initcall_start: func=init_menu+0x0/0x17
+         systemd-1     [000] ....     0.019611: initcall_finish: func=init_menu+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.019611: initcall_start: func=pcc_init+0x0/0x35c
+         systemd-1     [000] ....     0.019613: initcall_finish: func=pcc_init+0x0/0x35c ret=-19
+         systemd-1     [000] ....     0.019613: initcall_start: func=amd_postcore_init+0x0/0x117
+         systemd-1     [000] ....     0.019613: initcall_finish: func=amd_postcore_init+0x0/0x117 ret=0
+         systemd-1     [000] ....     0.019613: initcall_start: func=kobject_uevent_init+0x0/0x12
+         systemd-1     [000] ....     0.019616: initcall_finish: func=kobject_uevent_init+0x0/0x12 ret=0
+         systemd-1     [000] ....     0.019646: initcall_level: level=arch
+         systemd-1     [000] ....     0.019646: initcall_start: func=bts_init+0x0/0xc2
+         systemd-1     [000] ....     0.019646: initcall_finish: func=bts_init+0x0/0xc2 ret=-19
+         systemd-1     [000] ....     0.019646: initcall_start: func=pt_init+0x0/0x352
+         systemd-1     [000] ....     0.019647: initcall_finish: func=pt_init+0x0/0x352 ret=-19
+         systemd-1     [000] ....     0.019647: initcall_start: func=boot_params_ksysfs_init+0x0/0x273
+         systemd-1     [000] ....     0.019649: initcall_finish: func=boot_params_ksysfs_init+0x0/0x273 ret=0
+         systemd-1     [000] ....     0.019649: initcall_start: func=sbf_init+0x0/0xd2
+         systemd-1     [000] ....     0.019650: initcall_finish: func=sbf_init+0x0/0xd2 ret=0
+         systemd-1     [000] ....     0.019650: initcall_start: func=arch_kdebugfs_init+0x0/0x29
+         systemd-1     [000] ....     0.019652: initcall_finish: func=arch_kdebugfs_init+0x0/0x29 ret=0
+         systemd-1     [000] ....     0.019652: initcall_start: func=intel_pconfig_init+0x0/0xf0
+         systemd-1     [000] ....     0.019652: initcall_finish: func=intel_pconfig_init+0x0/0xf0 ret=0
+         systemd-1     [000] ....     0.019652: initcall_start: func=mtrr_if_init+0x0/0x64
+         systemd-1     [000] ....     0.019655: initcall_finish: func=mtrr_if_init+0x0/0x64 ret=0
+         systemd-1     [000] ....     0.019655: initcall_start: func=ffh_cstate_init+0x0/0x30
+         systemd-1     [000] ....     0.019656: initcall_finish: func=ffh_cstate_init+0x0/0x30 ret=0
+         systemd-1     [000] ....     0.019656: initcall_start: func=kvm_setup_pv_tlb_flush+0x0/0x8b
+         systemd-1     [000] ....     0.019657: initcall_finish: func=kvm_setup_pv_tlb_flush+0x0/0x8b ret=0
+         systemd-1     [000] ....     0.019657: initcall_start: func=activate_jump_labels+0x0/0x3a
+         systemd-1     [000] ....     0.019657: initcall_finish: func=activate_jump_labels+0x0/0x3a ret=0
+         systemd-1     [000] ....     0.019657: initcall_start: func=gigantic_pages_init+0x0/0x37
+         systemd-1     [000] ....     0.019658: initcall_finish: func=gigantic_pages_init+0x0/0x37 ret=0
+         systemd-1     [000] ....     0.019658: initcall_start: func=kcmp_cookies_init+0x0/0x3d
+         systemd-1     [000] ....     0.019659: initcall_finish: func=kcmp_cookies_init+0x0/0x3d ret=0
+         systemd-1     [000] ....     0.019659: initcall_start: func=acpi_pci_init+0x0/0x67
+         systemd-1     [000] ....     0.019663: initcall_finish: func=acpi_pci_init+0x0/0x67 ret=0
+         systemd-1     [000] ....     0.019663: initcall_start: func=dma_bus_init+0x0/0xab
+         systemd-1     [000] ....     0.019672: initcall_finish: func=dma_bus_init+0x0/0xab ret=0
+         systemd-1     [000] ....     0.019672: initcall_start: func=dma_channel_table_init+0x0/0xdc
+         systemd-1     [000] ....     0.019676: initcall_finish: func=dma_channel_table_init+0x0/0xdc ret=0
+         systemd-1     [000] ....     0.019676: initcall_start: func=setup_vcpu_hotplug_event+0x0/0x3c
+         systemd-1     [000] ....     0.019676: initcall_finish: func=setup_vcpu_hotplug_event+0x0/0x3c ret=-19
+         systemd-1     [000] ....     0.019676: initcall_start: func=register_xen_pci_notifier+0x0/0x3c
+         systemd-1     [000] ....     0.019677: initcall_finish: func=register_xen_pci_notifier+0x0/0x3c ret=0
+         systemd-1     [000] ....     0.019677: initcall_start: func=xen_pcpu_init+0x0/0xc5
+         systemd-1     [000] ....     0.019677: initcall_finish: func=xen_pcpu_init+0x0/0xc5 ret=-19
+         systemd-1     [000] ....     0.019677: initcall_start: func=dmi_id_init+0x0/0x322
+         systemd-1     [000] ....     0.019699: initcall_finish: func=dmi_id_init+0x0/0x322 ret=0
+         systemd-1     [000] ....     0.019699: initcall_start: func=numachip_timer_init+0x0/0x5a
+         systemd-1     [000] ....     0.019699: initcall_finish: func=numachip_timer_init+0x0/0x5a ret=-19
+         systemd-1     [000] ....     0.019699: initcall_start: func=pci_arch_init+0x0/0x6b
+         systemd-1     [002] ....     0.019890: initcall_finish: func=pci_arch_init+0x0/0x6b ret=0
+         systemd-1     [002] ....     0.019920: initcall_level: level=subsys
+         systemd-1     [002] ....     0.019921: initcall_start: func=init_vdso+0x0/0x46
+         systemd-1     [000] ....     0.019940: initcall_finish: func=init_vdso+0x0/0x46 ret=0
+         systemd-1     [000] ....     0.019941: initcall_start: func=sysenter_setup+0x0/0x19
+         systemd-1     [000] ....     0.019941: initcall_finish: func=sysenter_setup+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.019942: initcall_start: func=fixup_ht_bug+0x0/0xa9
+         systemd-1     [000] ....     0.019943: initcall_finish: func=fixup_ht_bug+0x0/0xa9 ret=0
+         systemd-1     [000] ....     0.019943: initcall_start: func=topology_init+0x0/0xc3
+         systemd-1     [000] ....     0.020112: initcall_finish: func=topology_init+0x0/0xc3 ret=0
+         systemd-1     [000] ....     0.020112: initcall_start: func=mtrr_init_finialize+0x0/0x47
+         systemd-1     [000] ....     0.020113: initcall_finish: func=mtrr_init_finialize+0x0/0x47 ret=0
+         systemd-1     [000] ....     0.020113: initcall_start: func=uid_cache_init+0x0/0xa1
+         systemd-1     [000] ....     0.020117: initcall_finish: func=uid_cache_init+0x0/0xa1 ret=0
+         systemd-1     [000] ....     0.020118: initcall_start: func=param_sysfs_init+0x0/0x1ef
+         systemd-1     [000] ....     0.021074: initcall_finish: func=param_sysfs_init+0x0/0x1ef ret=0
+         systemd-1     [000] ....     0.021074: initcall_start: func=user_namespace_sysctl_init+0x0/0x39
+         systemd-1     [000] ....     0.021081: initcall_finish: func=user_namespace_sysctl_init+0x0/0x39 ret=0
+         systemd-1     [000] ....     0.021081: initcall_start: func=proc_schedstat_init+0x0/0x24
+         systemd-1     [000] ....     0.021082: initcall_finish: func=proc_schedstat_init+0x0/0x24 ret=0
+         systemd-1     [000] ....     0.021082: initcall_start: func=pm_sysrq_init+0x0/0x1e
+         systemd-1     [002] ....     0.021089: initcall_finish: func=pm_sysrq_init+0x0/0x1e ret=0
+         systemd-1     [002] ....     0.021090: initcall_start: func=create_proc_profile+0x0/0xe0
+         systemd-1     [002] ....     0.021090: initcall_finish: func=create_proc_profile+0x0/0xe0 ret=0
+         systemd-1     [002] ....     0.021090: initcall_start: func=crash_save_vmcoreinfo_init+0x0/0x5e8
+         systemd-1     [002] ....     0.021115: initcall_finish: func=crash_save_vmcoreinfo_init+0x0/0x5e8 ret=0
+         systemd-1     [002] ....     0.021115: initcall_start: func=crash_notes_memory_init+0x0/0x3b
+         systemd-1     [002] ....     0.021117: initcall_finish: func=crash_notes_memory_init+0x0/0x3b ret=0
+         systemd-1     [002] ....     0.021117: initcall_start: func=cgroup_sysfs_init+0x0/0x1e
+         systemd-1     [002] ....     0.021121: initcall_finish: func=cgroup_sysfs_init+0x0/0x1e ret=0
+         systemd-1     [002] ....     0.021122: initcall_start: func=cgroup_namespaces_init+0x0/0xd
+         systemd-1     [002] ....     0.021122: initcall_finish: func=cgroup_namespaces_init+0x0/0xd ret=0
+         systemd-1     [002] ....     0.021122: initcall_start: func=user_namespaces_init+0x0/0x32
+         systemd-1     [002] ....     0.021129: initcall_finish: func=user_namespaces_init+0x0/0x32 ret=0
+         systemd-1     [002] ....     0.021129: initcall_start: func=hung_task_init+0x0/0x54
+         systemd-1     [000] ....     0.021147: initcall_finish: func=hung_task_init+0x0/0x54 ret=0
+         systemd-1     [000] ....     0.021148: initcall_start: func=dev_map_init+0x0/0x19
+         systemd-1     [000] ....     0.021148: initcall_finish: func=dev_map_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.021148: initcall_start: func=bpf_offload_init+0x0/0x19
+         systemd-1     [000] ....     0.021149: initcall_finish: func=bpf_offload_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.021149: initcall_start: func=oom_init+0x0/0x35
+         systemd-1     [000] ....     0.021164: initcall_finish: func=oom_init+0x0/0x35 ret=0
+         systemd-1     [000] ....     0.021164: initcall_start: func=default_bdi_init+0x0/0xb5
+         systemd-1     [000] ....     0.021198: initcall_finish: func=default_bdi_init+0x0/0xb5 ret=0
+         systemd-1     [000] ....     0.021198: initcall_start: func=percpu_enable_async+0x0/0x14
+         systemd-1     [000] ....     0.021198: initcall_finish: func=percpu_enable_async+0x0/0x14 ret=0
+         systemd-1     [000] ....     0.021198: initcall_start: func=kcompactd_init+0x0/0xa0
+         systemd-1     [002] ....     0.021214: initcall_finish: func=kcompactd_init+0x0/0xa0 ret=0
+         systemd-1     [002] ....     0.021214: initcall_start: func=init_reserve_notifier+0x0/0x24
+         systemd-1     [002] ....     0.021215: initcall_finish: func=init_reserve_notifier+0x0/0x24 ret=0
+         systemd-1     [002] ....     0.021215: initcall_start: func=init_admin_reserve+0x0/0x40
+         systemd-1     [002] ....     0.021215: initcall_finish: func=init_admin_reserve+0x0/0x40 ret=0
+         systemd-1     [002] ....     0.021215: initcall_start: func=init_user_reserve+0x0/0x40
+         systemd-1     [002] ....     0.021216: initcall_finish: func=init_user_reserve+0x0/0x40 ret=0
+         systemd-1     [002] ....     0.021216: initcall_start: func=swap_init_sysfs+0x0/0x6a
+         systemd-1     [002] ....     0.021218: initcall_finish: func=swap_init_sysfs+0x0/0x6a ret=0
+         systemd-1     [002] ....     0.021218: initcall_start: func=swapfile_init+0x0/0xbc
+         systemd-1     [002] ....     0.021220: initcall_finish: func=swapfile_init+0x0/0xbc ret=0
+         systemd-1     [002] ....     0.021221: initcall_start: func=hugetlb_init+0x0/0x4cd
+         systemd-1     [002] ....     0.021235: initcall_finish: func=hugetlb_init+0x0/0x4cd ret=0
+         systemd-1     [002] ....     0.021235: initcall_start: func=ksm_init+0x0/0x19f
+         systemd-1     [000] ....     0.021264: initcall_finish: func=ksm_init+0x0/0x19f ret=0
+         systemd-1     [000] ....     0.021264: initcall_start: func=hugepage_init+0x0/0x15b
+         systemd-1     [002] ....     0.021287: initcall_finish: func=hugepage_init+0x0/0x15b ret=0
+         systemd-1     [002] ....     0.021287: initcall_start: func=mem_cgroup_swap_init+0x0/0x57
+         systemd-1     [002] ....     0.021287: initcall_finish: func=mem_cgroup_swap_init+0x0/0x57 ret=0
+         systemd-1     [002] ....     0.021287: initcall_start: func=mem_cgroup_init+0x0/0x15b
+         systemd-1     [002] ....     0.021295: initcall_finish: func=mem_cgroup_init+0x0/0x15b ret=0
+         systemd-1     [002] ....     0.021295: initcall_start: func=page_idle_init+0x0/0x34
+         systemd-1     [002] ....     0.021297: initcall_finish: func=page_idle_init+0x0/0x34 ret=0
+         systemd-1     [002] ....     0.021297: initcall_start: func=sel_ib_pkey_init+0x0/0x4d
+         systemd-1     [002] ....     0.021298: initcall_finish: func=sel_ib_pkey_init+0x0/0x4d ret=0
+         systemd-1     [002] ....     0.021298: initcall_start: func=crypto_wq_init+0x0/0x36
+         systemd-1     [000] ....     0.021317: initcall_finish: func=crypto_wq_init+0x0/0x36 ret=0
+         systemd-1     [000] ....     0.021317: initcall_start: func=cryptomgr_init+0x0/0x17
+         systemd-1     [000] ....     0.021317: initcall_finish: func=cryptomgr_init+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.021318: initcall_start: func=init_bio+0x0/0xd6
+         systemd-1     [002] ....     0.021353: initcall_finish: func=init_bio+0x0/0xd6 ret=0
+         systemd-1     [002] ....     0.021354: initcall_start: func=blk_settings_init+0x0/0x2f
+         systemd-1     [002] ....     0.021354: initcall_finish: func=blk_settings_init+0x0/0x2f ret=0
+         systemd-1     [002] ....     0.021354: initcall_start: func=blk_ioc_init+0x0/0x2f
+         systemd-1     [002] ....     0.021355: initcall_finish: func=blk_ioc_init+0x0/0x2f ret=0
+         systemd-1     [002] ....     0.021355: initcall_start: func=blk_softirq_init+0x0/0x76
+         systemd-1     [002] ....     0.021355: initcall_finish: func=blk_softirq_init+0x0/0x76 ret=0
+         systemd-1     [002] ....     0.021356: initcall_start: func=blk_mq_init+0x0/0x2f
+         systemd-1     [002] ....     0.021356: initcall_finish: func=blk_mq_init+0x0/0x2f ret=0
+         systemd-1     [002] ....     0.021356: initcall_start: func=genhd_device_init+0x0/0x7b
+         systemd-1     [002] ....     0.021394: initcall_finish: func=genhd_device_init+0x0/0x7b ret=0
+         systemd-1     [002] ....     0.021395: initcall_start: func=irq_poll_setup+0x0/0x71
+         systemd-1     [002] ....     0.021395: initcall_finish: func=irq_poll_setup+0x0/0x71 ret=0
+         systemd-1     [002] ....     0.021395: initcall_start: func=sx150x_init+0x0/0x19
+         systemd-1     [002] ....     0.021400: initcall_finish: func=sx150x_init+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.021400: initcall_start: func=byt_gpio_init+0x0/0x19
+         systemd-1     [002] ....     0.021403: initcall_finish: func=byt_gpio_init+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.021403: initcall_start: func=chv_pinctrl_init+0x0/0x19
+         systemd-1     [002] ....     0.021407: initcall_finish: func=chv_pinctrl_init+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.021407: initcall_start: func=gpiolib_debugfs_init+0x0/0x29
+         systemd-1     [002] ....     0.021409: initcall_finish: func=gpiolib_debugfs_init+0x0/0x29 ret=0
+         systemd-1     [002] ....     0.021409: initcall_start: func=lp_gpio_init+0x0/0x19
+         systemd-1     [002] ....     0.021412: initcall_finish: func=lp_gpio_init+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.021412: initcall_start: func=rc5t583_gpio_init+0x0/0x19
+         systemd-1     [002] ....     0.021415: initcall_finish: func=rc5t583_gpio_init+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.021415: initcall_start: func=palmas_gpio_init+0x0/0x19
+         systemd-1     [002] ....     0.021418: initcall_finish: func=palmas_gpio_init+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.021418: initcall_start: func=tps6586x_gpio_init+0x0/0x19
+         systemd-1     [002] ....     0.021421: initcall_finish: func=tps6586x_gpio_init+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.021421: initcall_start: func=tps65910_gpio_init+0x0/0x19
+         systemd-1     [002] ....     0.021424: initcall_finish: func=tps65910_gpio_init+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.021424: initcall_start: func=pwm_debugfs_init+0x0/0x29
+         systemd-1     [002] ....     0.021425: initcall_finish: func=pwm_debugfs_init+0x0/0x29 ret=0
+         systemd-1     [002] ....     0.021425: initcall_start: func=pwm_sysfs_init+0x0/0x1e
+         systemd-1     [002] ....     0.021428: initcall_finish: func=pwm_sysfs_init+0x0/0x1e ret=0
+         systemd-1     [002] ....     0.021428: initcall_start: func=pci_slot_init+0x0/0x50
+         systemd-1     [002] ....     0.021429: initcall_finish: func=pci_slot_init+0x0/0x50 ret=0
+         systemd-1     [002] ....     0.021429: initcall_start: func=fbmem_init+0x0/0xda
+         systemd-1     [002] ....     0.021446: initcall_finish: func=fbmem_init+0x0/0xda ret=0
+         systemd-1     [002] ....     0.021447: initcall_start: func=acpi_init+0x0/0x35e
+         systemd-1     [002] ....     0.065224: initcall_finish: func=acpi_init+0x0/0x35e ret=0
+         systemd-1     [002] ....     0.065226: initcall_start: func=pnp_init+0x0/0x17
+         systemd-1     [002] ....     0.065231: initcall_finish: func=pnp_init+0x0/0x17 ret=0
+         systemd-1     [002] ....     0.065231: initcall_start: func=balloon_init+0x0/0x1c6
+         systemd-1     [002] ....     0.065232: initcall_finish: func=balloon_init+0x0/0x1c6 ret=-19
+         systemd-1     [002] ....     0.065232: initcall_start: func=xen_setup_shutdown_event+0x0/0x40
+         systemd-1     [002] ....     0.065232: initcall_finish: func=xen_setup_shutdown_event+0x0/0x40 ret=-19
+         systemd-1     [002] ....     0.065232: initcall_start: func=xenbus_probe_backend_init+0x0/0x53
+         systemd-1     [002] ....     0.065236: initcall_finish: func=xenbus_probe_backend_init+0x0/0x53 ret=0
+         systemd-1     [002] ....     0.065236: initcall_start: func=xenbus_probe_frontend_init+0x0/0x53
+         systemd-1     [002] ....     0.065241: initcall_finish: func=xenbus_probe_frontend_init+0x0/0x53 ret=0
+         systemd-1     [002] ....     0.065241: initcall_start: func=xen_acpi_pad_init+0x0/0x52
+         systemd-1     [002] ....     0.065241: initcall_finish: func=xen_acpi_pad_init+0x0/0x52 ret=-19
+         systemd-1     [002] ....     0.065241: initcall_start: func=misc_init+0x0/0xbe
+         systemd-1     [002] ....     0.065246: initcall_finish: func=misc_init+0x0/0xbe ret=0
+         systemd-1     [002] ....     0.065246: initcall_start: func=tpm_init+0x0/0xd6
+         systemd-1     [002] ....     0.065250: initcall_finish: func=tpm_init+0x0/0xd6 ret=0
+         systemd-1     [002] ....     0.065250: initcall_start: func=vga_arb_device_init+0x0/0x24f
+         systemd-1     [002] ....     0.065288: initcall_finish: func=vga_arb_device_init+0x0/0x24f ret=0
+         systemd-1     [002] ....     0.065288: initcall_start: func=cn_init+0x0/0xf0
+         systemd-1     [002] ....     0.065297: initcall_finish: func=cn_init+0x0/0xf0 ret=0
+         systemd-1     [002] ....     0.065297: initcall_start: func=pm860x_i2c_init+0x0/0x31
+         systemd-1     [002] ....     0.065302: initcall_finish: func=pm860x_i2c_init+0x0/0x31 ret=0
+         systemd-1     [002] ....     0.065302: initcall_start: func=wm8400_module_init+0x0/0x31
+         systemd-1     [002] ....     0.065306: initcall_finish: func=wm8400_module_init+0x0/0x31 ret=0
+         systemd-1     [002] ....     0.065306: initcall_start: func=wm831x_i2c_init+0x0/0x31
+         systemd-1     [002] ....     0.065309: initcall_finish: func=wm831x_i2c_init+0x0/0x31 ret=0
+         systemd-1     [002] ....     0.065309: initcall_start: func=wm831x_spi_init+0x0/0x2d
+         systemd-1     [002] ....     0.065312: initcall_finish: func=wm831x_spi_init+0x0/0x2d ret=0
+         systemd-1     [002] ....     0.065312: initcall_start: func=wm8350_i2c_init+0x0/0x19
+         systemd-1     [002] ....     0.065315: initcall_finish: func=wm8350_i2c_init+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.065316: initcall_start: func=tps65910_i2c_init+0x0/0x19
+         systemd-1     [002] ....     0.065318: initcall_finish: func=tps65910_i2c_init+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.065318: initcall_start: func=tps80031_init+0x0/0x19
+         systemd-1     [002] ....     0.065321: initcall_finish: func=tps80031_init+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.065321: initcall_start: func=ezx_pcap_init+0x0/0x19
+         systemd-1     [002] ....     0.065323: initcall_finish: func=ezx_pcap_init+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.065324: initcall_start: func=da903x_init+0x0/0x19
+         systemd-1     [002] ....     0.065326: initcall_finish: func=da903x_init+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.065326: initcall_start: func=da9052_spi_init+0x0/0x31
+         systemd-1     [002] ....     0.065332: initcall_finish: func=da9052_spi_init+0x0/0x31 ret=0
+         systemd-1     [002] ....     0.065332: initcall_start: func=da9052_i2c_init+0x0/0x31
+         systemd-1     [002] ....     0.065334: initcall_finish: func=da9052_i2c_init+0x0/0x31 ret=0
+         systemd-1     [002] ....     0.065335: initcall_start: func=lp8788_init+0x0/0x19
+         systemd-1     [002] ....     0.065337: initcall_finish: func=lp8788_init+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.065337: initcall_start: func=da9055_i2c_init+0x0/0x31
+         systemd-1     [002] ....     0.065340: initcall_finish: func=da9055_i2c_init+0x0/0x31 ret=0
+         systemd-1     [002] ....     0.065340: initcall_start: func=max77843_i2c_init+0x0/0x19
+         systemd-1     [002] ....     0.065342: initcall_finish: func=max77843_i2c_init+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.065342: initcall_start: func=max8925_i2c_init+0x0/0x31
+         systemd-1     [002] ....     0.065345: initcall_finish: func=max8925_i2c_init+0x0/0x31 ret=0
+         systemd-1     [002] ....     0.065345: initcall_start: func=max8997_i2c_init+0x0/0x19
+         systemd-1     [002] ....     0.065347: initcall_finish: func=max8997_i2c_init+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.065347: initcall_start: func=max8998_i2c_init+0x0/0x19
+         systemd-1     [002] ....     0.065349: initcall_finish: func=max8998_i2c_init+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.065350: initcall_start: func=ab3100_i2c_init+0x0/0x19
+         systemd-1     [002] ....     0.065352: initcall_finish: func=ab3100_i2c_init+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.065352: initcall_start: func=tps6586x_init+0x0/0x19
+         systemd-1     [002] ....     0.065355: initcall_finish: func=tps6586x_init+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.065356: initcall_start: func=tps65090_init+0x0/0x19
+         systemd-1     [002] ....     0.065358: initcall_finish: func=tps65090_init+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.065358: initcall_start: func=aat2870_init+0x0/0x19
+         systemd-1     [002] ....     0.065361: initcall_finish: func=aat2870_init+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.065361: initcall_start: func=palmas_i2c_init+0x0/0x19
+         systemd-1     [002] ....     0.065364: initcall_finish: func=palmas_i2c_init+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.065364: initcall_start: func=rc5t583_i2c_init+0x0/0x19
+         systemd-1     [002] ....     0.065367: initcall_finish: func=rc5t583_i2c_init+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.065367: initcall_start: func=sec_pmic_init+0x0/0x19
+         systemd-1     [002] ....     0.065370: initcall_finish: func=sec_pmic_init+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.065370: initcall_start: func=as3711_i2c_init+0x0/0x19
+         systemd-1     [002] ....     0.065372: initcall_finish: func=as3711_i2c_init+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.065372: initcall_start: func=libnvdimm_init+0x0/0x41
+         systemd-1     [002] ....     0.065391: initcall_finish: func=libnvdimm_init+0x0/0x41 ret=0
+         systemd-1     [002] ....     0.065391: initcall_start: func=dax_fs_init+0x0/0xc4
+         systemd-1     [002] ....     0.065409: initcall_finish: func=dax_fs_init+0x0/0xc4 ret=0
+         systemd-1     [002] ....     0.065409: initcall_start: func=dma_buf_init+0x0/0xaf
+         systemd-1     [002] ....     0.065412: initcall_finish: func=dma_buf_init+0x0/0xaf ret=0
+         systemd-1     [002] ....     0.065412: initcall_start: func=init_scsi+0x0/0x88
+         systemd-1     [002] ....     0.065450: initcall_finish: func=init_scsi+0x0/0x88 ret=0
+         systemd-1     [002] ....     0.065450: initcall_start: func=ata_init+0x0/0x31f
+         systemd-1     [000] ....     0.065497: initcall_finish: func=ata_init+0x0/0x31f ret=0
+         systemd-1     [000] ....     0.065498: initcall_start: func=phy_init+0x0/0x53
+         systemd-1     [000] ....     0.065510: initcall_finish: func=phy_init+0x0/0x53 ret=0
+         systemd-1     [000] ....     0.065510: initcall_start: func=usb_init+0x0/0x167
+         systemd-1     [000] ....     0.065550: initcall_finish: func=usb_init+0x0/0x167 ret=0
+         systemd-1     [000] ....     0.065550: initcall_start: func=serio_init+0x0/0x2f
+         systemd-1     [000] ....     0.065554: initcall_finish: func=serio_init+0x0/0x2f ret=0
+         systemd-1     [000] ....     0.065554: initcall_start: func=input_init+0x0/0x102
+         systemd-1     [000] ....     0.065558: initcall_finish: func=input_init+0x0/0x102 ret=0
+         systemd-1     [000] ....     0.065558: initcall_start: func=rtc_init+0x0/0x52
+         systemd-1     [000] ....     0.065560: initcall_finish: func=rtc_init+0x0/0x52 ret=0
+         systemd-1     [000] ....     0.065561: initcall_start: func=dw_i2c_init_driver+0x0/0x19
+         systemd-1     [000] ....     0.065568: initcall_finish: func=dw_i2c_init_driver+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.065568: initcall_start: func=pps_init+0x0/0xaf
+         systemd-1     [000] ....     0.065571: initcall_finish: func=pps_init+0x0/0xaf ret=0
+         systemd-1     [000] ....     0.065571: initcall_start: func=ptp_init+0x0/0x9e
+         systemd-1     [000] ....     0.065574: initcall_finish: func=ptp_init+0x0/0x9e ret=0
+         systemd-1     [000] ....     0.065574: initcall_start: func=power_supply_class_init+0x0/0x45
+         systemd-1     [000] ....     0.065576: initcall_finish: func=power_supply_class_init+0x0/0x45 ret=0
+         systemd-1     [000] ....     0.065576: initcall_start: func=hwmon_init+0x0/0xf1
+         systemd-1     [000] ....     0.065579: initcall_finish: func=hwmon_init+0x0/0xf1 ret=0
+         systemd-1     [000] ....     0.065579: initcall_start: func=md_init+0x0/0x166
+         systemd-1     [000] ....     0.065612: initcall_finish: func=md_init+0x0/0x166 ret=0
+         systemd-1     [000] ....     0.065612: initcall_start: func=edac_init+0x0/0x75
+         systemd-1     [002] ....     0.065957: initcall_finish: func=edac_init+0x0/0x75 ret=0
+         systemd-1     [002] ....     0.065958: initcall_start: func=mmc_init+0x0/0x3a
+         systemd-1     [002] ....     0.065969: initcall_finish: func=mmc_init+0x0/0x3a ret=0
+         systemd-1     [002] ....     0.065970: initcall_start: func=leds_init+0x0/0x41
+         systemd-1     [002] ....     0.065971: initcall_finish: func=leds_init+0x0/0x41 ret=0
+         systemd-1     [002] ....     0.065972: initcall_start: func=dmi_init+0x0/0x11b
+         systemd-1     [002] ....     0.065978: initcall_finish: func=dmi_init+0x0/0x11b ret=0
+         systemd-1     [002] ....     0.065978: initcall_start: func=efisubsys_init+0x0/0x2c3
+         systemd-1     [002] ....     0.082313: initcall_finish: func=efisubsys_init+0x0/0x2c3 ret=0
+         systemd-1     [002] ....     0.082313: initcall_start: func=devfreq_init+0x0/0xa8
+         systemd-1     [002] ....     0.082341: initcall_finish: func=devfreq_init+0x0/0xa8 ret=0
+         systemd-1     [002] ....     0.082341: initcall_start: func=devfreq_event_init+0x0/0x54
+         systemd-1     [002] ....     0.082345: initcall_finish: func=devfreq_event_init+0x0/0x54 ret=0
+         systemd-1     [002] ....     0.082345: initcall_start: func=devfreq_simple_ondemand_init+0x0/0x17
+         systemd-1     [002] ....     0.082346: initcall_finish: func=devfreq_simple_ondemand_init+0x0/0x17 ret=0
+         systemd-1     [002] ....     0.082346: initcall_start: func=devfreq_performance_init+0x0/0x17
+         systemd-1     [002] ....     0.082346: initcall_finish: func=devfreq_performance_init+0x0/0x17 ret=0
+         systemd-1     [002] ....     0.082346: initcall_start: func=devfreq_powersave_init+0x0/0x17
+         systemd-1     [002] ....     0.082347: initcall_finish: func=devfreq_powersave_init+0x0/0x17 ret=0
+         systemd-1     [002] ....     0.082347: initcall_start: func=devfreq_userspace_init+0x0/0x17
+         systemd-1     [002] ....     0.082347: initcall_finish: func=devfreq_userspace_init+0x0/0x17 ret=0
+         systemd-1     [002] ....     0.082347: initcall_start: func=devfreq_passive_init+0x0/0x17
+         systemd-1     [002] ....     0.082347: initcall_finish: func=devfreq_passive_init+0x0/0x17 ret=0
+         systemd-1     [002] ....     0.082348: initcall_start: func=vme_init+0x0/0x17
+         systemd-1     [002] ....     0.082354: initcall_finish: func=vme_init+0x0/0x17 ret=0
+         systemd-1     [002] ....     0.082354: initcall_start: func=ras_init+0x0/0x15
+         systemd-1     [002] ....     0.082357: initcall_finish: func=ras_init+0x0/0x15 ret=0
+         systemd-1     [002] ....     0.082358: initcall_start: func=nvmem_init+0x0/0x17
+         systemd-1     [002] ....     0.082361: initcall_finish: func=nvmem_init+0x0/0x17 ret=0
+         systemd-1     [002] ....     0.082361: initcall_start: func=pci_subsys_init+0x0/0x6c
+         systemd-1     [002] ....     0.084550: initcall_finish: func=pci_subsys_init+0x0/0x6c ret=0
+         systemd-1     [002] ....     0.084550: initcall_start: func=proto_init+0x0/0x17
+         systemd-1     [002] ....     0.084552: initcall_finish: func=proto_init+0x0/0x17 ret=0
+         systemd-1     [002] ....     0.084552: initcall_start: func=net_dev_init+0x0/0x1f2
+         systemd-1     [002] ....     0.084618: initcall_finish: func=net_dev_init+0x0/0x1f2 ret=0
+         systemd-1     [002] ....     0.084618: initcall_start: func=neigh_init+0x0/0x85
+         systemd-1     [002] ....     0.084619: initcall_finish: func=neigh_init+0x0/0x85 ret=0
+         systemd-1     [002] ....     0.084620: initcall_start: func=fib_notifier_init+0x0/0x17
+         systemd-1     [002] ....     0.084620: initcall_finish: func=fib_notifier_init+0x0/0x17 ret=0
+         systemd-1     [002] ....     0.084620: initcall_start: func=fib_rules_init+0x0/0xb1
+         systemd-1     [002] ....     0.084621: initcall_finish: func=fib_rules_init+0x0/0xb1 ret=0
+         systemd-1     [002] ....     0.084621: initcall_start: func=init_cgroup_netprio+0x0/0x19
+         systemd-1     [002] ....     0.084622: initcall_finish: func=init_cgroup_netprio+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.084622: initcall_start: func=bpf_lwt_init+0x0/0x1c
+         systemd-1     [002] ....     0.084622: initcall_finish: func=bpf_lwt_init+0x0/0x1c ret=0
+         systemd-1     [002] ....     0.084623: initcall_start: func=pktsched_init+0x0/0x114
+         systemd-1     [002] ....     0.084625: initcall_finish: func=pktsched_init+0x0/0x114 ret=0
+         systemd-1     [002] ....     0.084625: initcall_start: func=tc_filter_init+0x0/0xa8
+         systemd-1     [002] ....     0.084629: initcall_finish: func=tc_filter_init+0x0/0xa8 ret=0
+         systemd-1     [002] ....     0.084630: initcall_start: func=tc_action_init+0x0/0x6e
+         systemd-1     [002] ....     0.084632: initcall_finish: func=tc_action_init+0x0/0x6e ret=0
+         systemd-1     [002] ....     0.084632: initcall_start: func=genl_init+0x0/0x3b
+         systemd-1     [002] ....     0.084636: initcall_finish: func=genl_init+0x0/0x3b ret=0
+         systemd-1     [002] ....     0.084636: initcall_start: func=cipso_v4_init+0x0/0x69
+         systemd-1     [002] ....     0.084637: initcall_finish: func=cipso_v4_init+0x0/0x69 ret=0
+         systemd-1     [002] ....     0.084637: initcall_start: func=wireless_nlevent_init+0x0/0x3e
+         systemd-1     [002] ....     0.084638: initcall_finish: func=wireless_nlevent_init+0x0/0x3e ret=0
+         systemd-1     [002] ....     0.084639: initcall_start: func=netlbl_init+0x0/0x7e
+         systemd-1     [002] ....     0.084652: initcall_finish: func=netlbl_init+0x0/0x7e ret=0
+         systemd-1     [002] ....     0.084652: initcall_start: func=rfkill_init+0x0/0xf2
+         systemd-1     [002] ....     0.084676: initcall_finish: func=rfkill_init+0x0/0xf2 ret=0
+         systemd-1     [002] ....     0.084677: initcall_start: func=xen_mcfg_late+0x0/0xe6
+         systemd-1     [002] ....     0.084677: initcall_finish: func=xen_mcfg_late+0x0/0xe6 ret=0
+         systemd-1     [002] ....     0.084677: initcall_start: func=watchdog_init+0x0/0x8f
+         systemd-1     [000] ....     0.084700: initcall_finish: func=watchdog_init+0x0/0x8f ret=0
+         systemd-1     [000] ....     0.084733: initcall_level: level=fs
+         systemd-1     [000] ....     0.084734: initcall_start: func=nmi_warning_debugfs+0x0/0x2c
+         systemd-1     [000] ....     0.084736: initcall_finish: func=nmi_warning_debugfs+0x0/0x2c ret=0
+         systemd-1     [000] ....     0.084736: initcall_start: func=save_microcode_in_initrd+0x0/0xa0
+         systemd-1     [000] ....     0.084739: initcall_finish: func=save_microcode_in_initrd+0x0/0xa0 ret=0
+         systemd-1     [000] ....     0.084739: initcall_start: func=hpet_late_init+0x0/0x113
+         systemd-1     [000] ....     0.086756: initcall_finish: func=hpet_late_init+0x0/0x113 ret=0
+         systemd-1     [000] ....     0.086757: initcall_start: func=init_amd_nbs+0x0/0x11e
+         systemd-1     [000] ....     0.086760: initcall_finish: func=init_amd_nbs+0x0/0x11e ret=0
+         systemd-1     [000] ....     0.086760: initcall_start: func=sugov_register+0x0/0x17
+         systemd-1     [000] ....     0.086761: initcall_finish: func=sugov_register+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.086761: initcall_start: func=clocksource_done_booting+0x0/0x47
+         systemd-1     [000] ....     0.086771: initcall_finish: func=clocksource_done_booting+0x0/0x47 ret=0
+         systemd-1     [000] ....     0.086772: initcall_start: func=tracer_init_tracefs+0x0/0x1ba
+         systemd-1     [000] ....     0.090112: initcall_finish: func=tracer_init_tracefs+0x0/0x1ba ret=0
+         systemd-1     [000] ....     0.090112: initcall_start: func=init_trace_printk_function_export+0x0/0x32
+         systemd-1     [000] ....     0.090113: initcall_finish: func=init_trace_printk_function_export+0x0/0x32 ret=0
+         systemd-1     [000] ....     0.090113: initcall_start: func=init_graph_tracefs+0x0/0x32
+         systemd-1     [000] ....     0.090114: initcall_finish: func=init_graph_tracefs+0x0/0x32 ret=0
+         systemd-1     [000] ....     0.090114: initcall_start: func=event_trace_init+0x0/0x2c2
+         systemd-1     [000] ....     0.097422: initcall_finish: func=event_trace_init+0x0/0x2c2 ret=0
+         systemd-1     [000] ....     0.097424: initcall_start: func=trace_events_hist_init+0x0/0x4e
+         systemd-1     [000] ....     0.097428: initcall_finish: func=trace_events_hist_init+0x0/0x4e ret=0
+         systemd-1     [000] ....     0.097428: initcall_start: func=init_kprobe_trace+0x0/0x91
+         systemd-1     [000] ....     0.097430: initcall_finish: func=init_kprobe_trace+0x0/0x91 ret=0
+         systemd-1     [000] ....     0.097430: initcall_start: func=init_uprobe_trace+0x0/0x54
+         systemd-1     [000] ....     0.097432: initcall_finish: func=init_uprobe_trace+0x0/0x54 ret=0
+         systemd-1     [000] ....     0.097432: initcall_start: func=bpf_init+0x0/0x4c
+         systemd-1     [000] ....     0.097437: initcall_finish: func=bpf_init+0x0/0x4c ret=0
+         systemd-1     [000] ....     0.097437: initcall_start: func=init_pipe_fs+0x0/0x4c
+         systemd-1     [000] ....     0.097448: initcall_finish: func=init_pipe_fs+0x0/0x4c ret=0
+         systemd-1     [000] ....     0.097449: initcall_start: func=cgroup_writeback_init+0x0/0x30
+         systemd-1     [000] ....     0.097468: initcall_finish: func=cgroup_writeback_init+0x0/0x30 ret=0
+         systemd-1     [000] ....     0.097468: initcall_start: func=inotify_user_setup+0x0/0x4d
+         systemd-1     [000] ....     0.097473: initcall_finish: func=inotify_user_setup+0x0/0x4d ret=0
+         systemd-1     [000] ....     0.097473: initcall_start: func=eventpoll_init+0x0/0xc7
+         systemd-1     [000] ....     0.097482: initcall_finish: func=eventpoll_init+0x0/0xc7 ret=0
+         systemd-1     [000] ....     0.097483: initcall_start: func=anon_inode_init+0x0/0x60
+         systemd-1     [000] ....     0.097487: initcall_finish: func=anon_inode_init+0x0/0x60 ret=0
+         systemd-1     [000] ....     0.097487: initcall_start: func=init_dax_wait_table+0x0/0x47
+         systemd-1     [000] ....     0.097506: initcall_finish: func=init_dax_wait_table+0x0/0x47 ret=0
+         systemd-1     [000] ....     0.097506: initcall_start: func=proc_locks_init+0x0/0x24
+         systemd-1     [000] ....     0.097509: initcall_finish: func=proc_locks_init+0x0/0x24 ret=0
+         systemd-1     [000] ....     0.097509: initcall_start: func=dquot_init+0x0/0x11f
+         systemd-1     [000] ....     0.097529: initcall_finish: func=dquot_init+0x0/0x11f ret=0
+         systemd-1     [000] ....     0.097529: initcall_start: func=quota_init+0x0/0x29
+         systemd-1     [000] ....     0.097537: initcall_finish: func=quota_init+0x0/0x29 ret=0
+         systemd-1     [000] ....     0.097537: initcall_start: func=proc_cmdline_init+0x0/0x24
+         systemd-1     [000] ....     0.097538: initcall_finish: func=proc_cmdline_init+0x0/0x24 ret=0
+         systemd-1     [000] ....     0.097538: initcall_start: func=proc_consoles_init+0x0/0x24
+         systemd-1     [000] ....     0.097539: initcall_finish: func=proc_consoles_init+0x0/0x24 ret=0
+         systemd-1     [000] ....     0.097539: initcall_start: func=proc_cpuinfo_init+0x0/0x24
+         systemd-1     [000] ....     0.097540: initcall_finish: func=proc_cpuinfo_init+0x0/0x24 ret=0
+         systemd-1     [000] ....     0.097540: initcall_start: func=proc_devices_init+0x0/0x24
+         systemd-1     [000] ....     0.097540: initcall_finish: func=proc_devices_init+0x0/0x24 ret=0
+         systemd-1     [000] ....     0.097541: initcall_start: func=proc_interrupts_init+0x0/0x24
+         systemd-1     [000] ....     0.097541: initcall_finish: func=proc_interrupts_init+0x0/0x24 ret=0
+         systemd-1     [000] ....     0.097541: initcall_start: func=proc_loadavg_init+0x0/0x24
+         systemd-1     [000] ....     0.097542: initcall_finish: func=proc_loadavg_init+0x0/0x24 ret=0
+         systemd-1     [000] ....     0.097542: initcall_start: func=proc_meminfo_init+0x0/0x24
+         systemd-1     [000] ....     0.097542: initcall_finish: func=proc_meminfo_init+0x0/0x24 ret=0
+         systemd-1     [000] ....     0.097542: initcall_start: func=proc_stat_init+0x0/0x24
+         systemd-1     [000] ....     0.097543: initcall_finish: func=proc_stat_init+0x0/0x24 ret=0
+         systemd-1     [000] ....     0.097543: initcall_start: func=proc_uptime_init+0x0/0x24
+         systemd-1     [000] ....     0.097544: initcall_finish: func=proc_uptime_init+0x0/0x24 ret=0
+         systemd-1     [000] ....     0.097544: initcall_start: func=proc_version_init+0x0/0x24
+         systemd-1     [000] ....     0.097544: initcall_finish: func=proc_version_init+0x0/0x24 ret=0
+         systemd-1     [000] ....     0.097545: initcall_start: func=proc_softirqs_init+0x0/0x24
+         systemd-1     [000] ....     0.097545: initcall_finish: func=proc_softirqs_init+0x0/0x24 ret=0
+         systemd-1     [000] ....     0.097545: initcall_start: func=proc_kcore_init+0x0/0x19d
+         systemd-1     [000] ....     0.097550: initcall_finish: func=proc_kcore_init+0x0/0x19d ret=0
+         systemd-1     [000] ....     0.097550: initcall_start: func=vmcore_init+0x0/0x5c0
+         systemd-1     [000] ....     0.097550: initcall_finish: func=vmcore_init+0x0/0x5c0 ret=0
+         systemd-1     [000] ....     0.097551: initcall_start: func=proc_kmsg_init+0x0/0x27
+         systemd-1     [000] ....     0.097551: initcall_finish: func=proc_kmsg_init+0x0/0x27 ret=0
+         systemd-1     [000] ....     0.097551: initcall_start: func=proc_page_init+0x0/0x5b
+         systemd-1     [000] ....     0.097554: initcall_finish: func=proc_page_init+0x0/0x5b ret=0
+         systemd-1     [000] ....     0.097554: initcall_start: func=init_ramfs_fs+0x0/0x27
+         systemd-1     [000] ....     0.097554: initcall_finish: func=init_ramfs_fs+0x0/0x27 ret=0
+         systemd-1     [000] ....     0.097554: initcall_start: func=init_hugetlbfs_fs+0x0/0x17d
+         systemd-1     [000] ....     0.097568: initcall_finish: func=init_hugetlbfs_fs+0x0/0x17d ret=0
+         systemd-1     [000] ....     0.097568: initcall_start: func=tomoyo_initerface_init+0x0/0x17d
+         systemd-1     [000] ....     0.097569: initcall_finish: func=tomoyo_initerface_init+0x0/0x17d ret=0
+         systemd-1     [000] ....     0.097569: initcall_start: func=aa_create_aafs+0x0/0x3a8
+         systemd-1     [000] ....     0.097627: initcall_finish: func=aa_create_aafs+0x0/0x3a8 ret=0
+         systemd-1     [000] ....     0.097627: initcall_start: func=blk_scsi_ioctl_init+0x0/0x39e
+         systemd-1     [000] ....     0.097628: initcall_finish: func=blk_scsi_ioctl_init+0x0/0x39e ret=0
+         systemd-1     [000] ....     0.097628: initcall_start: func=dynamic_debug_init_debugfs+0x0/0x67
+         systemd-1     [000] ....     0.097630: initcall_finish: func=dynamic_debug_init_debugfs+0x0/0x67 ret=0
+         systemd-1     [000] ....     0.097631: initcall_start: func=simplefb_init+0x0/0x19
+         systemd-1     [000] ....     0.097646: initcall_finish: func=simplefb_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.097646: initcall_start: func=acpi_event_init+0x0/0x35
+         systemd-1     [000] ....     0.097650: initcall_finish: func=acpi_event_init+0x0/0x35 ret=0
+         systemd-1     [000] ....     0.097650: initcall_start: func=pnp_system_init+0x0/0x17
+         systemd-1     [000] ....     0.097655: initcall_finish: func=pnp_system_init+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.097655: initcall_start: func=pnpacpi_init+0x0/0x73
+         systemd-1     [000] ....     0.099213: initcall_finish: func=pnpacpi_init+0x0/0x73 ret=0
+         systemd-1     [000] ....     0.099213: initcall_start: func=chr_dev_init+0x0/0xad
+         systemd-1     [000] ....     0.100283: initcall_finish: func=chr_dev_init+0x0/0xad ret=0
+         systemd-1     [000] ....     0.100284: initcall_start: func=firmware_class_init+0x0/0xe9
+         systemd-1     [000] ....     0.100285: initcall_finish: func=firmware_class_init+0x0/0xe9 ret=0
+         systemd-1     [000] ....     0.100285: initcall_start: func=thermal_init+0x0/0xf4
+         systemd-1     [000] ....     0.100294: initcall_finish: func=thermal_init+0x0/0xf4 ret=0
+         systemd-1     [000] ....     0.100294: initcall_start: func=cpufreq_gov_performance_init+0x0/0x17
+         systemd-1     [000] ....     0.100295: initcall_finish: func=cpufreq_gov_performance_init+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.100295: initcall_start: func=map_properties+0x0/0x4ff
+         systemd-1     [000] ....     0.100295: initcall_finish: func=map_properties+0x0/0x4ff ret=0
+         systemd-1     [000] ....     0.100295: initcall_start: func=init_acpi_pm_clocksource+0x0/0xdc
+         systemd-1     [000] ....     0.104785: initcall_finish: func=init_acpi_pm_clocksource+0x0/0xdc ret=0
+         systemd-1     [000] ....     0.104785: initcall_start: func=pcibios_assign_resources+0x0/0xc7
+         systemd-1     [000] ....     0.104993: initcall_finish: func=pcibios_assign_resources+0x0/0xc7 ret=0
+         systemd-1     [000] ....     0.104993: initcall_start: func=sysctl_core_init+0x0/0x31
+         systemd-1     [000] ....     0.105005: initcall_finish: func=sysctl_core_init+0x0/0x31 ret=0
+         systemd-1     [000] ....     0.105005: initcall_start: func=eth_offload_init+0x0/0x19
+         systemd-1     [000] ....     0.105006: initcall_finish: func=eth_offload_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.105006: initcall_start: func=inet_init+0x0/0x28a
+         systemd-1     [000] ....     0.105488: initcall_finish: func=inet_init+0x0/0x28a ret=0
+         systemd-1     [000] ....     0.105489: initcall_start: func=ipv4_offload_init+0x0/0x79
+         systemd-1     [000] ....     0.105489: initcall_finish: func=ipv4_offload_init+0x0/0x79 ret=0
+         systemd-1     [000] ....     0.105489: initcall_start: func=af_unix_init+0x0/0x53
+         systemd-1     [000] ....     0.105498: initcall_finish: func=af_unix_init+0x0/0x53 ret=0
+         systemd-1     [000] ....     0.105499: initcall_start: func=ipv6_offload_init+0x0/0x84
+         systemd-1     [000] ....     0.105499: initcall_finish: func=ipv6_offload_init+0x0/0x84 ret=0
+         systemd-1     [000] ....     0.105500: initcall_start: func=pci_apply_final_quirks+0x0/0x127
+         systemd-1     [000] ....     0.105993: initcall_finish: func=pci_apply_final_quirks+0x0/0x127 ret=0
+         systemd-1     [000] ....     0.105994: initcall_start: func=acpi_reserve_resources+0x0/0xf0
+         systemd-1     [000] ....     0.105996: initcall_finish: func=acpi_reserve_resources+0x0/0xf0 ret=0
+         systemd-1     [000] ....     0.105996: initcall_start: func=populate_rootfs+0x0/0x10f
+         systemd-1     [000] ....     0.845041: initcall_finish: func=populate_rootfs+0x0/0x10f ret=0
+         systemd-1     [000] ....     0.845044: initcall_start: func=pci_iommu_init+0x0/0x44
+         systemd-1     [000] ....     0.845079: initcall_finish: func=pci_iommu_init+0x0/0x44 ret=0
+         systemd-1     [000] ....     0.845080: initcall_start: func=calgary_fixup_tce_spaces+0x0/0x106
+         systemd-1     [000] ....     0.845080: initcall_finish: func=calgary_fixup_tce_spaces+0x0/0x106 ret=-19
+         systemd-1     [000] ....     0.845080: initcall_start: func=ir_dev_scope_init+0x0/0x38
+         systemd-1     [000] ....     0.845080: initcall_finish: func=ir_dev_scope_init+0x0/0x38 ret=0
+         systemd-1     [000] ....     0.845115: initcall_level: level=device
+         systemd-1     [000] ....     0.845115: initcall_start: func=ia32_binfmt_init+0x0/0x19
+         systemd-1     [000] ....     0.845118: initcall_finish: func=ia32_binfmt_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.845118: initcall_start: func=amd_uncore_init+0x0/0x27a
+         systemd-1     [000] ....     0.845119: initcall_finish: func=amd_uncore_init+0x0/0x27a ret=-19
+         systemd-1     [000] ....     0.845119: initcall_start: func=amd_ibs_init+0x0/0x194
+         systemd-1     [000] ....     0.845119: initcall_finish: func=amd_ibs_init+0x0/0x194 ret=-19
+         systemd-1     [000] ....     0.845119: initcall_start: func=amd_iommu_pc_init+0x0/0x22a
+         systemd-1     [000] ....     0.845120: initcall_finish: func=amd_iommu_pc_init+0x0/0x22a ret=-19
+         systemd-1     [000] ....     0.845120: initcall_start: func=msr_init+0x0/0xf2
+         systemd-1     [000] ....     0.845124: initcall_finish: func=msr_init+0x0/0xf2 ret=0
+         systemd-1     [000] ....     0.845124: initcall_start: func=intel_uncore_init+0x0/0x24d
+         systemd-1     [000] ....     0.845171: initcall_finish: func=intel_uncore_init+0x0/0x24d ret=0
+         systemd-1     [000] ....     0.845172: initcall_start: func=register_kernel_offset_dumper+0x0/0x20
+         systemd-1     [000] ....     0.845172: initcall_finish: func=register_kernel_offset_dumper+0x0/0x20 ret=0
+         systemd-1     [000] ....     0.845172: initcall_start: func=i8259A_init_ops+0x0/0x29
+         systemd-1     [000] ....     0.845173: initcall_finish: func=i8259A_init_ops+0x0/0x29 ret=0
+         systemd-1     [000] ....     0.845173: initcall_start: func=init_tsc_clocksource+0x0/0xc6
+         systemd-1     [000] .N..     0.845175: initcall_finish: func=init_tsc_clocksource+0x0/0xc6 ret=0
+         systemd-1     [000] .N..     0.845175: initcall_start: func=add_rtc_cmos+0x0/0xd4
+         systemd-1     [000] .N..     0.845176: initcall_finish: func=add_rtc_cmos+0x0/0xd4 ret=0
+         systemd-1     [000] .N..     0.845176: initcall_start: func=i8237A_init_ops+0x0/0x19
+         systemd-1     [000] ....     0.845181: initcall_finish: func=i8237A_init_ops+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.845181: initcall_start: func=thermal_throttle_init_device+0x0/0x47
+         systemd-1     [000] ....     0.845210: initcall_finish: func=thermal_throttle_init_device+0x0/0x47 ret=0
+         systemd-1     [000] ....     0.845210: initcall_start: func=ioapic_init_ops+0x0/0x19
+         systemd-1     [000] ....     0.845210: initcall_finish: func=ioapic_init_ops+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.845211: initcall_start: func=register_e820_pmem+0x0/0x49
+         systemd-1     [000] ....     0.845215: initcall_finish: func=register_e820_pmem+0x0/0x49 ret=0
+         systemd-1     [000] ....     0.845215: initcall_start: func=add_pcspkr+0x0/0x70
+         systemd-1     [000] ....     0.845242: initcall_finish: func=add_pcspkr+0x0/0x70 ret=0
+         systemd-1     [000] ....     0.845242: initcall_start: func=start_periodic_check_for_corruption+0x0/0x60
+         systemd-1     [000] .N..     0.845245: initcall_finish: func=start_periodic_check_for_corruption+0x0/0x60 ret=0
+         systemd-1     [000] .N..     0.845245: initcall_start: func=sysfb_init+0x0/0x9f
+         systemd-1     [000] ....     0.845270: initcall_finish: func=sysfb_init+0x0/0x9f ret=0
+         systemd-1     [000] ....     0.845270: initcall_start: func=audit_classes_init+0x0/0xb4
+         systemd-1     [000] ....     0.845272: initcall_finish: func=audit_classes_init+0x0/0xb4 ret=0
+         systemd-1     [000] ....     0.845272: initcall_start: func=pt_dump_init+0x0/0x48
+         systemd-1     [000] ....     0.845272: initcall_finish: func=pt_dump_init+0x0/0x48 ret=0
+         systemd-1     [000] ....     0.845273: initcall_start: func=crc32c_intel_mod_init+0x0/0x5c
+         systemd-1     [000] ....     0.845314: initcall_finish: func=crc32c_intel_mod_init+0x0/0x5c ret=0
+         systemd-1     [000] ....     0.845315: initcall_start: func=iosf_mbi_init+0x0/0xbe
+         systemd-1     [000] ....     0.845338: initcall_finish: func=iosf_mbi_init+0x0/0xbe ret=0
+         systemd-1     [000] ....     0.845338: initcall_start: func=proc_execdomains_init+0x0/0x24
+         systemd-1     [000] ....     0.845341: initcall_finish: func=proc_execdomains_init+0x0/0x24 ret=0
+         systemd-1     [000] ....     0.845341: initcall_start: func=register_warn_debugfs+0x0/0x29
+         systemd-1     [000] ....     0.845343: initcall_finish: func=register_warn_debugfs+0x0/0x29 ret=0
+         systemd-1     [000] ....     0.845343: initcall_start: func=cpuhp_sysfs_init+0x0/0x77
+         systemd-1     [000] ....     0.845351: initcall_finish: func=cpuhp_sysfs_init+0x0/0x77 ret=0
+         systemd-1     [000] ....     0.845351: initcall_start: func=ioresources_init+0x0/0x3b
+         systemd-1     [000] ....     0.845353: initcall_finish: func=ioresources_init+0x0/0x3b ret=0
+         systemd-1     [000] ....     0.845353: initcall_start: func=init_sched_debug_procfs+0x0/0x2e
+         systemd-1     [000] ....     0.845354: initcall_finish: func=init_sched_debug_procfs+0x0/0x2e ret=0
+         systemd-1     [000] ....     0.845354: initcall_start: func=snapshot_device_init+0x0/0x17
+         systemd-1     [000] ....     0.845382: initcall_finish: func=snapshot_device_init+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.845382: initcall_start: func=irq_pm_init_ops+0x0/0x19
+         systemd-1     [000] ....     0.845382: initcall_finish: func=irq_pm_init_ops+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.845382: initcall_start: func=klp_init+0x0/0x2e
+         systemd-1     [000] ....     0.845384: initcall_finish: func=klp_init+0x0/0x2e ret=0
+         systemd-1     [000] ....     0.845384: initcall_start: func=timekeeping_init_ops+0x0/0x19
+         systemd-1     [000] ....     0.845384: initcall_finish: func=timekeeping_init_ops+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.845384: initcall_start: func=init_clocksource_sysfs+0x0/0x29
+         systemd-1     [000] ....     0.845404: initcall_finish: func=init_clocksource_sysfs+0x0/0x29 ret=0
+         systemd-1     [000] ....     0.845404: initcall_start: func=init_timer_list_procfs+0x0/0x2e
+         systemd-1     [000] ....     0.845405: initcall_finish: func=init_timer_list_procfs+0x0/0x2e ret=0
+         systemd-1     [000] ....     0.845405: initcall_start: func=alarmtimer_init+0x0/0x135
+         systemd-1     [000] ....     0.845433: initcall_finish: func=alarmtimer_init+0x0/0x135 ret=0
+         systemd-1     [000] ....     0.845434: initcall_start: func=init_posix_timers+0x0/0x2f
+         systemd-1     [000] ....     0.845438: initcall_finish: func=init_posix_timers+0x0/0x2f ret=0
+         systemd-1     [000] ....     0.845438: initcall_start: func=clockevents_init_sysfs+0x0/0xce
+         systemd-1     [000] ....     0.845512: initcall_finish: func=clockevents_init_sysfs+0x0/0xce ret=0
+         systemd-1     [000] ....     0.845512: initcall_start: func=proc_dma_init+0x0/0x24
+         systemd-1     [000] ....     0.845513: initcall_finish: func=proc_dma_init+0x0/0x24 ret=0
+         systemd-1     [000] ....     0.845513: initcall_start: func=proc_modules_init+0x0/0x24
+         systemd-1     [000] ....     0.845514: initcall_finish: func=proc_modules_init+0x0/0x24 ret=0
+         systemd-1     [000] ....     0.845514: initcall_start: func=kallsyms_init+0x0/0x27
+         systemd-1     [000] ....     0.845515: initcall_finish: func=kallsyms_init+0x0/0x27 ret=0
+         systemd-1     [000] ....     0.845515: initcall_start: func=pid_namespaces_init+0x0/0x45
+         systemd-1     [000] ....     0.845520: initcall_finish: func=pid_namespaces_init+0x0/0x45 ret=0
+         systemd-1     [000] ....     0.845521: initcall_start: func=audit_watch_init+0x0/0x3f
+         systemd-1     [000] ....     0.845521: initcall_finish: func=audit_watch_init+0x0/0x3f ret=0
+         systemd-1     [000] ....     0.845521: initcall_start: func=audit_fsnotify_init+0x0/0x3f
+         systemd-1     [000] ....     0.845521: initcall_finish: func=audit_fsnotify_init+0x0/0x3f ret=0
+         systemd-1     [000] ....     0.845521: initcall_start: func=audit_tree_init+0x0/0x52
+         systemd-1     [000] ....     0.845522: initcall_finish: func=audit_tree_init+0x0/0x52 ret=0
+         systemd-1     [000] ....     0.845522: initcall_start: func=init_kprobes+0x0/0x1dc
+         systemd-1     [000] ....     0.845703: initcall_finish: func=init_kprobes+0x0/0x1dc ret=0
+         systemd-1     [000] ....     0.845703: initcall_start: func=seccomp_sysctl_init+0x0/0x31
+         systemd-1     [000] ....     0.845706: initcall_finish: func=seccomp_sysctl_init+0x0/0x31 ret=0
+         systemd-1     [000] ....     0.845706: initcall_start: func=utsname_sysctl_init+0x0/0x19
+         systemd-1     [000] ....     0.845710: initcall_finish: func=utsname_sysctl_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.845710: initcall_start: func=init_tracepoints+0x0/0x2d
+         systemd-1     [000] ....     0.845711: initcall_finish: func=init_tracepoints+0x0/0x2d ret=0
+         systemd-1     [000] ....     0.845711: initcall_start: func=stack_trace_init+0x0/0xb5
+         systemd-1     [000] ....     0.845716: initcall_finish: func=stack_trace_init+0x0/0xb5 ret=0
+         systemd-1     [000] ....     0.845716: initcall_start: func=init_mmio_trace+0x0/0x12
+         systemd-1     [000] ....     0.845718: initcall_finish: func=init_mmio_trace+0x0/0x12 ret=0
+         systemd-1     [000] ....     0.845718: initcall_start: func=init_blk_tracer+0x0/0x56
+         systemd-1     [000] ....     0.845726: initcall_finish: func=init_blk_tracer+0x0/0x56 ret=0
+         systemd-1     [000] ....     0.845727: initcall_start: func=perf_event_sysfs_init+0x0/0x8d
+         systemd-1     [000] ....     0.845832: initcall_finish: func=perf_event_sysfs_init+0x0/0x8d ret=0
+         systemd-1     [000] ....     0.845832: initcall_start: func=init_uprobes+0x0/0x76
+         systemd-1     [000] ....     0.845834: initcall_finish: func=init_uprobes+0x0/0x76 ret=0
+         systemd-1     [000] ....     0.845834: initcall_start: func=system_trusted_keyring_init+0x0/0xfb
+         systemd-1     [000] ....     0.845842: initcall_finish: func=system_trusted_keyring_init+0x0/0xfb ret=0
+         systemd-1     [000] ....     0.845842: initcall_start: func=blacklist_init+0x0/0xab
+         systemd-1     [000] ....     0.845844: initcall_finish: func=blacklist_init+0x0/0xab ret=0
+         systemd-1     [000] ....     0.845844: initcall_start: func=kswapd_init+0x0/0x95
+         systemd-1     [000] ....     0.845860: initcall_finish: func=kswapd_init+0x0/0x95 ret=0
+         systemd-1     [000] ....     0.845860: initcall_start: func=extfrag_debug_init+0x0/0x7d
+         systemd-1     [000] ....     0.845865: initcall_finish: func=extfrag_debug_init+0x0/0x7d ret=0
+         systemd-1     [000] ....     0.845865: initcall_start: func=mm_compute_batch_init+0x0/0x1e
+         systemd-1     [000] ....     0.845866: initcall_finish: func=mm_compute_batch_init+0x0/0x1e ret=0
+         systemd-1     [000] ....     0.845866: initcall_start: func=slab_proc_init+0x0/0x27
+         systemd-1     [000] ....     0.845867: initcall_finish: func=slab_proc_init+0x0/0x27 ret=0
+         systemd-1     [000] ....     0.845867: initcall_start: func=workingset_init+0x0/0x84
+         systemd-1     [000] ....     0.845870: initcall_finish: func=workingset_init+0x0/0x84 ret=0
+         systemd-1     [000] ....     0.845870: initcall_start: func=proc_vmalloc_init+0x0/0x27
+         systemd-1     [000] ....     0.845871: initcall_finish: func=proc_vmalloc_init+0x0/0x27 ret=0
+         systemd-1     [000] ....     0.845871: initcall_start: func=procswaps_init+0x0/0x24
+         systemd-1     [000] ....     0.845872: initcall_finish: func=procswaps_init+0x0/0x24 ret=0
+         systemd-1     [000] ....     0.845872: initcall_start: func=init_frontswap+0x0/0x96
+         systemd-1     [000] ....     0.845876: initcall_finish: func=init_frontswap+0x0/0x96 ret=0
+         systemd-1     [000] ....     0.845876: initcall_start: func=slab_sysfs_init+0x0/0x101
+         systemd-1     [000] ....     0.846953: initcall_finish: func=slab_sysfs_init+0x0/0x101 ret=0
+         systemd-1     [000] ....     0.846953: initcall_start: func=init_cleancache+0x0/0x96
+         systemd-1     [000] ....     0.846958: initcall_finish: func=init_cleancache+0x0/0x96 ret=0
+         systemd-1     [000] ....     0.846958: initcall_start: func=init_zbud+0x0/0x25
+         systemd-1     [000] ....     0.846959: initcall_finish: func=init_zbud+0x0/0x25 ret=0
+         systemd-1     [000] ....     0.846960: initcall_start: func=zs_init+0x0/0x79
+         systemd-1     [000] ....     0.846972: initcall_finish: func=zs_init+0x0/0x79 ret=0
+         systemd-1     [000] ....     0.846972: initcall_start: func=hmm_init+0x0/0x69
+         systemd-1     [000] ....     0.846976: initcall_finish: func=hmm_init+0x0/0x69 ret=0
+         systemd-1     [000] ....     0.846976: initcall_start: func=fcntl_init+0x0/0x2f
+         systemd-1     [000] ....     0.846978: initcall_finish: func=fcntl_init+0x0/0x2f ret=0
+         systemd-1     [000] ....     0.846978: initcall_start: func=proc_filesystems_init+0x0/0x24
+         systemd-1     [000] ....     0.846979: initcall_finish: func=proc_filesystems_init+0x0/0x24 ret=0
+         systemd-1     [000] ....     0.846979: initcall_start: func=start_dirtytime_writeback+0x0/0x2f
+         systemd-1     [000] ....     0.846980: initcall_finish: func=start_dirtytime_writeback+0x0/0x2f ret=0
+         systemd-1     [000] ....     0.846980: initcall_start: func=blkdev_init+0x0/0x2f
+         systemd-1     [000] ....     0.846985: initcall_finish: func=blkdev_init+0x0/0x2f ret=0
+         systemd-1     [000] ....     0.846985: initcall_start: func=dio_init+0x0/0x32
+         systemd-1     [000] ....     0.847003: initcall_finish: func=dio_init+0x0/0x32 ret=0
+         systemd-1     [000] ....     0.847003: initcall_start: func=dnotify_init+0x0/0x7e
+         systemd-1     [000] ....     0.847020: initcall_finish: func=dnotify_init+0x0/0x7e ret=0
+         systemd-1     [000] ....     0.847021: initcall_start: func=fanotify_user_setup+0x0/0x7c
+         systemd-1     [000] ....     0.847024: initcall_finish: func=fanotify_user_setup+0x0/0x7c ret=0
+         systemd-1     [000] ....     0.847024: initcall_start: func=userfaultfd_init+0x0/0x33
+         systemd-1     [000] ....     0.847037: initcall_finish: func=userfaultfd_init+0x0/0x33 ret=0
+         systemd-1     [000] ....     0.847038: initcall_start: func=aio_setup+0x0/0xa6
+         systemd-1     [000] ....     0.847059: initcall_finish: func=aio_setup+0x0/0xa6 ret=0
+         systemd-1     [000] ....     0.847059: initcall_start: func=fscrypt_init+0x0/0xa9
+         systemd-1     [000] ....     0.847105: initcall_finish: func=fscrypt_init+0x0/0xa9 ret=0
+         systemd-1     [000] ....     0.847105: initcall_start: func=init_sys32_ioctl+0x0/0x2d
+         systemd-1     [000] ....     0.847258: initcall_finish: func=init_sys32_ioctl+0x0/0x2d ret=0
+         systemd-1     [000] ....     0.847258: initcall_start: func=mbcache_init+0x0/0x36
+         systemd-1     [000] ....     0.847274: initcall_finish: func=mbcache_init+0x0/0x36 ret=0
+         systemd-1     [000] ....     0.847274: initcall_start: func=init_devpts_fs+0x0/0x2d
+         systemd-1     [000] ....     0.847280: initcall_finish: func=init_devpts_fs+0x0/0x2d ret=0
+         systemd-1     [000] ....     0.847280: initcall_start: func=ext4_init_fs+0x0/0x19b
+         systemd-1     [000] ....     0.847348: initcall_finish: func=ext4_init_fs+0x0/0x19b ret=0
+         systemd-1     [000] ....     0.847349: initcall_start: func=journal_init+0x0/0x111
+         systemd-1     [000] ....     0.847386: initcall_finish: func=journal_init+0x0/0x111 ret=0
+         systemd-1     [000] ....     0.847386: initcall_start: func=init_squashfs_fs+0x0/0x70
+         systemd-1     [000] ....     0.847401: initcall_finish: func=init_squashfs_fs+0x0/0x70 ret=0
+         systemd-1     [000] ....     0.847401: initcall_start: func=init_fat_fs+0x0/0x4f
+         systemd-1     [000] ....     0.847429: initcall_finish: func=init_fat_fs+0x0/0x4f ret=0
+         systemd-1     [000] ....     0.847429: initcall_start: func=init_vfat_fs+0x0/0x17
+         systemd-1     [000] ....     0.847429: initcall_finish: func=init_vfat_fs+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.847430: initcall_start: func=ecryptfs_init+0x0/0x1a6
+         systemd-1     [000] ....     0.847540: initcall_finish: func=ecryptfs_init+0x0/0x1a6 ret=0
+         systemd-1     [000] ....     0.847541: initcall_start: func=init_nls_cp437+0x0/0x19
+         systemd-1     [000] ....     0.847541: initcall_finish: func=init_nls_cp437+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.847541: initcall_start: func=fuse_init+0x0/0x1ad
+         systemd-1     [000] ....     0.847590: initcall_finish: func=fuse_init+0x0/0x1ad ret=0
+         systemd-1     [000] ....     0.847590: initcall_start: func=init_pstore_fs+0x0/0x51
+         systemd-1     [000] ....     0.847592: initcall_finish: func=init_pstore_fs+0x0/0x51 ret=0
+         systemd-1     [000] ....     0.847592: initcall_start: func=efivarfs_init+0x0/0x39
+         systemd-1     [000] ....     0.847593: initcall_finish: func=efivarfs_init+0x0/0x39 ret=0
+         systemd-1     [000] ....     0.847593: initcall_start: func=ipc_init+0x0/0x63
+         systemd-1     [000] ....     0.847597: initcall_finish: func=ipc_init+0x0/0x63 ret=0
+         systemd-1     [000] ....     0.847597: initcall_start: func=ipc_sysctl_init+0x0/0x19
+         systemd-1     [000] ....     0.847604: initcall_finish: func=ipc_sysctl_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.847604: initcall_start: func=init_mqueue_fs+0x0/0xf8
+         systemd-1     [000] ....     0.847634: initcall_finish: func=init_mqueue_fs+0x0/0xf8 ret=0
+         systemd-1     [000] ....     0.847634: initcall_start: func=key_proc_init+0x0/0x5d
+         systemd-1     [000] ....     0.847636: initcall_finish: func=key_proc_init+0x0/0x5d ret=0
+         systemd-1     [000] ....     0.847636: initcall_start: func=selinux_nf_ip_init+0x0/0x43
+         systemd-1     [000] ....     0.847636: initcall_finish: func=selinux_nf_ip_init+0x0/0x43 ret=0
+         systemd-1     [000] ....     0.847637: initcall_start: func=init_sel_fs+0x0/0x125
+         systemd-1     [000] ....     0.847637: initcall_finish: func=init_sel_fs+0x0/0x125 ret=0
+         systemd-1     [000] ....     0.847637: initcall_start: func=selnl_init+0x0/0x7c
+         systemd-1     [000] ....     0.847643: initcall_finish: func=selnl_init+0x0/0x7c ret=0
+         systemd-1     [000] ....     0.847643: initcall_start: func=sel_netif_init+0x0/0x43
+         systemd-1     [000] ....     0.847643: initcall_finish: func=sel_netif_init+0x0/0x43 ret=0
+         systemd-1     [000] ....     0.847643: initcall_start: func=sel_netnode_init+0x0/0x4d
+         systemd-1     [000] ....     0.847643: initcall_finish: func=sel_netnode_init+0x0/0x4d ret=0
+         systemd-1     [000] ....     0.847644: initcall_start: func=sel_netport_init+0x0/0x4d
+         systemd-1     [000] ....     0.847644: initcall_finish: func=sel_netport_init+0x0/0x4d ret=0
+         systemd-1     [000] ....     0.847644: initcall_start: func=aurule_init+0x0/0x30
+         systemd-1     [000] ....     0.847644: initcall_finish: func=aurule_init+0x0/0x30 ret=0
+         systemd-1     [000] ....     0.847644: initcall_start: func=init_smk_fs+0x0/0x119
+         systemd-1     [000] ....     0.847645: initcall_finish: func=init_smk_fs+0x0/0x119 ret=0
+         systemd-1     [000] ....     0.847645: initcall_start: func=smack_nf_ip_init+0x0/0x2e
+         systemd-1     [000] ....     0.847645: initcall_finish: func=smack_nf_ip_init+0x0/0x2e ret=0
+         systemd-1     [000] ....     0.847645: initcall_start: func=crypto_algapi_init+0x0/0x12
+         systemd-1     [000] ....     0.847647: initcall_finish: func=crypto_algapi_init+0x0/0x12 ret=0
+         systemd-1     [000] ....     0.847647: initcall_start: func=seqiv_module_init+0x0/0x17
+         systemd-1     [000] ....     0.847647: initcall_finish: func=seqiv_module_init+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.847647: initcall_start: func=dh_init+0x0/0x20
+         systemd-1     [000] ....     0.847669: initcall_finish: func=dh_init+0x0/0x20 ret=0
+         systemd-1     [000] ....     0.847670: initcall_start: func=rsa_init+0x0/0x50
+         systemd-1     [000] ....     0.847688: initcall_finish: func=rsa_init+0x0/0x50 ret=0
+         systemd-1     [000] ....     0.847688: initcall_start: func=hmac_module_init+0x0/0x17
+         systemd-1     [000] ....     0.847689: initcall_finish: func=hmac_module_init+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.847689: initcall_start: func=crypto_null_mod_init+0x0/0x4d
+         systemd-1     [000] ....     0.847758: initcall_finish: func=crypto_null_mod_init+0x0/0x4d ret=0
+         systemd-1     [000] ....     0.847758: initcall_start: func=md5_mod_init+0x0/0x17
+         systemd-1     [000] ....     0.847775: initcall_finish: func=md5_mod_init+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.847776: initcall_start: func=sha1_generic_mod_init+0x0/0x17
+         systemd-1     [000] ....     0.847791: initcall_finish: func=sha1_generic_mod_init+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.847791: initcall_start: func=sha256_generic_mod_init+0x0/0x1c
+         systemd-1     [000] ....     0.847823: initcall_finish: func=sha256_generic_mod_init+0x0/0x1c ret=0
+         systemd-1     [000] ....     0.847824: initcall_start: func=sha512_generic_mod_init+0x0/0x1c
+         systemd-1     [000] ....     0.847857: initcall_finish: func=sha512_generic_mod_init+0x0/0x1c ret=0
+         systemd-1     [000] ....     0.847858: initcall_start: func=crypto_ecb_module_init+0x0/0x17
+         systemd-1     [000] ....     0.847858: initcall_finish: func=crypto_ecb_module_init+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.847858: initcall_start: func=crypto_cbc_module_init+0x0/0x17
+         systemd-1     [000] ....     0.847858: initcall_finish: func=crypto_cbc_module_init+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.847858: initcall_start: func=crypto_cts_module_init+0x0/0x17
+         systemd-1     [000] ....     0.847858: initcall_finish: func=crypto_cts_module_init+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.847859: initcall_start: func=crypto_module_init+0x0/0x17
+         systemd-1     [000] ....     0.847859: initcall_finish: func=crypto_module_init+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.847859: initcall_start: func=crypto_ctr_module_init+0x0/0x3e
+         systemd-1     [000] ....     0.847859: initcall_finish: func=crypto_ctr_module_init+0x0/0x3e ret=0
+         systemd-1     [000] ....     0.847859: initcall_start: func=crypto_gcm_module_init+0x0/0xc3
+         systemd-1     [000] ....     0.847860: initcall_finish: func=crypto_gcm_module_init+0x0/0xc3 ret=0
+         systemd-1     [000] ....     0.847860: initcall_start: func=aes_init+0x0/0x17
+         systemd-1     [000] ....     0.847874: initcall_finish: func=aes_init+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.847874: initcall_start: func=deflate_mod_init+0x0/0x44
+         systemd-1     [000] ....     0.847920: initcall_finish: func=deflate_mod_init+0x0/0x44 ret=0
+         systemd-1     [000] ....     0.847921: initcall_start: func=crc32c_mod_init+0x0/0x17
+         systemd-1     [000] ....     0.847936: initcall_finish: func=crc32c_mod_init+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.847937: initcall_start: func=crct10dif_mod_init+0x0/0x17
+         systemd-1     [000] ....     0.847953: initcall_finish: func=crct10dif_mod_init+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.847953: initcall_start: func=lzo_mod_init+0x0/0x3f
+         systemd-1     [000] ....     0.847985: initcall_finish: func=lzo_mod_init+0x0/0x3f ret=0
+         systemd-1     [000] ....     0.847986: initcall_start: func=drbg_init+0x0/0x8d
+         systemd-1     [000] ....     0.848347: initcall_finish: func=drbg_init+0x0/0x8d ret=0
+         systemd-1     [000] ....     0.848348: initcall_start: func=jent_mod_init+0x0/0x35
+         systemd-1     [000] ....     0.848512: initcall_finish: func=jent_mod_init+0x0/0x35 ret=0
+         systemd-1     [000] ....     0.848512: initcall_start: func=ghash_mod_init+0x0/0x17
+         systemd-1     [000] ....     0.848529: initcall_finish: func=ghash_mod_init+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.848530: initcall_start: func=asymmetric_key_init+0x0/0x17
+         systemd-1     [000] ....     0.848532: initcall_finish: func=asymmetric_key_init+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.848532: initcall_start: func=x509_key_init+0x0/0x17
+         systemd-1     [000] ....     0.848533: initcall_finish: func=x509_key_init+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.848534: initcall_start: func=proc_genhd_init+0x0/0x3b
+         systemd-1     [000] ....     0.848536: initcall_finish: func=proc_genhd_init+0x0/0x3b ret=0
+         systemd-1     [000] ....     0.848536: initcall_start: func=bsg_init+0x0/0x193
+         systemd-1     [000] ....     0.848561: initcall_finish: func=bsg_init+0x0/0x193 ret=0
+         systemd-1     [000] ....     0.848561: initcall_start: func=throtl_init+0x0/0x47
+         systemd-1     [000] ....     0.848588: initcall_finish: func=throtl_init+0x0/0x47 ret=0
+         systemd-1     [000] ....     0.848588: initcall_start: func=noop_init+0x0/0x17
+         systemd-1     [000] ....     0.848590: initcall_finish: func=noop_init+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.848590: initcall_start: func=deadline_init+0x0/0x17
+         systemd-1     [000] ....     0.848591: initcall_finish: func=deadline_init+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.848591: initcall_start: func=cfq_init+0x0/0x79
+         systemd-1     [000] ....     0.848628: initcall_finish: func=cfq_init+0x0/0x79 ret=0
+         systemd-1     [000] ....     0.848628: initcall_start: func=crc_t10dif_mod_init+0x0/0x3e
+         systemd-1     [000] ....     0.848630: initcall_finish: func=crc_t10dif_mod_init+0x0/0x3e ret=0
+         systemd-1     [000] ....     0.848630: initcall_start: func=percpu_counter_startup+0x0/0x56
+         systemd-1     [000] ....     0.848644: initcall_finish: func=percpu_counter_startup+0x0/0x56 ret=0
+         systemd-1     [000] ....     0.848645: initcall_start: func=digsig_init+0x0/0x3b
+         systemd-1     [000] ....     0.848647: initcall_finish: func=digsig_init+0x0/0x3b ret=0
+         systemd-1     [000] ....     0.848647: initcall_start: func=sg_pool_init+0x0/0xd9
+         systemd-1     [000] ....     0.848658: initcall_finish: func=sg_pool_init+0x0/0xd9 ret=0
+         systemd-1     [000] ....     0.848658: initcall_start: func=phy_core_init+0x0/0x50
+         systemd-1     [000] ....     0.848663: initcall_finish: func=phy_core_init+0x0/0x50 ret=0
+         systemd-1     [000] ....     0.848663: initcall_start: func=amd_gpio_driver_init+0x0/0x19
+         systemd-1     [000] ....     0.848673: initcall_finish: func=amd_gpio_driver_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.848673: initcall_start: func=cnl_pinctrl_driver_init+0x0/0x19
+         systemd-1     [000] ....     0.848678: initcall_finish: func=cnl_pinctrl_driver_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.848678: initcall_start: func=tps68470_gpio_driver_init+0x0/0x19
+         systemd-1     [000] ....     0.848684: initcall_finish: func=tps68470_gpio_driver_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.848684: initcall_start: func=crystalcove_pwm_driver_init+0x0/0x19
+         systemd-1     [000] ....     0.848688: initcall_finish: func=crystalcove_pwm_driver_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.848688: initcall_start: func=pci_proc_init+0x0/0x70
+         systemd-1     [000] ....     0.848702: initcall_finish: func=pci_proc_init+0x0/0x70 ret=0
+         systemd-1     [000] ....     0.848703: initcall_start: func=pcie_portdrv_init+0x0/0x3b
+         systemd-1     [000] ....     0.849231: initcall_finish: func=pcie_portdrv_init+0x0/0x3b ret=0
+         systemd-1     [000] ....     0.849231: initcall_start: func=aer_service_init+0x0/0x3f
+         systemd-1     [000] ....     0.849235: initcall_finish: func=aer_service_init+0x0/0x3f ret=0
+         systemd-1     [000] ....     0.849236: initcall_start: func=pcie_pme_service_init+0x0/0x17
+         systemd-1     [000] ....     0.849238: initcall_finish: func=pcie_pme_service_init+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.849239: initcall_start: func=dpc_service_init+0x0/0x17
+         systemd-1     [000] ....     0.849241: initcall_finish: func=dpc_service_init+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.849241: initcall_start: func=pci_hotplug_init+0x0/0x36
+         systemd-1     [000] ....     0.849241: initcall_finish: func=pci_hotplug_init+0x0/0x36 ret=0
+         systemd-1     [000] ....     0.849242: initcall_start: func=pcied_init+0x0/0x5b
+         systemd-1     [000] ....     0.849246: initcall_finish: func=pcied_init+0x0/0x5b ret=0
+         systemd-1     [000] ....     0.849246: initcall_start: func=pci_ep_cfs_init+0x0/0xd3
+         systemd-1     [000] ....     0.849257: initcall_finish: func=pci_ep_cfs_init+0x0/0xd3 ret=0
+         systemd-1     [000] ....     0.849257: initcall_start: func=pci_epc_init+0x0/0x47
+         systemd-1     [000] ....     0.849260: initcall_finish: func=pci_epc_init+0x0/0x47 ret=0
+         systemd-1     [000] ....     0.849260: initcall_start: func=pci_epf_init+0x0/0x2f
+         systemd-1     [000] ....     0.849264: initcall_finish: func=pci_epf_init+0x0/0x2f ret=0
+         systemd-1     [000] ....     0.849264: initcall_start: func=dw_plat_pcie_driver_init+0x0/0x19
+         systemd-1     [000] ....     0.849268: initcall_finish: func=dw_plat_pcie_driver_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.849269: initcall_start: func=imsttfb_init+0x0/0x110
+         systemd-1     [000] ....     0.849275: initcall_finish: func=imsttfb_init+0x0/0x110 ret=0
+         systemd-1     [000] ....     0.849276: initcall_start: func=asiliantfb_init+0x0/0x39
+         systemd-1     [000] ....     0.849281: initcall_finish: func=asiliantfb_init+0x0/0x39 ret=0
+         systemd-1     [000] ....     0.849281: initcall_start: func=vesafb_driver_init+0x0/0x19
+         systemd-1     [000] ....     0.849285: initcall_finish: func=vesafb_driver_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.849285: initcall_start: func=efifb_driver_init+0x0/0x19
+         systemd-1     [000] ....     0.850757: initcall_finish: func=efifb_driver_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.850757: initcall_start: func=intel_idle_init+0x0/0x5e2
+         systemd-1     [000] ....     0.850901: initcall_finish: func=intel_idle_init+0x0/0x5e2 ret=0
+         systemd-1     [000] ....     0.850901: initcall_start: func=acpi_ac_init+0x0/0x83
+         systemd-1     [000] ....     0.851123: initcall_finish: func=acpi_ac_init+0x0/0x83 ret=0
+         systemd-1     [000] ....     0.851124: initcall_start: func=acpi_button_driver_init+0x0/0x23
+         systemd-1     [000] ....     0.851253: initcall_finish: func=acpi_button_driver_init+0x0/0x23 ret=0
+         systemd-1     [000] ....     0.851253: initcall_start: func=acpi_fan_driver_init+0x0/0x19
+         systemd-1     [000] ....     0.851260: initcall_finish: func=acpi_fan_driver_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.851260: initcall_start: func=acpi_processor_driver_init+0x0/0x9a
+         systemd-1     [000] ....     0.851418: initcall_finish: func=acpi_processor_driver_init+0x0/0x9a ret=0
+         systemd-1     [000] ....     0.851418: initcall_start: func=acpi_thermal_init+0x0/0x84
+         systemd-1     [000] ....     0.852821: initcall_finish: func=acpi_thermal_init+0x0/0x84 ret=0
+         systemd-1     [000] ....     0.852822: initcall_start: func=acpi_battery_init+0x0/0x35
+         systemd-1     [000] ....     0.852825: initcall_finish: func=acpi_battery_init+0x0/0x35 ret=0
+         systemd-1     [000] ....     0.852825: initcall_start: func=acpi_hed_driver_init+0x0/0x17
+         systemd-1     [000] ....     0.852843: initcall_finish: func=acpi_hed_driver_init+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.852843: initcall_start: func=bgrt_init+0x0/0xba
+         systemd-1     [000] ....     0.852844: initcall_finish: func=bgrt_init+0x0/0xba ret=-19
+         systemd-1     [000] ....     0.852844: initcall_start: func=acpi_aml_init+0x0/0xd2
+         systemd-1     [000] ....     0.852848: initcall_finish: func=acpi_aml_init+0x0/0xd2 ret=0
+         systemd-1     [000] ....     0.852848: initcall_start: func=erst_init+0x0/0x317
+         systemd-1     [000] ....     0.852849: initcall_finish: func=erst_init+0x0/0x317 ret=0
+         systemd-1     [000] ....     0.852849: initcall_start: func=ghes_init+0x0/0x142
+         systemd-1     [000] ....     0.852850: initcall_finish: func=ghes_init+0x0/0x142 ret=-19
+         systemd-1     [000] ....     0.852850: initcall_start: func=tps68470_pmic_opregion_driver_init+0x0/0x19
+         systemd-1     [000] ....     0.852858: initcall_finish: func=tps68470_pmic_opregion_driver_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.852859: initcall_start: func=gpio_clk_driver_init+0x0/0x19
+         systemd-1     [000] ....     0.852865: initcall_finish: func=gpio_clk_driver_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.852866: initcall_start: func=plt_clk_driver_init+0x0/0x19
+         systemd-1     [000] ....     0.852873: initcall_finish: func=plt_clk_driver_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.852873: initcall_start: func=virtio_mmio_init+0x0/0x19
+         systemd-1     [000] ....     0.852881: initcall_finish: func=virtio_mmio_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.852881: initcall_start: func=virtio_pci_driver_init+0x0/0x20
+         systemd-1     [000] ....     0.852894: initcall_finish: func=virtio_pci_driver_init+0x0/0x20 ret=0
+         systemd-1     [000] ....     0.852896: initcall_start: func=virtio_balloon_driver_init+0x0/0x17
+         systemd-1     [000] ....     0.852902: initcall_finish: func=virtio_balloon_driver_init+0x0/0x17 ret=0
+         systemd-1     [000] ....     0.852902: initcall_start: func=xenbus_probe_initcall+0x0/0x53
+         systemd-1     [000] ....     0.852902: initcall_finish: func=xenbus_probe_initcall+0x0/0x53 ret=-19
+         systemd-1     [000] ....     0.852903: initcall_start: func=xenbus_init+0x0/0x3b
+         systemd-1     [000] ....     0.852903: initcall_finish: func=xenbus_init+0x0/0x3b ret=-19
+         systemd-1     [000] ....     0.852903: initcall_start: func=xenbus_backend_init+0x0/0x4d
+         systemd-1     [000] ....     0.852903: initcall_finish: func=xenbus_backend_init+0x0/0x4d ret=-19
+         systemd-1     [000] ....     0.852903: initcall_start: func=hypervisor_subsys_init+0x0/0x2a
+         systemd-1     [000] ....     0.852904: initcall_finish: func=hypervisor_subsys_init+0x0/0x2a ret=-19
+         systemd-1     [000] ....     0.852904: initcall_start: func=hyper_sysfs_init+0x0/0x191
+         systemd-1     [000] ....     0.852904: initcall_finish: func=hyper_sysfs_init+0x0/0x191 ret=-19
+         systemd-1     [000] ....     0.852904: initcall_start: func=platform_driver_init+0x0/0x20
+         systemd-1     [000] ....     0.852910: initcall_finish: func=platform_driver_init+0x0/0x20 ret=0
+         systemd-1     [000] ....     0.852910: initcall_start: func=xen_late_init_mcelog+0x0/0x66
+         systemd-1     [000] ....     0.852910: initcall_finish: func=xen_late_init_mcelog+0x0/0x66 ret=-19
+         systemd-1     [000] ....     0.852910: initcall_start: func=xen_acpi_processor_init+0x0/0x1dd
+         systemd-1     [000] ....     0.852911: initcall_finish: func=xen_acpi_processor_init+0x0/0x1dd ret=-19
+         systemd-1     [000] ....     0.852911: initcall_start: func=n_null_init+0x0/0x24
+         systemd-1     [000] ....     0.852911: initcall_finish: func=n_null_init+0x0/0x24 ret=0
+         systemd-1     [000] ....     0.852911: initcall_start: func=pty_init+0x0/0x34f
+         systemd-1     [000] ....     0.852940: initcall_finish: func=pty_init+0x0/0x34f ret=0
+         systemd-1     [000] ....     0.852941: initcall_start: func=sysrq_init+0x0/0x71
+         systemd-1     [000] ....     0.852943: initcall_finish: func=sysrq_init+0x0/0x71 ret=0
+         systemd-1     [000] ....     0.852944: initcall_start: func=xen_hvc_init+0x0/0x25c
+         systemd-1     [000] ....     0.852944: initcall_finish: func=xen_hvc_init+0x0/0x25c ret=-19
+         systemd-1     [000] ....     0.852944: initcall_start: func=serial8250_init+0x0/0x168
+         systemd-1     [000] ....     0.854591: initcall_finish: func=serial8250_init+0x0/0x168 ret=0
+         systemd-1     [000] ....     0.854591: initcall_start: func=serial_pci_driver_init+0x0/0x20
+         systemd-1     [000] ....     0.854609: initcall_finish: func=serial_pci_driver_init+0x0/0x20 ret=0
+         systemd-1     [000] ....     0.854609: initcall_start: func=max310x_uart_init+0x0/0x3a
+         systemd-1     [000] ....     0.854621: initcall_finish: func=max310x_uart_init+0x0/0x3a ret=0
+         systemd-1     [000] ....     0.854621: initcall_start: func=sccnxp_uart_driver_init+0x0/0x19
+         systemd-1     [000] ....     0.854628: initcall_finish: func=sccnxp_uart_driver_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.854628: initcall_start: func=init_kgdboc+0x0/0x1c
+         systemd-1     [000] ....     0.854629: initcall_finish: func=init_kgdboc+0x0/0x1c ret=0
+         systemd-1     [000] ....     0.854629: initcall_start: func=ttyprintk_init+0x0/0x107
+         systemd-1     [000] ....     0.854649: initcall_finish: func=ttyprintk_init+0x0/0x107 ret=0
+         systemd-1     [000] ....     0.854650: initcall_start: func=init+0x0/0x102
+         systemd-1     [000] ....     0.854665: initcall_finish: func=init+0x0/0x102 ret=0
+         systemd-1     [000] ....     0.854665: initcall_start: func=hpet_init+0x0/0x6a
+         systemd-1     [000] ....     0.854759: initcall_finish: func=hpet_init+0x0/0x6a ret=0
+         systemd-1     [000] ....     0.854759: initcall_start: func=hwrng_modinit+0x0/0x82
+         systemd-1     [000] ....     0.854792: initcall_finish: func=hwrng_modinit+0x0/0x82 ret=0
+         systemd-1     [000] ....     0.854792: initcall_start: func=agp_init+0x0/0x2c
+         systemd-1     [000] ....     0.854794: initcall_finish: func=agp_init+0x0/0x2c ret=0
+         systemd-1     [000] ....     0.854794: initcall_start: func=agp_amd64_mod_init+0x0/0x26
+         systemd-1     [000] ....     0.854814: initcall_finish: func=agp_amd64_mod_init+0x0/0x26 ret=-19
+         systemd-1     [000] ....     0.854814: initcall_start: func=agp_intel_init+0x0/0x2f
+         systemd-1     [000] ....     0.854824: initcall_finish: func=agp_intel_init+0x0/0x2f ret=0
+         systemd-1     [000] ....     0.854824: initcall_start: func=agp_via_init+0x0/0x2f
+         systemd-1     [000] ....     0.854834: initcall_finish: func=agp_via_init+0x0/0x2f ret=0
+         systemd-1     [000] ....     0.854834: initcall_start: func=init_tis+0x0/0xd7
+         systemd-1     [002] ....     0.911898: initcall_finish: func=init_tis+0x0/0xd7 ret=0
+         systemd-1     [002] ....     0.911900: initcall_start: func=crb_acpi_driver_init+0x0/0x17
+         systemd-1     [002] ....     0.911925: initcall_finish: func=crb_acpi_driver_init+0x0/0x17 ret=0
+         systemd-1     [002] ....     0.911925: initcall_start: func=cn_proc_init+0x0/0x3b
+         systemd-1     [002] ....     0.911926: initcall_finish: func=cn_proc_init+0x0/0x3b ret=0
+         systemd-1     [002] ....     0.911926: initcall_start: func=_nvm_misc_init+0x0/0x17
+         systemd-1     [002] ....     0.911958: initcall_finish: func=_nvm_misc_init+0x0/0x17 ret=0
+         systemd-1     [002] ....     0.911958: initcall_start: func=topology_sysfs_init+0x0/0x40
+         systemd-1     [002] ....     0.911971: initcall_finish: func=topology_sysfs_init+0x0/0x40 ret=0
+         systemd-1     [002] ....     0.911971: initcall_start: func=cacheinfo_sysfs_init+0x0/0x32
+         systemd-1     [000] ....     0.912382: initcall_finish: func=cacheinfo_sysfs_init+0x0/0x32 ret=168
+         systemd-1     [000] ....     0.912383: initcall_start: func=loop_init+0x0/0x16a
+         systemd-1     [000] ....     0.913943: initcall_finish: func=loop_init+0x0/0x16a ret=0
+         systemd-1     [000] ....     0.913944: initcall_start: func=xlblk_init+0x0/0xf0
+         systemd-1     [000] ....     0.913944: initcall_finish: func=xlblk_init+0x0/0xf0 ret=-19
+         systemd-1     [000] ....     0.913944: initcall_start: func=htcpld_core_init+0x0/0x32
+         systemd-1     [000] ....     0.913966: initcall_finish: func=htcpld_core_init+0x0/0x32 ret=-19
+         systemd-1     [000] ....     0.913966: initcall_start: func=tps65912_i2c_driver_init+0x0/0x19
+         systemd-1     [000] ....     0.913970: initcall_finish: func=tps65912_i2c_driver_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.913970: initcall_start: func=tps65912_spi_driver_init+0x0/0x19
+         systemd-1     [000] ....     0.913974: initcall_finish: func=tps65912_spi_driver_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.913974: initcall_start: func=tps68470_driver_init+0x0/0x19
+         systemd-1     [000] ....     0.913978: initcall_finish: func=tps68470_driver_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.913979: initcall_start: func=twl_driver_init+0x0/0x19
+         systemd-1     [000] ....     0.913982: initcall_finish: func=twl_driver_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.913983: initcall_start: func=twl4030_audio_driver_init+0x0/0x19
+         systemd-1     [000] ....     0.913987: initcall_finish: func=twl4030_audio_driver_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.913987: initcall_start: func=twl6040_driver_init+0x0/0x19
+         systemd-1     [000] ....     0.913990: initcall_finish: func=twl6040_driver_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.913990: initcall_start: func=smsc_i2c_driver_init+0x0/0x19
+         systemd-1     [000] ....     0.913993: initcall_finish: func=smsc_i2c_driver_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.913993: initcall_start: func=da9063_i2c_driver_init+0x0/0x19
+         systemd-1     [000] ....     0.913996: initcall_finish: func=da9063_i2c_driver_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.913996: initcall_start: func=max14577_i2c_init+0x0/0x19
+         systemd-1     [000] ....     0.913999: initcall_finish: func=max14577_i2c_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.913999: initcall_start: func=max77693_i2c_driver_init+0x0/0x19
+         systemd-1     [000] ....     0.914002: initcall_finish: func=max77693_i2c_driver_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.914002: initcall_start: func=adp5520_driver_init+0x0/0x19
+         systemd-1     [000] ....     0.914006: initcall_finish: func=adp5520_driver_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.914006: initcall_start: func=intel_soc_pmic_i2c_driver_init+0x0/0x19
+         systemd-1     [000] ....     0.914009: initcall_finish: func=intel_soc_pmic_i2c_driver_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.914009: initcall_start: func=cht_wc_driver_init+0x0/0x19
+         systemd-1     [000] ....     0.914012: initcall_finish: func=cht_wc_driver_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.914012: initcall_start: func=e820_pmem_driver_init+0x0/0x19
+         systemd-1     [000] ....     0.914017: initcall_finish: func=e820_pmem_driver_init+0x0/0x19 ret=0
+         systemd-1     [000] ....     0.914017: initcall_start: func=init_sd+0x0/0x178
+         systemd-1     [000] ....     0.914035: initcall_finish: func=init_sd+0x0/0x178 ret=0
+         systemd-1     [000] ....     0.914036: initcall_start: func=init_sr+0x0/0x48
+         systemd-1     [000] ....     0.914038: initcall_finish: func=init_sr+0x0/0x48 ret=0
+         systemd-1     [000] ....     0.914038: initcall_start: func=init_sg+0x0/0x125
+         systemd-1     [000] ....     0.914046: initcall_finish: func=init_sg+0x0/0x125 ret=0
+         systemd-1     [000] ....     0.914046: initcall_start: func=nvme_core_init+0x0/0x148
+         systemd-1     [002] ....     0.914184: initcall_finish: func=nvme_core_init+0x0/0x148 ret=0
+         systemd-1     [002] ....     0.914185: initcall_start: func=nvme_init+0x0/0x20
+         systemd-1     [002] ....     0.914200: initcall_finish: func=nvme_init+0x0/0x20 ret=0
+         systemd-1     [002] ....     0.914200: initcall_start: func=piix_init+0x0/0x2e
+         systemd-1     [002] ....     0.914211: initcall_finish: func=piix_init+0x0/0x2e ret=0
+         systemd-1     [002] ....     0.914211: initcall_start: func=sis_pci_driver_init+0x0/0x20
+         systemd-1     [002] ....     0.914218: initcall_finish: func=sis_pci_driver_init+0x0/0x20 ret=0
+         systemd-1     [002] ....     0.914218: initcall_start: func=ata_generic_pci_driver_init+0x0/0x20
+         systemd-1     [002] ....     0.914226: initcall_finish: func=ata_generic_pci_driver_init+0x0/0x20 ret=0
+         systemd-1     [002] ....     0.914226: initcall_start: func=net_olddevs_init+0x0/0x67
+         systemd-1     [002] ....     0.914229: initcall_finish: func=net_olddevs_init+0x0/0x67 ret=0
+         systemd-1     [002] ....     0.914229: initcall_start: func=fixed_mdio_bus_init+0x0/0xf5
+         systemd-1     [002] ....     0.914264: initcall_finish: func=fixed_mdio_bus_init+0x0/0xf5 ret=0
+         systemd-1     [002] ....     0.914265: initcall_start: func=tun_init+0x0/0xa4
+         systemd-1     [002] ....     0.914292: initcall_finish: func=tun_init+0x0/0xa4 ret=0
+         systemd-1     [002] ....     0.914293: initcall_start: func=cavium_ptp_driver_init+0x0/0x20
+         systemd-1     [002] ....     0.914303: initcall_finish: func=cavium_ptp_driver_init+0x0/0x20 ret=0
+         systemd-1     [002] ....     0.914303: initcall_start: func=ppp_init+0x0/0x10c
+         systemd-1     [002] ....     0.914326: initcall_finish: func=ppp_init+0x0/0x10c ret=0
+         systemd-1     [002] ....     0.914326: initcall_start: func=netif_init+0x0/0x77
+         systemd-1     [002] ....     0.914327: initcall_finish: func=netif_init+0x0/0x77 ret=-19
+         systemd-1     [002] ....     0.914327: initcall_start: func=cdrom_init+0x0/0x1e
+         systemd-1     [002] ....     0.914332: initcall_finish: func=cdrom_init+0x0/0x1e ret=0
+         systemd-1     [002] ....     0.914332: initcall_start: func=dwc2_platform_driver_init+0x0/0x19
+         systemd-1     [002] ....     0.914339: initcall_finish: func=dwc2_platform_driver_init+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.914339: initcall_start: func=ehci_hcd_init+0x0/0xc4
+         systemd-1     [002] ....     0.914343: initcall_finish: func=ehci_hcd_init+0x0/0xc4 ret=0
+         systemd-1     [002] ....     0.914343: initcall_start: func=ehci_pci_init+0x0/0x6c
+         systemd-1     [002] ....     0.951250: initcall_finish: func=ehci_pci_init+0x0/0x6c ret=0
+         systemd-1     [002] ....     0.951253: initcall_start: func=ehci_platform_init+0x0/0x4f
+         systemd-1     [002] ....     0.951269: initcall_finish: func=ehci_platform_init+0x0/0x4f ret=0
+         systemd-1     [002] ....     0.951270: initcall_start: func=ohci_hcd_mod_init+0x0/0x92
+         systemd-1     [002] ....     0.951273: initcall_finish: func=ohci_hcd_mod_init+0x0/0x92 ret=0
+         systemd-1     [002] ....     0.951273: initcall_start: func=ohci_pci_init+0x0/0x6c
+         systemd-1     [002] ....     0.951282: initcall_finish: func=ohci_pci_init+0x0/0x6c ret=0
+         systemd-1     [002] ....     0.951282: initcall_start: func=ohci_platform_init+0x0/0x4f
+         systemd-1     [002] ....     0.951288: initcall_finish: func=ohci_platform_init+0x0/0x4f ret=0
+         systemd-1     [002] ....     0.951288: initcall_start: func=uhci_hcd_init+0x0/0x11c
+         systemd-1     [002] ....     0.951305: initcall_finish: func=uhci_hcd_init+0x0/0x11c ret=0
+         systemd-1     [002] ....     0.951305: initcall_start: func=xhci_hcd_init+0x0/0x24
+         systemd-1     [002] ....     0.951306: initcall_finish: func=xhci_hcd_init+0x0/0x24 ret=0
+         systemd-1     [002] ....     0.951306: initcall_start: func=xhci_pci_init+0x0/0x49
+         systemd-1     [002] ....     0.951312: initcall_finish: func=xhci_pci_init+0x0/0x49 ret=0
+         systemd-1     [002] ....     0.951313: initcall_start: func=kgdbdbgp_start_thread+0x0/0x55
+         systemd-1     [002] ....     0.951313: initcall_finish: func=kgdbdbgp_start_thread+0x0/0x55 ret=0
+         systemd-1     [002] ....     0.951313: initcall_start: func=ledtrig_usb_init+0x0/0x33
+         systemd-1     [002] ....     0.951315: initcall_finish: func=ledtrig_usb_init+0x0/0x33 ret=0
+         systemd-1     [002] ....     0.951315: initcall_start: func=i8042_init+0x0/0x474
+         systemd-1     [002] ....     0.956112: initcall_finish: func=i8042_init+0x0/0x474 ret=0
+         systemd-1     [002] ....     0.956112: initcall_start: func=mousedev_init+0x0/0x86
+         systemd-1     [002] ....     0.956168: initcall_finish: func=mousedev_init+0x0/0x86 ret=0
+         systemd-1     [002] ....     0.956168: initcall_start: func=evdev_init+0x0/0x17
+         systemd-1     [002] ....     0.956235: initcall_finish: func=evdev_init+0x0/0x17 ret=0
+         systemd-1     [002] ....     0.956235: initcall_start: func=atkbd_init+0x0/0x2c
+         systemd-1     [002] .N..     0.956245: initcall_finish: func=atkbd_init+0x0/0x2c ret=0
+         systemd-1     [002] .N..     0.956245: initcall_start: func=elants_i2c_driver_init+0x0/0x19
+         systemd-1     [002] ....     0.956266: initcall_finish: func=elants_i2c_driver_init+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.956266: initcall_start: func=uinput_misc_init+0x0/0x17
+         systemd-1     [002] ....     0.956286: initcall_finish: func=uinput_misc_init+0x0/0x17 ret=0
+         systemd-1     [002] ....     0.956287: initcall_start: func=cmos_init+0x0/0x6e
+         systemd-1     [002] ....     0.956462: initcall_finish: func=cmos_init+0x0/0x6e ret=0
+         systemd-1     [002] ....     0.956462: initcall_start: func=i2c_dev_init+0x0/0xbe
+         systemd-1     [002] ....     0.956467: initcall_finish: func=i2c_dev_init+0x0/0xbe ret=0
+         systemd-1     [002] ....     0.956467: initcall_start: func=restart_poweroff_driver_init+0x0/0x19
+         systemd-1     [002] ....     0.956473: initcall_finish: func=restart_poweroff_driver_init+0x0/0x19 ret=0
+         systemd-1     [002] ....     0.956473: initcall_start: func=watchdog_gov_noop_register+0x0/0x17
+         systemd-1     [002] ....     0.956473: initcall_finish: func=watchdog_gov_noop_register+0x0/0x17 ret=0
+         systemd-1     [002] ....     0.956474: initcall_start: func=dm_init+0x0/0x51
+         systemd-1     [002] ....     0.956558: initcall_finish: func=dm_init+0x0/0x51 ret=0
+         systemd-1     [002] ....     0.956558: initcall_start: func=cpufreq_gov_powersave_init+0x0/0x17
+         systemd-1     [002] ....     0.956559: initcall_finish: func=cpufreq_gov_powersave_init+0x0/0x17 ret=0
+         systemd-1     [002] ....     0.956559: initcall_start: func=cpufreq_gov_userspace_init+0x0/0x17
+         systemd-1     [002] ....     0.956559: initcall_finish: func=cpufreq_gov_userspace_init+0x0/0x17 ret=0
+         systemd-1     [002] ....     0.956560: initcall_start: func=cpufreq_gov_dbs_init+0x0/0x17
+         systemd-1     [002] ....     0.956560: initcall_finish: func=cpufreq_gov_dbs_init+0x0/0x17 ret=0
+         systemd-1     [002] ....     0.956560: initcall_start: func=cpufreq_gov_dbs_init+0x0/0x17
+         systemd-1     [002] ....     0.956560: initcall_finish: func=cpufreq_gov_dbs_init+0x0/0x17 ret=0
+         systemd-1     [002] ....     0.956561: initcall_start: func=intel_pstate_init+0x0/0x321
+         systemd-1     [002] .N..     0.956726: initcall_finish: func=intel_pstate_init+0x0/0x321 ret=0
+         systemd-1     [002] .N..     0.956726: initcall_start: func=ledtrig_disk_init+0x0/0x59
+         systemd-1     [002] ....     0.956730: initcall_finish: func=ledtrig_disk_init+0x0/0x59 ret=0
+         systemd-1     [002] ....     0.956730: initcall_start: func=ledtrig_cpu_init+0x0/0xde
+         systemd-1     [002] ....     0.956774: initcall_finish: func=ledtrig_cpu_init+0x0/0xde ret=0
+         systemd-1     [002] ....     0.956775: initcall_start: func=ledtrig_panic_init+0x0/0x3e
+         systemd-1     [002] ....     0.956776: initcall_finish: func=ledtrig_panic_init+0x0/0x3e ret=0
+         systemd-1     [002] ....     0.956776: initcall_start: func=efivars_sysfs_init+0x0/0x210
+         systemd-1     [002] ....     0.973694: initcall_finish: func=efivars_sysfs_init+0x0/0x210 ret=0
+         systemd-1     [002] ....     0.973695: initcall_start: func=esrt_sysfs_init+0x0/0x2da
+         systemd-1     [002] ....     0.973695: initcall_finish: func=esrt_sysfs_init+0x0/0x2da ret=-38
+         systemd-1     [002] ....     0.973695: initcall_start: func=skein_generic_init+0x0/0x5b
+         systemd-1     [002] ....     0.973774: initcall_finish: func=skein_generic_init+0x0/0x5b ret=0
+         systemd-1     [002] ....     0.973774: initcall_start: func=pmc_core_probe+0x0/0x224
+         systemd-1     [002] ....     0.973774: initcall_finish: func=pmc_core_probe+0x0/0x224 ret=-19
+         systemd-1     [002] ....     0.973774: initcall_start: func=pmc_atom_init+0x0/0x28d
+         systemd-1     [002] ....     0.973777: initcall_finish: func=pmc_atom_init+0x0/0x28d ret=-19
+         systemd-1     [002] ....     0.973777: initcall_start: func=extcon_class_init+0x0/0x1d
+         systemd-1     [002] ....     0.973780: initcall_finish: func=extcon_class_init+0x0/0x1d ret=0
+         systemd-1     [002] ....     0.973781: initcall_start: func=powercap_init+0x0/0x28e
+         systemd-1     [002] ....     0.973810: initcall_finish: func=powercap_init+0x0/0x28e ret=0
+         systemd-1     [002] ....     0.973810: initcall_start: func=pm_check_save_msr+0x0/0x20
+         systemd-1     [002] ....     0.973811: initcall_finish: func=pm_check_save_msr+0x0/0x20 ret=0
+         systemd-1     [002] ....     0.973811: initcall_start: func=sock_diag_init+0x0/0x3a
+         systemd-1     [002] ....     0.973826: initcall_finish: func=sock_diag_init+0x0/0x3a ret=0
+         systemd-1     [002] ....     0.973827: initcall_start: func=blackhole_init+0x0/0x17
+         systemd-1     [002] ....     0.973828: initcall_finish: func=blackhole_init+0x0/0x17 ret=0
+         systemd-1     [002] ....     0.973828: initcall_start: func=gre_offload_init+0x0/0x4e
+         systemd-1     [002] ....     0.973828: initcall_finish: func=gre_offload_init+0x0/0x4e ret=0
+         systemd-1     [002] ....     0.973828: initcall_start: func=sysctl_ipv4_init+0x0/0x51
+         systemd-1     [002] ....     0.973863: initcall_finish: func=sysctl_ipv4_init+0x0/0x51 ret=0
+         systemd-1     [002] ....     0.973864: initcall_start: func=cubictcp_register+0x0/0x5f
+         systemd-1     [002] ....     0.973864: initcall_finish: func=cubictcp_register+0x0/0x5f ret=0
+         systemd-1     [002] ....     0.973864: initcall_start: func=inet6_init+0x0/0x379
+         systemd-1     [001] ....     0.976710: initcall_finish: func=inet6_init+0x0/0x379 ret=0
+         systemd-1     [001] ....     0.976712: initcall_start: func=packet_init+0x0/0x47
+         systemd-1     [001] ....     0.976717: initcall_finish: func=packet_init+0x0/0x47 ret=0
+         systemd-1     [001] ....     0.976717: initcall_start: func=strp_mod_init+0x0/0x36
+         systemd-1     [001] ....     0.976735: initcall_finish: func=strp_mod_init+0x0/0x36 ret=0
+         systemd-1     [001] ....     0.976736: initcall_start: func=dcbnl_init+0x0/0x52
+         systemd-1     [001] ....     0.976736: initcall_finish: func=dcbnl_init+0x0/0x52 ret=0
+         systemd-1     [001] ....     0.976736: initcall_start: func=init_dns_resolver+0x0/0xdb
+         systemd-1     [001] ....     0.976742: initcall_finish: func=init_dns_resolver+0x0/0xdb ret=0
+         systemd-1     [001] ....     0.976742: initcall_start: func=mcheck_init_device+0x0/0x152
+         systemd-1     [001] ....     0.976855: initcall_finish: func=mcheck_init_device+0x0/0x152 ret=0
+         systemd-1     [001] ....     0.976855: initcall_start: func=dev_mcelog_init_device+0x0/0x50
+         systemd-1     [001] ....     0.976878: initcall_finish: func=dev_mcelog_init_device+0x0/0x50 ret=0
+         systemd-1     [001] ....     0.976907: initcall_level: level=late
+         systemd-1     [001] ....     0.976907: initcall_start: func=tboot_late_init+0x0/0x2f1
+         systemd-1     [001] ....     0.976908: initcall_finish: func=tboot_late_init+0x0/0x2f1 ret=0
+         systemd-1     [001] ....     0.976908: initcall_start: func=intel_rdt_late_init+0x0/0x4c0
+         systemd-1     [001] ....     0.976908: initcall_finish: func=intel_rdt_late_init+0x0/0x4c0 ret=-19
+         systemd-1     [001] ....     0.976908: initcall_start: func=mcheck_late_init+0x0/0x7a
+         systemd-1     [001] ....     0.976922: initcall_finish: func=mcheck_late_init+0x0/0x7a ret=0
+         systemd-1     [001] ....     0.976923: initcall_start: func=severities_debugfs_init+0x0/0x40
+         systemd-1     [001] ....     0.976924: initcall_finish: func=severities_debugfs_init+0x0/0x40 ret=0
+         systemd-1     [001] ....     0.976924: initcall_start: func=threshold_init_device+0x0/0x52
+         systemd-1     [001] ....     0.976924: initcall_finish: func=threshold_init_device+0x0/0x52 ret=0
+         systemd-1     [001] ....     0.976924: initcall_start: func=microcode_init+0x0/0x1fc
+         systemd-1     [001] ....     0.976976: initcall_finish: func=microcode_init+0x0/0x1fc ret=0
+         systemd-1     [001] ....     0.976976: initcall_start: func=hpet_insert_resource+0x0/0x29
+         systemd-1     [001] ....     0.976979: initcall_finish: func=hpet_insert_resource+0x0/0x29 ret=0
+         systemd-1     [001] ....     0.976979: initcall_start: func=update_mp_table+0x0/0x509
+         systemd-1     [001] ....     0.976979: initcall_finish: func=update_mp_table+0x0/0x509 ret=0
+         systemd-1     [001] ....     0.976979: initcall_start: func=lapic_insert_resource+0x0/0x45
+         systemd-1     [001] ....     0.976980: initcall_finish: func=lapic_insert_resource+0x0/0x45 ret=0
+         systemd-1     [001] ....     0.976980: initcall_start: func=print_ICs+0x0/0x197
+         systemd-1     [001] ....     0.976980: initcall_finish: func=print_ICs+0x0/0x197 ret=0
+         systemd-1     [001] ....     0.976981: initcall_start: func=pat_memtype_list_init+0x0/0x3a
+         systemd-1     [001] ....     0.976982: initcall_finish: func=pat_memtype_list_init+0x0/0x3a ret=0
+         systemd-1     [001] ....     0.976982: initcall_start: func=create_tlb_single_page_flush_ceiling+0x0/0x2e
+         systemd-1     [001] ....     0.976983: initcall_finish: func=create_tlb_single_page_flush_ceiling+0x0/0x2e ret=0
+         systemd-1     [001] ....     0.976983: initcall_start: func=create_init_pkru_value+0x0/0x2e
+         systemd-1     [001] ....     0.976984: initcall_finish: func=create_init_pkru_value+0x0/0x2e ret=0
+         systemd-1     [001] ....     0.976985: initcall_start: func=init_oops_id+0x0/0x40
+         systemd-1     [001] ....     0.976985: initcall_finish: func=init_oops_id+0x0/0x40 ret=0
+         systemd-1     [001] ....     0.976985: initcall_start: func=sched_clock_init_late+0x0/0x80
+         systemd-1     [001] ....     0.977040: initcall_finish: func=sched_clock_init_late+0x0/0x80 ret=0
+         systemd-1     [001] ....     0.977040: initcall_start: func=sched_init_debug+0x0/0x43
+         systemd-1     [001] ....     0.977043: initcall_finish: func=sched_init_debug+0x0/0x43 ret=0
+         systemd-1     [001] ....     0.977043: initcall_start: func=pm_qos_power_init+0x0/0xb4
+         systemd-1     [001] ....     0.977099: initcall_finish: func=pm_qos_power_init+0x0/0xb4 ret=0
+         systemd-1     [001] ....     0.977099: initcall_start: func=pm_debugfs_init+0x0/0x29
+         systemd-1     [001] ....     0.977100: initcall_finish: func=pm_debugfs_init+0x0/0x29 ret=0
+         systemd-1     [001] ....     0.977100: initcall_start: func=printk_late_init+0x0/0x129
+         systemd-1     [001] ....     0.977101: initcall_finish: func=printk_late_init+0x0/0x129 ret=0
+         systemd-1     [001] ....     0.977101: initcall_start: func=tk_debug_sleep_time_init+0x0/0x41
+         systemd-1     [001] ....     0.977102: initcall_finish: func=tk_debug_sleep_time_init+0x0/0x41 ret=0
+         systemd-1     [001] ....     0.977102: initcall_start: func=debugfs_kprobe_init+0x0/0xd1
+         systemd-1     [001] ....     0.977106: initcall_finish: func=debugfs_kprobe_init+0x0/0xd1 ret=0
+         systemd-1     [001] ....     0.977106: initcall_start: func=taskstats_init+0x0/0x3c
+         systemd-1     [001] ....     0.977112: initcall_finish: func=taskstats_init+0x0/0x3c ret=0
+         systemd-1     [001] ....     0.977112: initcall_start: func=init_hwlat_tracer+0x0/0xb8
+         systemd-1     [001] ....     0.977120: initcall_finish: func=init_hwlat_tracer+0x0/0xb8 ret=0
+         systemd-1     [001] ....     0.977120: initcall_start: func=kdb_ftrace_register+0x0/0x32
+         systemd-1     [001] ....     0.977122: initcall_finish: func=kdb_ftrace_register+0x0/0x32 ret=0
+         systemd-1     [001] ....     0.977122: initcall_start: func=load_system_certificate_list+0x0/0xfa
+         systemd-1     [001] ....     0.978992: initcall_finish: func=load_system_certificate_list+0x0/0xfa ret=0
+         systemd-1     [001] ....     0.978992: initcall_start: func=fault_around_debugfs+0x0/0x3a
+         systemd-1     [001] ....     0.978994: initcall_finish: func=fault_around_debugfs+0x0/0x3a ret=0
+         systemd-1     [001] ....     0.978994: initcall_start: func=max_swapfiles_check+0x0/0xd
+         systemd-1     [001] ....     0.978995: initcall_finish: func=max_swapfiles_check+0x0/0xd ret=0
+         systemd-1     [001] ....     0.978995: initcall_start: func=init_zswap+0x0/0x437
+         systemd-1     [001] ....     0.979054: initcall_finish: func=init_zswap+0x0/0x437 ret=0
+         systemd-1     [001] ....     0.979055: initcall_start: func=split_huge_pages_debugfs+0x0/0x3a
+         systemd-1     [001] ....     0.979056: initcall_finish: func=split_huge_pages_debugfs+0x0/0x3a ret=0
+         systemd-1     [001] ....     0.979056: initcall_start: func=check_early_ioremap_leak+0x0/0x3f
+         systemd-1     [001] ....     0.979056: initcall_finish: func=check_early_ioremap_leak+0x0/0x3f ret=0
+         systemd-1     [001] ....     0.979056: initcall_start: func=init_root_keyring+0x0/0x10
+         systemd-1     [001] ....     0.979061: initcall_finish: func=init_root_keyring+0x0/0x10 ret=0
+         systemd-1     [001] ....     0.979062: initcall_start: func=big_key_init+0x0/0x9a
+         systemd-1     [001] ....     0.981393: initcall_finish: func=big_key_init+0x0/0x9a ret=0
+         systemd-1     [001] ....     0.981394: initcall_start: func=init_trusted+0x0/0xb4
+         systemd-1     [001] ....     0.981396: initcall_finish: func=init_trusted+0x0/0xb4 ret=0
+         systemd-1     [001] ....     0.981397: initcall_start: func=init_encrypted+0x0/0xd8
+         systemd-1     [001] ....     0.982531: initcall_finish: func=init_encrypted+0x0/0xd8 ret=0
+         systemd-1     [001] ....     0.982531: initcall_start: func=init_profile_hash+0x0/0x8b
+         systemd-1     [001] ....     0.982534: initcall_finish: func=init_profile_hash+0x0/0x8b ret=0
+         systemd-1     [001] ....     0.982534: initcall_start: func=init_ima+0x0/0x9b
+         systemd-1     [001] ....     1.059511: initcall_finish: func=init_ima+0x0/0x9b ret=0
+         systemd-1     [001] ....     1.059516: initcall_start: func=init_evm+0x0/0x56
+         systemd-1     [001] ....     1.059537: initcall_finish: func=init_evm+0x0/0x56 ret=0
+         systemd-1     [001] ....     1.059538: initcall_start: func=prandom_reseed+0x0/0x2f
+         systemd-1     [001] ....     1.059542: initcall_finish: func=prandom_reseed+0x0/0x2f ret=0
+         systemd-1     [001] ....     1.059542: initcall_start: func=init_error_injection+0x0/0x6f
+         systemd-1     [001] ....     1.059685: initcall_finish: func=init_error_injection+0x0/0x6f ret=0
+         systemd-1     [001] ....     1.059685: initcall_start: func=pci_resource_alignment_sysfs_init+0x0/0x1e
+         systemd-1     [001] ....     1.059690: initcall_finish: func=pci_resource_alignment_sysfs_init+0x0/0x1e ret=0
+         systemd-1     [001] ....     1.059691: initcall_start: func=pci_sysfs_init+0x0/0x5a
+         systemd-1     [001] ....     1.059774: initcall_finish: func=pci_sysfs_init+0x0/0x5a ret=0
+         systemd-1     [001] ....     1.059774: initcall_start: func=bert_init+0x0/0x23b
+         systemd-1     [001] ....     1.059775: initcall_finish: func=bert_init+0x0/0x23b ret=0
+         systemd-1     [001] ....     1.059775: initcall_start: func=clk_debug_init+0x0/0x143
+         systemd-1     [001] ....     1.059783: initcall_finish: func=clk_debug_init+0x0/0x143 ret=0
+         systemd-1     [001] ....     1.059784: initcall_start: func=boot_wait_for_devices+0x0/0x2e
+         systemd-1     [001] ....     1.059784: initcall_finish: func=boot_wait_for_devices+0x0/0x2e ret=-19
+         systemd-1     [001] ....     1.059784: initcall_start: func=dmar_free_unused_resources+0x0/0xc0
+         systemd-1     [001] ....     1.059784: initcall_finish: func=dmar_free_unused_resources+0x0/0xc0 ret=0
+         systemd-1     [001] ....     1.059785: initcall_start: func=deferred_probe_initcall+0x0/0x30
+         systemd-1     [001] ....     1.059791: initcall_finish: func=deferred_probe_initcall+0x0/0x30 ret=0
+         systemd-1     [001] ....     1.059791: initcall_start: func=late_resume_init+0x0/0x1a0
+         systemd-1     [001] ....     1.059852: initcall_finish: func=late_resume_init+0x0/0x1a0 ret=0
+         systemd-1     [001] ....     1.059852: initcall_start: func=sync_debugfs_init+0x0/0x60
+         systemd-1     [001] ....     1.059854: initcall_finish: func=sync_debugfs_init+0x0/0x60 ret=0
+         systemd-1     [001] ....     1.059855: initcall_start: func=rtc_hctosys+0x0/0xfc
+         systemd-1     [001] ....     1.059906: initcall_finish: func=rtc_hctosys+0x0/0xfc ret=0
+         systemd-1     [001] ....     1.059906: initcall_start: func=charger_manager_init+0x0/0x8d
+         systemd-1     [001] ....     1.060029: initcall_finish: func=charger_manager_init+0x0/0x8d ret=0
+         systemd-1     [001] ....     1.060030: initcall_start: func=acpi_cpufreq_init+0x0/0x297
+         systemd-1     [001] ....     1.060030: initcall_finish: func=acpi_cpufreq_init+0x0/0x297 ret=-17
+         systemd-1     [001] ....     1.060030: initcall_start: func=powernowk8_init+0x0/0x1e0
+         systemd-1     [001] ....     1.060031: initcall_finish: func=powernowk8_init+0x0/0x1e0 ret=-19
+         systemd-1     [001] ....     1.060031: initcall_start: func=pcc_cpufreq_init+0x0/0x486
+         systemd-1     [001] ....     1.060036: initcall_finish: func=pcc_cpufreq_init+0x0/0x486 ret=-19
+         systemd-1     [001] ....     1.060036: initcall_start: func=centrino_init+0x0/0x30
+         systemd-1     [001] ....     1.060036: initcall_finish: func=centrino_init+0x0/0x30 ret=-19
+         systemd-1     [001] ....     1.060036: initcall_start: func=edd_init+0x0/0x29c
+         systemd-1     [001] ....     1.060037: initcall_finish: func=edd_init+0x0/0x29c ret=-19
+         systemd-1     [001] ....     1.060037: initcall_start: func=firmware_memmap_init+0x0/0x38
+         systemd-1     [001] ....     1.060060: initcall_finish: func=firmware_memmap_init+0x0/0x38 ret=0
+         systemd-1     [001] ....     1.060060: initcall_start: func=register_update_efi_random_seed+0x0/0x30
+         systemd-1     [001] ....     1.060060: initcall_finish: func=register_update_efi_random_seed+0x0/0x30 ret=0
+         systemd-1     [001] ....     1.060060: initcall_start: func=efi_shutdown_init+0x0/0x44
+         systemd-1     [001] ....     1.060061: initcall_finish: func=efi_shutdown_init+0x0/0x44 ret=0
+         systemd-1     [001] ....     1.060061: initcall_start: func=itmt_legacy_init+0x0/0x50
+         systemd-1     [001] ....     1.060061: initcall_finish: func=itmt_legacy_init+0x0/0x50 ret=-19
+         systemd-1     [001] ....     1.060061: initcall_start: func=pci_mmcfg_late_insert_resources+0x0/0x58
+         systemd-1     [001] ....     1.060065: initcall_finish: func=pci_mmcfg_late_insert_resources+0x0/0x58 ret=0
+         systemd-1     [001] ....     1.060065: initcall_start: func=tcp_congestion_default+0x0/0x1e
+         systemd-1     [001] ....     1.060066: initcall_finish: func=tcp_congestion_default+0x0/0x1e ret=0
+         systemd-1     [001] ....     1.060066: initcall_start: func=software_resume+0x0/0x2a0
+         systemd-1     [001] ....     1.060066: initcall_finish: func=software_resume+0x0/0x2a0 ret=-2
+         systemd-1     [001] ....     1.060067: initcall_start: func=tracing_set_default_clock+0x0/0x3d
+         systemd-1     [001] ....     1.060067: initcall_finish: func=tracing_set_default_clock+0x0/0x3d ret=0
+         systemd-1     [001] ....     1.060067: initcall_start: func=clear_boot_tracer+0x0/0x2e
+         systemd-1     [001] ....     1.060067: initcall_finish: func=clear_boot_tracer+0x0/0x2e ret=0
+         systemd-1     [001] ....     1.060067: initcall_start: func=clk_disable_unused+0x0/0x170
+         systemd-1     [001] ....     1.060068: initcall_finish: func=clk_disable_unused+0x0/0x170 ret=0
+         systemd-1     [001] ....     1.060068: initcall_start: func=regulator_init_complete+0x0/0x3b
+         systemd-1     [001] ....     1.060069: initcall_finish: func=regulator_init_complete+0x0/0x3b ret=0
+   systemd-udevd-176   [000] ....     1.138879: initcall_start: func=fb_sys_read+0x0/0xe0 [fb_sys_fops]
+   systemd-udevd-176   [000] ....     1.138889: initcall_finish: func=fb_sys_read+0x0/0xe0 [fb_sys_fops] ret=0
+   systemd-udevd-192   [003] ....     1.155114: initcall_start: func=__check_hid_generic+0x0/0x40 [hid_generic]
+   systemd-udevd-192   [003] ....     1.155119: initcall_finish: func=__check_hid_generic+0x0/0x40 [hid_generic] ret=0
+   systemd-udevd-192   [003] ....     1.172683: initcall_start: func=0xffffffffc01ab000
+   systemd-udevd-192   [003] ....     1.173509: initcall_finish: func=0xffffffffc01ab000 ret=0
+   systemd-udevd-189   [001] ....     1.194669: initcall_start: func=hid_submit_out+0x0/0x140 [usbhid]
+   systemd-udevd-188   [000] ....     1.201197: initcall_start: func=autofs_mount+0x0/0x20 [autofs4]
+   systemd-udevd-188   [000] .N..     1.201227: initcall_finish: func=autofs_mount+0x0/0x20 [autofs4] ret=0
+   systemd-udevd-179   [000] ....     1.202777: initcall_start: func=0xffffffffc0238000
+   systemd-udevd-190   [003] ....     1.252791: initcall_start: func=host_info+0x0/0x20 [usb_storage]
+   systemd-udevd-190   [003] ....     1.252804: initcall_finish: func=host_info+0x0/0x20 [usb_storage] ret=0
+   systemd-udevd-190   [003] ....     1.299743: initcall_start: func=icmp_checkentry+0x0/0x20 [ip_tables]
+   systemd-udevd-190   [003] ....     1.299755: initcall_finish: func=icmp_checkentry+0x0/0x20 [ip_tables] ret=0
+   systemd-udevd-189   [002] ....     1.401328: initcall_finish: func=hid_submit_out+0x0/0x140 [usbhid] ret=0
+   systemd-udevd-179   [002] ....     1.448088: initcall_finish: func=0xffffffffc0238000 ret=0
+   systemd-udevd-190   [003] ....     1.744897: initcall_start: func=0xffffffffc04b4000
+   systemd-udevd-190   [003] ....     1.797200: initcall_finish: func=0xffffffffc04b4000 ret=0
+   systemd-udevd-192   [003] ....     1.948455: initcall_start: func=0xffffffffc051c000
+   systemd-udevd-192   [003] ....     1.948476: initcall_finish: func=0xffffffffc051c000 ret=0
+   systemd-udevd-192   [003] ....     1.955454: initcall_start: func=uas_resume+0x0/0x10 [uas]
+   systemd-udevd-192   [003] ....     1.957844: initcall_finish: func=uas_resume+0x0/0x10 [uas] ret=0
+   systemd-udevd-192   [003] ....     1.960850: initcall_start: func=autofs_mount+0x0/0x20 [autofs4]
+   systemd-udevd-192   [001] ....     2.079029: initcall_finish: func=autofs_mount+0x0/0x20 [autofs4] ret=0
+   systemd-udevd-189   [001] ....     2.139864: initcall_start: func=xt_compat_calc_jump+0x0/0x80 [x_tables]
+   systemd-udevd-189   [001] ....     2.140118: initcall_finish: func=xt_compat_calc_jump+0x0/0x80 [x_tables] ret=0
+   systemd-udevd-189   [001] ....     2.143720: initcall_start: func=0xffffffffc01ab000
+   systemd-udevd-189   [001] ....     2.143731: initcall_finish: func=0xffffffffc01ab000 ret=0
+         systemd-1     [001] ....     2.979941: initcall_start: func=0xffffffffc01ab000
+         systemd-1     [001] ....     2.980005: initcall_finish: func=0xffffffffc01ab000 ret=0
+         systemd-1     [001] ....     2.989477: initcall_start: func=0xffffffffc0238000
+         systemd-1     [001] ....     2.989479: initcall_finish: func=0xffffffffc0238000 ret=0
+         systemd-1     [001] ....     2.998550: initcall_start: func=0xffffffffc0302000
+         systemd-1     [001] ....     2.998555: initcall_finish: func=0xffffffffc0302000 ret=0
+ systemd-modules-287   [003] ....     3.304627: initcall_start: func=0xffffffffc04c9000
+ systemd-modules-287   [003] ....     3.304644: initcall_finish: func=0xffffffffc04c9000 ret=0
+ systemd-modules-287   [003] ....     3.315795: initcall_start: func=0xffffffffc04d4000
+ systemd-modules-287   [003] ....     3.320299: initcall_finish: func=0xffffffffc04d4000 ret=0
+ systemd-modules-287   [003] ....     3.327801: initcall_start: func=0xffffffffc04c9000
+ systemd-modules-287   [000] ....     3.332388: initcall_finish: func=0xffffffffc04c9000 ret=0
+ systemd-modules-287   [000] ....     3.347783: initcall_start: func=0xffffffffc04e70e2
+ systemd-modules-287   [000] ....     3.348159: initcall_finish: func=0xffffffffc04e70e2 ret=0
+        modprobe-330   [000] ....     3.409540: initcall_start: func=0xffffffffc051c000
+        modprobe-330   [000] ....     3.409542: initcall_finish: func=0xffffffffc051c000 ret=0
+   systemd-udevd-348   [003] ....     3.723062: initcall_start: func=0xffffffffc0524000
+   systemd-udevd-348   [003] ....     3.723070: initcall_finish: func=0xffffffffc0524000 ret=0
+   systemd-udevd-351   [000] ....     3.818258: initcall_start: func=0xffffffffc052c000
+   systemd-udevd-351   [000] ....     3.818267: initcall_finish: func=0xffffffffc052c000 ret=0
+   systemd-udevd-358   [002] ....     3.844918: initcall_start: func=snd_timer_find+0x0/0x70 [snd_timer]
+   systemd-udevd-358   [002] ....     3.844935: initcall_finish: func=snd_timer_find+0x0/0x70 [snd_timer] ret=0
+   systemd-udevd-359   [003] ....     3.853853: initcall_start: func=nvram_open+0x0/0xa0 [nvram]
+   systemd-udevd-359   [003] ....     3.853877: initcall_finish: func=nvram_open+0x0/0xa0 [nvram] ret=0
+   systemd-udevd-354   [000] ....     3.875765: initcall_start: func=snd_use_lock_sync_helper+0x0/0x90 [snd_seq]
+   systemd-udevd-354   [000] ....     3.876784: initcall_finish: func=snd_use_lock_sync_helper+0x0/0x90 [snd_seq] ret=0
+   systemd-udevd-358   [002] ....     3.877955: initcall_start: func=snd_seq_control_queue+0x160/0x190 [snd_seq]
+   systemd-udevd-358   [002] ....     3.877975: initcall_finish: func=snd_seq_control_queue+0x160/0x190 [snd_seq] ret=0
+        modprobe-368   [003] ....     3.897970: initcall_start: func=btbcm_set_bdaddr+0x3a/0x70 [btbcm]
+        modprobe-368   [003] ....     3.897983: initcall_finish: func=btbcm_set_bdaddr+0x3a/0x70 [btbcm] ret=0
+        modprobe-386   [003] ....     3.918950: initcall_start: func=0xffffffffc051c000
+        modprobe-386   [003] ....     3.918965: initcall_finish: func=0xffffffffc051c000 ret=0
+        modprobe-386   [003] ....     3.929631: initcall_start: func=nvram_open+0x0/0xa0 [nvram]
+        modprobe-386   [003] ....     3.929675: initcall_finish: func=nvram_open+0x0/0xa0 [nvram] ret=0
+   systemd-udevd-350   [002] ....     4.013955: initcall_start: func=joydev_correct+0x0/0x80 [joydev]
+   systemd-udevd-350   [002] ....     4.014097: initcall_finish: func=joydev_correct+0x0/0x80 [joydev] ret=0
+        modprobe-400   [000] ....     4.020773: initcall_start: func=media_device_open+0x0/0x10 [media]
+        modprobe-400   [000] .N..     4.020845: initcall_finish: func=media_device_open+0x0/0x10 [media] ret=0
+   systemd-udevd-350   [002] ....     4.049261: initcall_start: func=0xffffffffc056a000
+   systemd-udevd-360   [002] ....     4.057154: initcall_start: func=ecdh_init+0x0/0x20 [ecdh_generic]
+   systemd-udevd-360   [002] ....     4.057222: initcall_finish: func=ecdh_init+0x0/0x20 [ecdh_generic] ret=0
+   systemd-udevd-362   [002] ....     4.067704: initcall_start: func=btbcm_set_bdaddr+0x0/0x70 [btbcm]
+   systemd-udevd-362   [002] ....     4.067720: initcall_finish: func=btbcm_set_bdaddr+0x0/0x70 [btbcm] ret=0
+   systemd-udevd-350   [002] ....     4.097794: initcall_finish: func=0xffffffffc056a000 ret=0
+   systemd-udevd-362   [002] ....     4.112290: initcall_start: func=0xffffffffc05d6000
+   systemd-udevd-362   [002] ....     4.112427: initcall_finish: func=0xffffffffc05d6000 ret=0
+   systemd-udevd-359   [003] ....     4.125198: initcall_start: func=media_dev_t+0x5a0/0xffffffffffffd5a0 [media]
+   systemd-udevd-359   [003] ....     4.125203: initcall_finish: func=media_dev_t+0x5a0/0xffffffffffffd5a0 [media] ret=0
+   systemd-udevd-354   [000] ....     4.149542: initcall_start: func=glue_xts_crypt_128bit_one+0x0/0x70 [glue_helper]
+   systemd-udevd-350   [003] ....     4.161405: initcall_start: func=hda_reg_write+0x177/0x300 [snd_hda_core]
+        modprobe-410   [003] ....     4.163550: initcall_start: func=bt_sock_register+0x0/0x60 [bluetooth]
+        modprobe-410   [003] ....     4.163555: initcall_finish: func=bt_sock_register+0x0/0x60 [bluetooth] ret=0
+   systemd-udevd-354   [000] ....     4.165375: initcall_finish: func=glue_xts_crypt_128bit_one+0x0/0x70 [glue_helper] ret=0
+   systemd-udevd-350   [003] ....     4.185452: initcall_finish: func=hda_reg_write+0x177/0x300 [snd_hda_core] ret=0
+   systemd-udevd-357   [001] ....     4.388301: initcall_start: func=glue_xts_crypt_128bit_one+0x0/0x70 [glue_helper]
+   systemd-udevd-357   [001] ....     4.388338: initcall_finish: func=glue_xts_crypt_128bit_one+0x0/0x70 [glue_helper] ret=0
+   systemd-udevd-349   [001] ....     4.391775: initcall_start: func=rapl_pmu_event_init+0x0/0x170 [intel_rapl_perf]
+   systemd-udevd-349   [001] ....     4.391789: initcall_finish: func=rapl_pmu_event_init+0x0/0x170 [intel_rapl_perf] ret=0
+   systemd-udevd-363   [000] ....     4.661808: initcall_start: func=alsa_hwdep_exit+0xfbf/0xfbf [snd_hwdep]
+   systemd-udevd-363   [000] ....     4.661818: initcall_finish: func=alsa_hwdep_exit+0xfbf/0xfbf [snd_hwdep] ret=0
+   systemd-udevd-363   [000] ....     4.835301: initcall_start: func=0xffffffffc068b000
+   systemd-udevd-363   [000] ....     4.835307: initcall_finish: func=0xffffffffc068b000 ret=0
+   systemd-udevd-359   [003] ....     4.837926: initcall_start: func=glue_xts_crypt_128bit_one+0x0/0x70 [glue_helper]
+   systemd-udevd-349   [001] ....     4.841835: initcall_start: func=simd_skcipher_setkey+0x0/0x50 [crypto_simd]
+   systemd-udevd-349   [001] ....     4.841847: initcall_finish: func=simd_skcipher_setkey+0x0/0x50 [crypto_simd] ret=0
+   systemd-udevd-359   [000] ....     4.843137: initcall_finish: func=glue_xts_crypt_128bit_one+0x0/0x70 [glue_helper] ret=0
+   systemd-udevd-359   [002] ....     4.888242: initcall_start: func=_fold_64_B_loop+0x23/0x25f [crct10dif_pclmul]
+   systemd-udevd-357   [003] ....     4.909632: initcall_start: func=__connect+0x0/0xb0 [irqbypass]
+   systemd-udevd-357   [003] ....     4.909826: initcall_finish: func=__connect+0x0/0xb0 [irqbypass] ret=0
+   systemd-udevd-359   [002] ....     4.918397: initcall_finish: func=_fold_64_B_loop+0x23/0x25f [crct10dif_pclmul] ret=0
+   systemd-udevd-354   [000] ....     4.921570: initcall_start: func=hdmi_get_spk_alloc+0x0/0x60 [snd_hda_codec_hdmi]
+   systemd-udevd-354   [000] ....     4.924341: initcall_finish: func=hdmi_get_spk_alloc+0x0/0x60 [snd_hda_codec_hdmi] ret=0
+   systemd-udevd-363   [000] ....     4.943354: initcall_start: func=uvc_delete+0x2c/0x170 [uvcvideo]
+   systemd-udevd-363   [000] ....     4.944422: initcall_finish: func=uvc_delete+0x2c/0x170 [uvcvideo] ret=0
+   systemd-udevd-358   [000] ....     4.949906: initcall_start: func=vb2_vmalloc_num_users+0x0/0x10 [videobuf2_vmalloc]
+   systemd-udevd-358   [000] ....     4.949915: initcall_finish: func=vb2_vmalloc_num_users+0x0/0x10 [videobuf2_vmalloc] ret=0
+   systemd-udevd-362   [000] ....     5.005691: initcall_start: func=0xffffffffc0524000
+   systemd-udevd-362   [002] ....     5.005741: initcall_finish: func=0xffffffffc0524000 ret=0
+   systemd-udevd-349   [003] ....     5.058951: initcall_start: func=arc4_set_key+0x0/0x80 [arc4]
+   systemd-udevd-362   [002] ....     5.063032: initcall_start: func=hdmi_get_spk_alloc+0x0/0x60 [snd_hda_codec_hdmi]
+        modprobe-450   [001] ....     5.075378: initcall_start: func=__clmul_gf128mul_ble+0x0/0xa0 [ghash_clmulni_intel]
+        modprobe-450   [001] ....     5.075393: initcall_finish: func=__clmul_gf128mul_ble+0x0/0xa0 [ghash_clmulni_intel] ret=0
+   systemd-udevd-349   [003] ....     5.077439: initcall_finish: func=arc4_set_key+0x0/0x80 [arc4] ret=0
+        modprobe-471   [001] ....     5.088706: initcall_start: func=0xffffffffc051c000
+        modprobe-471   [001] ....     5.088709: initcall_finish: func=0xffffffffc051c000 ret=0
+   systemd-udevd-362   [001] ....     5.089052: initcall_finish: func=hdmi_get_spk_alloc+0x0/0x60 [snd_hda_codec_hdmi] ret=0
+        modprobe-450   [002] ....     5.091180: initcall_start: func=crc_t10dif_pcl+0x0/0x9b [crct10dif_pclmul]
+        modprobe-450   [002] ....     5.098723: initcall_finish: func=crc_t10dif_pcl+0x0/0x9b [crct10dif_pclmul] ret=0
+   systemd-udevd-358   [001] ....     5.106469: initcall_start: func=0xffffffffc0524000
+   systemd-udevd-358   [001] ....     5.106628: initcall_finish: func=0xffffffffc0524000 ret=0
+   systemd-udevd-350   [000] ....     5.125095: initcall_start: func=0xffffffffc068b000
+   systemd-udevd-350   [000] ....     5.125171: initcall_finish: func=0xffffffffc068b000 ret=0
+        modprobe-475   [002] ....     5.127456: initcall_start: func=arc4_set_key+0x0/0x80 [arc4]
+        modprobe-475   [002] ....     5.128995: initcall_finish: func=arc4_set_key+0x0/0x80 [arc4] ret=0
+   systemd-udevd-362   [001] ....     5.149069: initcall_start: func=0xffffffffc051c000
+   systemd-udevd-362   [001] ....     5.150917: initcall_finish: func=0xffffffffc051c000 ret=0
+   systemd-udevd-362   [002] ....     5.414728: initcall_start: func=exit_nls_iso8859_1+0xaf7/0xf8b [nls_iso8859_1]
+        modprobe-444   [001] ....     5.423294: initcall_start: func=iwl_wimax_active+0x0/0x30 [iwldvm]
+        modprobe-444   [001] ....     5.423303: initcall_finish: func=iwl_wimax_active+0x0/0x30 [iwldvm] ret=0
+   systemd-udevd-362   [002] ....     5.443107: initcall_finish: func=exit_nls_iso8859_1+0xaf7/0xf8b [nls_iso8859_1] ret=0
+   systemd-udevd-362   [000] ....     5.507039: initcall_start: func=arc4_set_key+0x0/0x80 [arc4]
+   systemd-udevd-349   [001] ....     5.544992: initcall_start: func=0xffffffffc051c000
+   systemd-udevd-349   [001] ....     5.545499: initcall_finish: func=0xffffffffc051c000 ret=0
+   systemd-udevd-362   [001] ....     5.560774: initcall_finish: func=arc4_set_key+0x0/0x80 [arc4] ret=0
+        modprobe-444   [003] ....     5.565075: initcall_start: func=0xffffffffc0995000
+   systemd-udevd-358   [002] ....     5.577444: initcall_start: func=uni2char+0x0/0x50 [nls_iso8859_1]
+   systemd-udevd-358   [002] ....     5.577540: initcall_finish: func=uni2char+0x0/0x50 [nls_iso8859_1] ret=0
+   systemd-udevd-359   [003] ....     5.585738: initcall_start: func=0xffffffffc09af000
+   systemd-udevd-359   [002] ....     5.588361: initcall_finish: func=0xffffffffc09af000 ret=0
+   systemd-udevd-362   [003] ....     5.601326: initcall_start: func=0xffffffffc0ab6000
+        modprobe-598   [000] ....     5.601461: initcall_start: func=0xffffffffc051c000
+        modprobe-598   [003] ....     5.601527: initcall_finish: func=0xffffffffc051c000 ret=0
+        modprobe-444   [003] ....     5.605939: initcall_finish: func=0xffffffffc0995000 ret=0
+   systemd-udevd-362   [003] ....     5.606753: initcall_finish: func=0xffffffffc0ab6000 ret=0
+        modprobe-668   [000] ....     5.805871: initcall_start: func=0xffffffffc051c000
+        modprobe-668   [000] ....     5.805873: initcall_finish: func=0xffffffffc051c000 ret=0
+        modprobe-886   [000] ....     9.022340: initcall_start: func=0xffffffffc0af6000
+        modprobe-886   [000] ....     9.022351: initcall_finish: func=0xffffffffc0af6000 ret=0
+        modprobe-1133  [003] ....     9.645816: initcall_start: func=0xffffffffc0b74000
+        modprobe-1133  [003] ....     9.645876: initcall_finish: func=0xffffffffc0b74000 ret=0
+        modprobe-1137  [001] ....     9.666462: initcall_start: func=0xffffffffc0b7e000
+        modprobe-1137  [001] ....     9.666472: initcall_finish: func=0xffffffffc0b7e000 ret=0
+        modprobe-1140  [001] ....     9.676573: initcall_start: func=0xffffffffc0b87000
+        modprobe-1140  [001] ....     9.676647: initcall_finish: func=0xffffffffc0b87000 ret=0
+        modprobe-1144  [000] ....     9.694183: initcall_start: func=llc_sap_open+0x4d/0xf0 [llc]
+        modprobe-1144  [000] ....     9.694197: initcall_finish: func=llc_sap_open+0x4d/0xf0 [llc] ret=0
+        modprobe-1146  [001] ....     9.721577: initcall_start: func=0xffffffffc0ba6000
+        modprobe-1146  [001] ....     9.721580: initcall_finish: func=0xffffffffc0ba6000 ret=0
+        modprobe-1148  [002] ....     9.730899: initcall_start: func=0xffffffffc0b74000
+        modprobe-1148  [002] ....     9.730932: initcall_finish: func=0xffffffffc0b74000 ret=0
+        modprobe-1285  [002] ....    10.627657: initcall_start: func=0xffffffffc0ba6000
+        modprobe-1285  [002] ....    10.627660: initcall_finish: func=0xffffffffc0ba6000 ret=0
+        modprobe-1285  [001] ....    10.722501: initcall_start: func=reject_tg+0x0/0xa0 [ipt_REJECT]
+        modprobe-1285  [001] ....    10.722518: initcall_finish: func=reject_tg+0x0/0xa0 [ipt_REJECT] ret=0
+        modprobe-1307  [002] ....    10.738336: initcall_start: func=0xffffffffc0ba6000
+        modprobe-1307  [002] ....    10.738339: initcall_finish: func=0xffffffffc0ba6000 ret=0
+        modprobe-1324  [003] ....    10.775805: initcall_start: func=0xffffffffc0ba6000
+        modprobe-1324  [003] ....    10.775808: initcall_finish: func=0xffffffffc0ba6000 ret=0
+        modprobe-1331  [003] ....    10.797864: initcall_start: func=_rs.63492+0x0/0xfffffffffffff000 [xt_conntrack]
+        modprobe-1331  [003] ....    10.797868: initcall_finish: func=_rs.63492+0x0/0xfffffffffffff000 [xt_conntrack] ret=0
+        modprobe-1331  [000] ....    10.880803: initcall_start: func=__nf_nat_l4proto_find+0x0/0x20 [nf_nat]
+        modprobe-1331  [000] ....    10.881261: initcall_finish: func=__nf_nat_l4proto_find+0x0/0x20 [nf_nat] ret=0
+        modprobe-1331  [000] ....    10.889297: initcall_start: func=0xffffffffc0ba6000
+        modprobe-1331  [000] ....    10.889299: initcall_finish: func=0xffffffffc0ba6000 ret=0
+        modprobe-1338  [001] ....    10.899093: initcall_start: func=0xffffffffc0c21000
+        modprobe-1338  [001] ....    10.899096: initcall_finish: func=0xffffffffc0c21000 ret=0
+        modprobe-1338  [001] ....    10.912453: initcall_start: func=device_cmp+0x0/0x40 [nf_nat_masquerade_ipv4]
+        modprobe-1338  [001] ....    10.912531: initcall_finish: func=device_cmp+0x0/0x40 [nf_nat_masquerade_ipv4] ret=0
+        modprobe-1350  [002] ....    10.961537: initcall_start: func=0xffffffffc0c2d000
+        modprobe-1350  [002] ....    10.961610: initcall_finish: func=0xffffffffc0c2d000 ret=0
+        modprobe-1350  [002] ....    10.973337: initcall_start: func=0xffffffffc0ba6000
+        modprobe-1350  [002] ....    10.973340: initcall_finish: func=0xffffffffc0ba6000 ret=0
+        modprobe-1350  [003] ....    10.980606: initcall_start: func=0xffffffffc0c19000
+        modprobe-1350  [003] ....    10.980629: initcall_finish: func=0xffffffffc0c19000 ret=0
+        modprobe-1354  [000] ....    10.997041: initcall_start: func=0xffffffffc0ba6000
+        modprobe-1354  [000] ....    10.997048: initcall_finish: func=0xffffffffc0ba6000 ret=0
+        modprobe-1362  [001] ....    11.026599: initcall_start: func=0xffffffffc0c45000
+        modprobe-1362  [001] ....    11.026619: initcall_finish: func=0xffffffffc0c45000 ret=0
+        modprobe-1364  [000] ....    11.033390: initcall_start: func=0xffffffffc0ba6000
+        modprobe-1364  [000] ....    11.033392: initcall_finish: func=0xffffffffc0ba6000 ret=0
+        modprobe-1996  [000] ....    21.887965: initcall_start: func=0xffffffffc0ca7000
+        modprobe-1996  [000] ....    21.888073: initcall_finish: func=0xffffffffc0ca7000 ret=0
