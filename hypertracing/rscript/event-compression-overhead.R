@@ -16,7 +16,7 @@ library(stringi)
 # #3faf1f
 colors <- c("Baseline" = "gray10", "Guest Tracing" = "#6f2054", "Write to disk"="dodgerblue2",
             "Host Tracing" = "#2f1f54", "Hypercall" = "#cf1f54", 
-            "Syscall Probe"="darkorange2", "Time+Compression"="yellow2", "Nested Cost"="#3faf1f")
+            "Syscall Probe"="darkorange2", "Batching"="yellow2", "Nested Cost"="#3faf1f")
 
 # layer,tracer,workload,configuration,time,event,freq,total_event_cost,cost_per_event
 data <- read.table("./hypertracing/data/syscall-nutshell-overhead.csv", header=T, sep=",")
@@ -76,7 +76,7 @@ plot <- ggplot(data, aes(x=reorder(component, time_per_event), y = time_per_even
   # ) +
   # geom_text(aes(y=total_time_per_event, label=overhead), colour='black', size = 3.4,
   #           position=position_dodge(width=0.9), vjust=-1) +
-  labs(title = "", x ="Cost of", y ="Latency (ns)", fill="Event Compression") +
+  labs(title = "", x ="Component", y ="Latency (ns)", fill="Event Batching") +
   # scale_fill_manual(values = colors) +
   scale_fill_manual(values = c('#2f1f54','#cf1f54')) +
   theme_light() +
@@ -87,7 +87,7 @@ plot <- ggplot(data, aes(x=reorder(component, time_per_event), y = time_per_even
     axis.text.y = element_text(margin = margin(t=2,b=1))
   )
 # Average latency of getcpu system call for multiple tracers
-pdf(file="./plots/event-compression-overhead.pdf", width=5.16, height=4)
+pdf(file="./plots/event-batching-overhead.pdf", width=5.16, height=4)
 plot(plot)
 
 dev.off()

@@ -6,7 +6,7 @@ library(ggrepel)
 # function_name,exit_time,duration,depth,process
 data_freq <- read.table("./bootup-trace/rscript/bootup-func-frequencies.csv", header=T, sep=",")
 # data <- read.table("./bootup-trace/dynamic-analysis.csv", header=T, sep=',')
-data_freq <- count(data, c("function_name"))
+# data_freq <- count(data, c("function_name"))
 total <- sum(data_freq$freq)
 data_freq$percentage <- round((data_freq$freq/total) * 100, 3)
 
@@ -37,7 +37,7 @@ plot <- ggplot(data_freq, aes(reorder(function_name, -freq), fill=color)) +
   labs(x ="Function name", y ="Frequency") +
   theme_light() +
   theme(
-    legend.position = c(0.94,0.91),
+    legend.position = c(0.90,0.84),
     legend.title=element_blank(),
     # axis.text.x = element_blank(),
     # axis.text.x = element_text(angle = 50, hjust = 1, vjust=1, size = 10),
