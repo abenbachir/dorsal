@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmfxml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="xmldefinition.xsd">
+
+
+<!-- The state provider assigns states from events -->
+    <stateProvider version="0" id="abder.state.provider">
+		<head>
+            <traceType id="org.eclipse.tracecompass.incubator.ftrace.core" />
+            <label value="Bootup Analysis" />
+        </head>
+        		<!-- Convenience names for the state values -->
+        <definedValue name="INITCALL_NOT_RUNNING" value="11111" />
+        <definedValue name="BOOT_LEVELS_NOT_RUNNING" value="22222" />
+
+ 
+
+        <definedValue name="INITCALL_EXIT" value="4002" />
+
+        <definedValue name="console" value="console" /> <!-- yellow #ffd700 -->
+		<definedValue name="security" value="11" /> <!-- red -->
+
+        <location id="BootLevel">
+			<stateAttribute type="constant" value="Hosts" />
+			<stateAttribute type="constant" value="Boot levels" />
+		</location>
+		<location id="Modules">
+			<stateAttribute type="constant" value="Hosts" />
+			<stateAttribute type="constant" value="Modules" />
+		</location>
+		<!-- Event handlers -->     
+		<eventHandler eventName="initcall_level">
+			<stateChange>
+				<stateAttribute type="location" value="BootLevel" />
+				<stateValue type="eventField" value="level" forcedType="string" />
+			</stateChange>
+		</eventHandler>
+		<eventHandler eventName="initcall_start">
+			<stateChange>
+				<stateAttribute type="location" value="Modules" />
+				<stateValue type="eventField" value="func" forcedType="string" />
+			</stateChange>
+		</eventHandler>
+		<eventHandler eventName="initcall_finish">
+			<stateChange>
+				<stateAttribute type="location" value="Modules" />
+				<stateValue type="eventField" value="$INITCALL_EXIT" forcedType="string" />
+			</stateChange>
+		</eventHandler>
+
+    </stateProvider>
+
+    <!-- This is the definition of the time-graph view -->
+    <timeGraphView id="org.eclipse.linuxtools.tmf.analysis.xml.ui.views.statesystem">
+        <head>
+            <analysis id="abder.state.provider" />
+            <label value="Boot-up Flow View" />
+        </head>
+
+        <!-- StateValues-->
+		 <!-- black -->
+		<definedValue name="" value="11111" color="#cdcdcd" />
+		<definedValue name="" value="22222" color="#bdbdbd" /> <!-- light gray -->
+
+		<definedValue name="Userspace" value="9002" color="#41ab5d" /> 
+		<definedValue name="Kernel panic" value="9003" color="#000000" /> 
+
+        <definedValue name="console" value="10" color="#e7298a" /> <!-- yellow #ffd700 -->
+		<definedValue name="security" value="11" color="#960001" /> <!-- red -->
+		<definedValue name="Early" value="0" color="#225ea8" /> <!-- violet -->
+		<definedValue name="Pure" value="1" color="#74a9cf" /> <!-- green -->
+		<definedValue name="Core" value="2" color="#4dac26" /> <!-- orange -->
+		<definedValue name="Core sync" value="12" color="#fe9929" />
+		<definedValue name="Postcore" value="3" color="#78c679" /> <!-- light green -->
+		<definedValue name="Postcore sync" value="13" color="#d9f0a3" />
+		<definedValue name="Arch" value="4" color="#a8ddb5" /> <!-- blue ocean -->
+		<definedValue name="Arch sync" value="14" color="#1d91c0" />
+		<definedValue name="Subsys" value="5" color="#ffd700" /> <!-- violet -->
+		<definedValue name="Subsys sync" value="15" color="#fe9929" />
+		<definedValue name="Filesystem" value="6" color="#cc4c02" /> <!--  -->
+		<definedValue name="Filesystem sync" value="16" color="#8c2d04" />
+		<definedValue name="Rootfs" value="7" color="#2a9088" /> <!--   -->
+		<definedValue name="Device" value="8" color="#0570b0" /> <!--  -->
+		<definedValue name="Device sync" value="18" color="#fcc5c0" />
+		<definedValue name="Late" value="9" color="#0c2c84" /> <!--  -->
+		<definedValue name="Late sync" value="19" color="#bf812d" />
+
+		<entry path="Hosts/*" displayText="true">
+			<display type="self" />
+			<entry path="Boot levels" displayText="true">
+				<display type="self" />
+			</entry>
+			<entry path="Modules"  displayText="true">
+				<display type="self" />
+			</entry>
+		</entry>
+    </timeGraphView>
+
+</tmfxml>
