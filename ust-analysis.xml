@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmfxml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="xmldefinition.xsd">
+
+	<!-- The state provider assigns states from events -->
+	<stateProvider id="org.eclipse.linuxtools.ust.example" version="1">
+		<head>
+			<traceType id="org.eclipse.linuxtools.lttng2.ust.tracetype" />
+			<label value="UST Example Analysis" />
+		</head>
+
+		<!-- Convenience names for the state values -->
+		<definedValue name="STATE_CPU_BUSY" value="2" />
+		<definedValue name="STATE_CONNECTING" value="100" />
+		<definedValue name="STATE_ESTABLISHED" value="101" />
+		<definedValue name="PROCNAME" value="11111" />
+		
+		<location id="CurrentCounter">
+			<stateAttribute type="constant" value="CPUs" />
+			<stateAttribute type="eventField" value="cpu" />
+			<stateAttribute type="constant" value="counter" />
+		</location>
+		<location id="CurrentCPU">
+			<stateAttribute type="constant" value="CPUs" />
+			<stateAttribute type="eventField" value="cpu" />
+		</location>
+		<location id="CurrentThread">
+			<stateAttribute type="constant" value="CPUs" />
+			<stateAttribute type="eventField" value="cpu" />
+			<stateAttribute type="constant" value="Threads" />
+			<stateAttribute type="eventField" value="tid" />
+		</location>
+
+		<!-- Event handlers -->
+		<eventHandler eventName="ust_myprog:connection_wait">
+			<stateChange>
+				<stateAttribute type="location" value="CurrentThread" />
+				<stateAttribute type="constant" value="ID" />				
+				<stateValue type="int" value="$STATE_CONNECTING" />
+			</stateChange>
+			<stateChange>
+				<stateAttribute type="location" value="CurrentThread" />
+				<stateAttribute type="constant" value="Exec_name" />
+				<stateValue type="eventField" value="context._procname" forcedType="string" />
+			</stateChange>
+			<stateChange>
+				<stateAttribute type="location" value="CurrentCounter" />
+				<stateValue stack="push" type="int" value="$STATE_CPU_BUSY" />
+			</stateChange>
+			<stateChange>
+				<if>
+					<condition>
+						<stateAttribute type="location" value="CurrentCounter" />
+						<stateValue type="int" value="1" />
+					</condition>
+				</if>
+				<then>
+					<stateAttribute type="location" value="CurrentCPU" />
+					<stateValue type="int" value="$STATE_CPU_BUSY" />
+				</then>
+			</stateChange>
+		</eventHandler>
+		<eventHandler eventName="ust_myprog:connection_start">
+			<stateChange>
+				<stateAttribute type="location" value="CurrentThread" />
+				<stateAttribute type="constant" value="ID" />				
+				<stateValue type="int" value="$STATE_ESTABLISHED" />
+			</stateChange>
+		</eventHandler>
+		<eventHandler eventName="ust_myprog:connection_end">
+			<stateChange>
+				<stateAttribute type="location" value="CurrentThread" />
+				<stateAttribute type="constant" value="ID" />				
+				<stateValue type="null" />
+			</stateChange>
+			<stateChange>
+				<stateAttribute type="location" value="CurrentThread" />
+				<stateAttribute type="constant" value="Exec_name" />
+				<stateValue type="null" />
+			</stateChange>
+			<stateChange>
+				<stateAttribute type="location" value="CurrentCounter" />			
+				<stateValue stack="pop" type="null" />
+			</stateChange>
+			<stateChange>
+				<if>
+					<condition>
+						<stateAttribute type="location" value="CurrentCounter" />
+						<stateValue type="null" />
+					</condition>
+				</if>
+				<then>
+					<stateAttribute type="location" value="CurrentCPU" />
+					<stateValue type="null" />
+				</then>
+			</stateChange>
+		</eventHandler>
+		
+	</stateProvider>
+
+	<!-- This is the definition of the time-graph view -->
+	<timeGraphView id="org.eclipse.linuxtools.tmf.analysis.xml.sstimeview">
+		<head>
+			<analysis id="org.eclipse.linuxtools.ust.example" />
+			<label value="Example UST View" />
+		</head>
+	
+		<!-- Colors assigned to the state values -->
+		<definedValue name="Connecting" value="100" color="#FFDD00" />
+		<definedValue name="Established" value="101" color="#00CC11" />
+		
+		<definedValue name="CPU BUSY" value="1" color="#F08B00" />
+		<definedValue name="CPU BUSY" value="2" color="#F08B00" />
+
+
+		<!-- Which attributes to "print" in the view -->
+		<entry path="CPUs/*" displayText="true">
+			<display type="self" />
+			<entry path="Threads/*" displayText="true">
+			<!-- 	<display type="self" /> -->
+				
+				<display type="constant" value="ID" />
+				<parent type="constant" value="ParentID" />
+				<name type="constant" value="Exec_name" />
+			</entry>
+		</entry>
+	</timeGraphView>
+
+</tmfxml>

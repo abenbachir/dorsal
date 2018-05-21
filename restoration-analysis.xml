@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmfxml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="xmldefinition.xsd">
+
+
+<!-- The state provider assigns states from events -->
+    <stateProvider version="0" id="ciena_L0CP.state.provider">
+		<head>
+            <traceType id="org.eclipse.linuxtools.tmf.ui.type.ctf" />
+            <label value="L0CP Analysis" />
+        </head>
+
+        <location id="StateChange">
+			<stateAttribute type="constant" value="Nodes" />
+			<stateAttribute type="eventField" value="node_id" />
+			<stateAttribute type="constant" value="Areas" />
+			<stateAttribute type="eventField" value="area_id" />
+		</location>
+
+		<!-- Event handlers -->
+		<eventHandler eventName="area_begin">
+			<stateChange>
+				<stateAttribute type="location" value="StateChange" />
+				<stateAttribute type="constant" value="Display" />
+				<stateValue type="eventField" value="operation" />
+			</stateChange>
+			<stateChange>
+				<stateAttribute type="location" value="StateChange" />
+				<stateAttribute type="constant" value="Name" />
+				<stateValue type="eventField" value="area_name" />
+			</stateChange>
+		</eventHandler>
+
+		<eventHandler eventName="area_end">
+			<stateChange>
+				<stateAttribute type="location" value="StateChange" />
+				<stateAttribute type="constant" value="Display" />
+				<stateValue type="null" />
+			</stateChange>
+			<stateChange>
+				<stateAttribute type="location" value="StateChange" />
+				<stateAttribute type="constant" value="Name" />
+				<stateValue type="null" />
+			</stateChange>
+		</eventHandler>
+
+    </stateProvider>
+
+    <!-- This is the definition of the time-graph view -->
+    <timeGraphView id="org.eclipse.linuxtools.tmf.analysis.xml.ui.views.statesystem">
+        <head>
+            <analysis id="ciena_L0CP.state.provider" />
+            <label value="Restoration Flow View" />
+        </head>
+
+        <entry path="Nodes/*" displayText="true">
+			<display type="self" />
+			<entry path="Areas/*" displayText="true">
+				<display type="constant" value="Display" />
+				<name type="constant" value="Name" />
+			</entry>
+		</entry>
+    </timeGraphView>
+
+</tmfxml>

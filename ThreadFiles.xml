@@ -395,7 +395,9 @@
 				</else>
 			</stateChange>
 			<stateChange>
-				<stateAttribute type="location" value="newCurrentThread" />
+				<!-- <stateAttribute type="location" value="newCurrentThread" /> -->
+				<stateAttribute type="constant" value="Threads" />
+				<stateAttribute type="eventField" value="next_tid" />
 				<stateAttribute type="constant" value="Exec_name" />
 				<stateValue type="eventField" value="next_comm" />
 			</stateChange>
@@ -1053,16 +1055,6 @@
 					<stateValue type="null" />
 				</then>
 			</stateChange>
-
-
-
-
-
-
-
-
-
-
 
 
 			<stateChange>
