@@ -23,7 +23,7 @@ run_qemu()
 	image=$3
 
 	sudo taskset -c $affinity qemu-system-x86_64 \
-	-m 2048 -smp 1 -M pc -name guest_$affinity \
+	-m 2048 -smp 2 -M pc -name guest_$affinity \
 	-enable-kvm -append "root=/dev/sda1 console=tty0 console=ttyS0 rw $p1" \
 	--kernel $image \
 	-serial stdio \
@@ -157,7 +157,7 @@ lttng_start()
 }
 
 # run_qemu "" 1 "${bzImage}"
-
+ftrace=function_graph trace_event=block:block_rq_issue,block:block_rq_complete trace_buf_size=400M ftrace_notrace=acpi*,_raw_spin_*,*kmem_cache*,_cond_resched,note_page,*slab*,*console*,*fb*,*mutex*
 filter_notrace="ftrace_notrace=read_pci*,e820*,acpi_*,native_flush_*,*_fixmap*,early_mem*,*early_io*,__probe*,*print*,console*,mutex*,jump_label*,arch_jump*,*raw_spin*,get_page_bootmem,*free*,*mod_zone*,parame*"
 param2="ftrace_dump_on_oops ftrace_vearly ftrace=function trace_buf_size=40M ftrace_filter=*_init $filter_notrace"
 
